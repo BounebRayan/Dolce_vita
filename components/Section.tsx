@@ -21,8 +21,9 @@ export default function Section() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/products?sort=createdDate&limit=10');
+        const response = await fetch('api/products?sort=createdDate&limit=10');
         const data = await response.json();
+        console.log(data);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
