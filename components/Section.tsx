@@ -12,18 +12,22 @@ type Product = {
   images: string[];
 };
 
-export default function Section() {
+type SectionProp = {
+  name:string,
+  url: string;
+};
+
+export default function Section(prop:SectionProp) {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4; // Number of products to display at once
+  const itemsPerPage = 4;
 
   // Fetch data from the backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('api/products?sort=createdDate&limit=10');
+        const response = await fetch(prop.url);
         const data = await response.json();
-        console.log(data);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -46,12 +50,13 @@ export default function Section() {
   };
 
   return (
-    <section className="p-6 mx-16">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Nouveautés</h2>
+    <section className="p-6 mt-6 mx-52 border-t-[1.5px] border-gray-300">
+
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-2xl font-md">{prop.name}</h2>
         <div className="flex items-center space-x-4">
-          <a href="#" className="text-blue-500 hover:underline">
-            Voir Plus
+          <a href="#" className="text-black text-sm underline">
+            Tout Voir
           </a>
           <div className="flex space-x-2">
             <button
@@ -83,9 +88,6 @@ export default function Section() {
                   alt={product.productName}
                   className="w-full h-[320px] object-cover rounded-sm"
                 />
-                <div className="absolute top-3.5 right-3.5 bg-transparent/50 text-xs text-white py-1 px-3 rounded-sm border border-white">
-                  New
-                </div>
                 <h3 className="mt-2 text-lg">{product.productName}</h3>
                 <p className="mt-1 text-gray-600">{product.price.toFixed(2)}DT</p>
               </div>

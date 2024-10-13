@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const sortField = searchParams.get('sort') || 'createdDate';
   const limit = parseInt(searchParams.get('limit') || '10', 10);
 
-  const sortCriteria = sortField === 'unitsSold' ? { unitsSold: -1 } : { [sortField]: -1 };
+  const sortCriteria: { [key: string]: 1 | -1 } = sortField === 'unitsSold' ? { unitsSold: -1 } : { [sortField]: -1 };
 
   try {
     const products = await Product.find().sort(sortCriteria).limit(limit);

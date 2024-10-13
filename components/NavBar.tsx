@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
       </ul>
       {hoveredItem && (
         <div
-          className="absolute left-0 right-0 flex justify-center bg-white border-t-[1px] border-gray-200"
+          className="absolute left-0 right-0 flex justify-center bg-white border-t-[1px] border-gray-200 z-10"
           onMouseEnter={() => setHoveredItem(hoveredItem)}
           onMouseLeave={handleMouseLeave}
         >

@@ -17,6 +17,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
+    await connectToDB();
     const productData = await req.json();
   
     try {
@@ -36,6 +37,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 
   export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+    await connectToDB();
     try {
       const deletedProduct = await Product.findByIdAndDelete(params.id);
       if (!deletedProduct) {
