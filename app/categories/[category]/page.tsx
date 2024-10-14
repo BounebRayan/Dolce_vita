@@ -23,7 +23,7 @@ const SubcategoryPage = ({ params }: SubcategoryPageProps) => {
   useEffect(() => {
     const fetchProductsBySubcategory = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/products/subcategory', {
+        const response = await axios.get('products/subcategory', {
           params: { subcategory },
         });
         setProducts(response.data);

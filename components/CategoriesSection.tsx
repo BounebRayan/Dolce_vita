@@ -65,7 +65,7 @@ const CategoriesSection: React.FC = () => {
         {categories
           .slice(currentIndex, currentIndex + itemsPerPage)
           .map((category) => (
-            <Link key={category.id} href={`/subcategory/${category.link}`}>
+            <Link key={category.id} href={`/categories/${category.link}`}>
             <div className="text-center relative cursor-pointer transform transition duration-300 hover:scale-105">
               <img
                 src={category.image}
