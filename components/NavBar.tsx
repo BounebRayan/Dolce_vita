@@ -55,7 +55,7 @@ const Navbar: React.FC = () => {
           <ul className="flex space-x-4 py-2">
             {categories[hoveredItem as keyof typeof categories].map((category) => (
               <li key={category}>
-                <Link href={`/${hoveredItem}/${category.toLowerCase()}`} className="relative after:absolute after:w-full after:h-[0.5px] after:bg-black after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0">
+                <Link href={`/categories/${category.toLowerCase()}`} className="relative after:absolute after:w-full after:h-[0.5px] after:bg-black after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0">
                   {category}
                 </Link>
               </li>

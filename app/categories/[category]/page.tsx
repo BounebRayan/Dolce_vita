@@ -1,4 +1,6 @@
-'use client'
+'use client';
+
+import { useParams } from 'next/navigation'; // For the App Router
 import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -8,15 +10,11 @@ interface Product {
   productName: string;
   price: number;
   images: string[];
-  // Add more fields as needed
 }
 
-interface SubcategoryPageProps {
-  params: { subcategory: string };
-}
-
-const SubcategoryPage = ({ params }: SubcategoryPageProps) => {
-  const { subcategory } = params;
+const SubcategoryPage = () => {
+  const params = useParams(); // Get dynamic route params
+  const { category } = params;
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -24,7 +22,7 @@ const SubcategoryPage = ({ params }: SubcategoryPageProps) => {
     const fetchProductsBySubcategory = async () => {
       try {
         const response = await axios.get('/api/products/subcategory', {
-          params: { subcategory },
+          params: { "subcategory": category },
         });
         setProducts(response.data);
       } catch (error) {
@@ -33,15 +31,16 @@ const SubcategoryPage = ({ params }: SubcategoryPageProps) => {
         setLoading(false);
       }
     };
-
-    if (subcategory) fetchProductsBySubcategory();
-  }, [subcategory]);
+    if (category) {
+      fetchProductsBySubcategory();
+    }
+  }, [category]);
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className="container mx-auto mt-8 px-4">
-      <h1 className="text-3xl font-semibold mb-6 capitalize">{subcategory} Products</h1>
+      <h1 className="text-3xl font-semibold mb-6 capitalize">{category} Products</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.length > 0 ? (
           products.map((product) => (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 
 type Product = {
   _id: string;
@@ -73,4 +73,12 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+const Page = () => {
+  return (
+    <Suspense>
+      <SearchPage/>
+    </Suspense>
+  )
+}
+
+export default Page
