@@ -82,14 +82,14 @@ export default function Section(prop:SectionProp) {
           .slice(currentIndex, currentIndex + itemsPerPage)
           .map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
-              <div className="text-center relative cursor-pointer transform transition duration-300 hover:scale-105">
+              <div className="relative cursor-pointer">
                 <img
                   src={product.images[0]}
                   alt={product.productName}
-                  className="w-full h-[320px] object-cover rounded-sm"
+                  className="w-full h-[320px] object-cover rounded-sm transform transition duration-300 hover:scale-105"
                 />
-                <h3 className="mt-2 text-lg">{product.productName}</h3>
-                <p className="mt-1 text-gray-600">{product.price.toFixed(2)}DT</p>
+                <h3 className="ml-2 mt-2 text-[16px] font-medium">{product.productName}</h3>
+                <p className="ml-2 text-[14px] text-gray-600">{product.price.toFixed(2)}DT</p>
               </div>
             </Link>
           ))}

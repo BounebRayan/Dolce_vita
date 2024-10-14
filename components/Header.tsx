@@ -25,7 +25,7 @@ export default function Header(){
                 <SearchInput/>
                 
                 <nav className="flex items-center space-x-3">
-                    <Link href="/magasins" className="hover:border-b-[1px] border-gray-300">
+                    <Link href="/magasins" className="relative after:absolute after:w-full after:h-[0.5px] after:bg-black after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0">
                         Nos Magasins
                     </Link>
                     <Link href="/cart"aria-label="Cart">
