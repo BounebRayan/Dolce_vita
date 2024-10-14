@@ -39,7 +39,7 @@ const ProductDetails = ({ productId }: Props) => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`products/${productId}`);
+        const response = await axios.get(`/api/products/${productId}`);
         console.log(response);
         setProduct(response.data);
         setSelectedImage(response.data.images[response.data.mainImageNumber] || response.data.images[0]); // Set main or first image

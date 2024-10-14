@@ -21,7 +21,7 @@ const RelatedProducts: React.FC<Props> = ({ subCategory }) => {
   useEffect(() => {
     const fetchSimilarProducts = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/products/subcategory`, {
+        const response = await axios.get(`/api/products/subcategory`, {
           params: { subcategory: subCategory, limit: 4 }
         });
         setSimilarProducts(response.data);
