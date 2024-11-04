@@ -27,7 +27,9 @@ export default function Header() {
                     <div className="w-full lg:w-auto flex items-center justify-center">
                         <SearchInput />
                     </div>
-                    <ShoppingCartIcon className="h-6 w-6 text-black"/>
+                    <Link href="/">
+                    <ShoppingCartIcon className="h-6 w-6 text-black cursor-pointer"/>
+                    </Link>
                 </div>
             </div>
         </header>

@@ -11,7 +11,7 @@ const Footer: FC = () => {
       <div className="px-12 flex flex-col items-start justify-between md:flex-row">
         {/* Website Name */}
         <div className="text-center md:text-left mb-4 md:mb-0">
-          <span className={`${playfair_Display.className} text-2xl font-bold text-gray-900`}>Dolce Vita</span>
+          <Link href="/" className={`${playfair_Display.className} text-2xl font-bold text-gray-900`}>Dolce Vita</Link>
         </div>
 
         {/* Navigation Links */}
