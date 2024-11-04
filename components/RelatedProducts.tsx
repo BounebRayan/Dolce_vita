@@ -22,7 +22,7 @@ const RelatedProducts: React.FC<Props> = ({ subCategory }) => {
     const fetchSimilarProducts = async () => {
       try {
         const response = await axios.get(`/api/products/subcategory`, {
-          params: { subcategory: subCategory, limit: 4 }
+          params: { subcategory: subCategory, limit: 5 }
         });
         setSimilarProducts(response.data);
       } catch (error) {
@@ -35,28 +35,29 @@ const RelatedProducts: React.FC<Props> = ({ subCategory }) => {
     fetchSimilarProducts();
   }, [subCategory]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className='text-center pt-5'>Loading...</div>;
 
   return (
-    <div className="mt-8 mx-12">
-      <h2 className="text-2xl font-semibold mb-4">You May Also Like</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="mt-3 mx-24 border-t-[1.5px] border-gray-300 px-3 py-4">
+      <h2 className="text-2xl font-md mb-4">Les clients ont également consulté</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {similarProducts.length > 0 ? (
           similarProducts.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
-              <div className="text-center cursor-pointer transform transition duration-300 hover:scale-105">
+              <div className="cursor-pointer transform transition duration-300 hover:scale-105">
                 <img
                   src={product.images[0]}
                   alt={product.productName}
-                  className="w-full h-[320px] object-cover rounded-sm"
+                  className="w-full h-[420px] object-cover rounded-sm"
+                  loading="lazy"
                 />
-                <h3 className="mt-2 text-lg font-semibold text-gray-900">{product.productName}</h3>
-                <p className="mt-1 text-gray-600">{product.price.toFixed(2)} DT</p>
+                <h3 className="mt-2 text-[13px] sm:text-[14px] font-bold">{product.productName}</h3>
+                <p className="text-[13px] sm:text-[14px] text-gray-600">{product.price.toFixed(2)} DT</p>
               </div>
             </Link>
           ))
         ) : (
-          <p>No similar products found</p>
+          <p>Aucun produit similaire n'a été trouvé 😔</p>
         )}
       </div>
     </div>

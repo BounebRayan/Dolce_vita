@@ -1,20 +1,28 @@
+"use client";
+import Link from "next/link";
 import React from "react";
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
+
 
 const AboutUsSection = () => {
   return (
-    <section className="py-6 mt-6 mx-52 border-t-[1.5px] border-gray-300">
-      <div className="container mx-auto px-6 text-center">
-        <div className="mb-4">
-          {/* Decorative SVG */}
-          <svg fill="#9ca3af" width="64px" height="64px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M12,1a1,1,0,0,0-1,1v9.586L6.293,16.293a1,1,0,0,0,0,1.414l5,5a1,1,0,0,0,1.414,0l5-5a1,1,0,0,0,0-1.414L13,11.586V2A1,1,0,0,0,12,1Zm0,19.586L8.414,17,12,13.414,15.586,17ZM6,13A2.993,2.993,0,0,0,7,7.184V2A1,1,0,0,0,5,2V7.184A2.993,2.993,0,0,0,6,13ZM6,9a1,1,0,1,1-1,1A1,1,0,0,1,6,9Zm15,1a3,3,0,0,0-2-2.816V2a1,1,0,0,0-2,0V7.184A2.995,2.995,0,1,0,21,10Zm-4,0a1,1,0,1,1,1,1A1,1,0,0,1,17,10Z"></path></g></svg>
-        </div>
+    <section className="my-6 mx-16 mt-10 bg-[#F5F5F1] flex items-center">
 
-        <h2 className="text-3xl font-semibold text-gray-800 mb-4">
-         Qui sommes-nous
-        </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-        Nous sommes un magasin de meubles et de décoration intérieure haut de gamme, dédié à vous apporter des produits de qualité et élégants pour vos espaces de vie. Explorez notre large gamme de designs modernes, classiques et minimalistes qui rehaussent le confort et l’esthétique de votre maison.
+      {/* Left Side: Image */}
+      <div className="w-1/2 h-[700px] bg-black">
+        <img
+          src="https://placehold.co/1200x800/C8C8C8/C8C8C8" // Replace with your image URL
+          alt="About Us"
+          className="w-full h-full object-cover" // Updated styles here
+        />
+      </div>
+
+      {/* Right Side: Text */}
+      <div className="w-1/2 px-20 flex flex-col items-center">
+        <p className="text-xl text-black">
+          De nouveaux designs évoquent l'essence réconfortante de la convivialité.
         </p>
+        <button className="border border-black px-5 py-2 flex items-center gap-1 mt-3 hover:bg-[#dcc174]">Decouvrir <ChevronRightIcon className="h-4 w-4 text-black"/></button>
       </div>
     </section>
   );

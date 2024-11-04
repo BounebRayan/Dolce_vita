@@ -2,6 +2,7 @@
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useState } from 'react';
+import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 
 const locations = [
   {
@@ -9,11 +10,11 @@ const locations = [
     name: 'Dolce Vita Sousse',
     lat: 35.845622,
     lng: 10.592508,
-    address: 'Route de ceinture Z.I Akouda Sousse, 4022',
-    phone: '29 338 765',
-    email: 'megastore@mytek.tn',
+    address: 'Avenue Yasser Arafat Sahloul Sousse, 4022',
+    phone: '24 331 900',
+    email: 'megastore@dolcevita.tn',
     horaires: {
-      lundiSamedi: '08:00 - 19:00',
+      lundiSamedi: '09:00 - 20:00',
       dimanche: '09:00 - 15:00',
     },
   },
@@ -23,10 +24,10 @@ const locations = [
     lat: 36.8496,
     lng: 10.1942,
     address: 'Sokra, Ariana',
-    phone: '29 338 765',
-    email: 'store.sokra@mytek.tn',
+    phone: '24 331 900',
+    email: 'store.sokra@dolcevita.tn',
     horaires: {
-      lundiSamedi: '08:00 - 19:00',
+      lundiSamedi: '09:00 - 20:00',
       dimanche: '09:00 - 15:00',
     },
   }
@@ -42,31 +43,45 @@ export default function MagasinsPage() {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className='my-4'>
-      <div className='flex items-center justify-center'>
+    <div className='my-4 grid grid-cols-2 mx-12 gap-4'>
+      <div className='flex items-center justify-center h-[700px]'>
         <GoogleMap
           center={{ lat: selectedLocation.lat, lng: selectedLocation.lng }}
           zoom={7}
-          mapContainerStyle={{ width: '40%', height: '500px' }}
+          mapContainerStyle={{ width: '100%', height: '100%' }}
         >
           {locations.map((location) => (
             <Marker
               key={location.id}
               position={{ lat: location.lat, lng: location.lng }}
-              onClick={() => setSelectedLocation(location)}
+              onClick={() => setSelectedLocation(location)} // Update selectedLocation when pin is clicked
             />
           ))}
         </GoogleMap>
       </div>
-
-      <div className="location-info mt-4 text-center">
-        <h3>{selectedLocation.name}</h3>
-        <p>{selectedLocation.address}</p>
-        <p>Téléphone: {selectedLocation.phone}</p>
-        <p>Email: {selectedLocation.email}</p>
-        <h4>Horaires</h4>
-        <p>Lundi au Samedi: {selectedLocation.horaires.lundiSamedi}</p>
-        <p>Dimanche: {selectedLocation.horaires.dimanche}</p>
+      <div>
+        <div className='text-2xl font-md mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
+        {locations.map((location) => (
+          <div key={location.id} className="border-t border-gray-300 p-3">
+            <div
+              className="flex items-center cursor-pointer justify-between"
+              onClick={() => setSelectedLocation(location)} // Update selectedLocation when title is clicked
+            >
+              <span className="mr-2">{location.name}</span>
+              {selectedLocation.id === location.id ? <AiOutlineUp /> : <AiOutlineDown />}
+            </div>
+            {selectedLocation.id === location.id && ( // Show description only for the selected location
+              <div>
+                <p>{selectedLocation.address}</p>
+                <p>Téléphone: {selectedLocation.phone}</p>
+                <p>Email: {selectedLocation.email}</p>
+                <h4>Horaires</h4>
+                <p>Lundi au Samedi: {selectedLocation.horaires.lundiSamedi}</p>
+                <p>Dimanche: {selectedLocation.horaires.dimanche}</p>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ export default function SearchInput() {
 
   const handleInputBlur = () => {
     if (searchValue === '') {
-      inputRef.current!.placeholder = 'Rechercher';
+      inputRef.current!.placeholder = 'Recherche de produits';
     }
     setIsFocused(false);
   };
@@ -51,21 +51,21 @@ export default function SearchInput() {
       <input
         type="text"
         ref={inputRef}
-        placeholder="Rechercher"
+        placeholder="Recherche de produits"
         aria-label="Search"
         value={searchValue}
         onChange={handleInputChange}
         onBlur={handleInputBlur}
         onFocus={handleInputFocus}
-        className="placeholder:text-black text-lg outline-none flex-grow"
+        className="placeholder:text-black text-md outline-none flex-grow"
       />
       {searchValue === '' ? (
         <button type="button" onClick={handleIconClick} className="ml-2">
-          <MagnifyingGlassIcon className="h-6 w-6 text-black" />
+          <MagnifyingGlassIcon className="h-5 w-5 text-black" />
         </button>
       ) : (
         <button type="button" onClick={handleClearInput} className="ml-2">
-          <XMarkIcon className="h-6 w-6 text-black" />
+          <XMarkIcon className="h-5 w-5 text-black" />
         </button>
       )}
     </form>

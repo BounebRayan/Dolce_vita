@@ -23,7 +23,7 @@ const SearchPage = () => {
     setSearchTerm(query);
 
     const fetchData = async () => {
-      setLoading(true);  // Reset loading when search term changes
+      setLoading(true); 
       try {
         const response = await fetch(`/api/products/search?query=${encodeURIComponent(query)}`);
         if (!response.ok) {
@@ -44,33 +44,37 @@ const SearchPage = () => {
   }, [query]);
 
   return (
-    <section className="px-6 mx-16 py-4">
-      <h2 className="text-2xl font-semibold mb-4">Résultats de recherche pour: "{searchTerm}"</h2>
+    <section className="px-6 mx-12 py-4 pt-2">
+      <h2 className="text-2xl font-md mb-4">Résultats de recherche pour: "{searchTerm}"</h2>
       {loading ? (
         <p className="text-center text-lg">Loading...</p>
       ) : (
-        <div className="grid grid-cols-4 gap-3">
-          {products.length > 0 ? (
-            products.map((product) => (
-              <Link key={product._id} href={`product/${product._id}`} className="text-center block">
-                <div className="text-center">
+        products.length > 0 ? (
+          <div className="grid grid-cols-5 gap-4">
+            {products.map((product) => (
+              <Link key={product._id} href={`product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105">
+                <div>
                   <img
                     src={product.images[product.mainImageNumber - 1] || '/fallback-image.jpg'}
                     alt={product.productName}
-                    className="w-[320px] h-[320px] rounded-sm object-cover mx-auto"
+                    className="w-[360px] h-[360px] rounded-sm object-cover mx-auto"
+                    loading='lazy'
                   />
-                  <h3 className="mt-2 text-lg">{product.productName}</h3>
-                  <p className="mt-1 text-gray-600">{product.price}</p>
+                  <h3 className="mt-2 text-[13px] sm:text-[14px] font-bold">{product.productName}</h3>
+                  <p className="text-[13px] sm:text-[14px] text-gray-600">{product.price} DT</p>
                 </div>
               </Link>
-            ))
-          ) : (
-            <p className="text-center text-lg">No products found.</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-center text-lg">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme 😔</p>
+          </div>
+        )
       )}
     </section>
   );
+  
 };
 
 const Page = () => {
