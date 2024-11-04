@@ -22,9 +22,11 @@ const AboutUsSection = () => {
         <p className="text-lg sm:text-xl text-black">
           De nouveaux designs évoquent l'essence réconfortante de la convivialité.
         </p>
+        <Link href={"/new"}>
         <button className="border border-black px-4 py-2 sm:px-5 sm:py-2 flex items-center gap-1 mt-3 hover:bg-[#dcc174] transition-colors duration-300">
           Decouvrir <ChevronRightIcon className="h-4 w-4 text-black"/>
         </button>
+        </Link>
       </div>
     </section>
   );

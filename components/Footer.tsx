@@ -19,7 +19,7 @@ const Footer: FC = () => {
 
         {/* Navigation Links */}
         <div className="flex flex-col items-center space-y-2 md:space-y-0 md:flex-row md:space-x-6">
-          <Link href="/" className="text-gray-700 hover:text-gray-900">
+          <Link href="/a-propos" className="text-gray-700 hover:text-gray-900">
             À propos
           </Link>
           <Link href="/magasins" className="text-gray-700 hover:text-gray-900">
@@ -55,9 +55,7 @@ const Footer: FC = () => {
 
       {/* Privacy Policy and Terms */}
       <div className="mt-4 text-center text-sm text-gray-500">
-        © 2024 Dolce Vita. 
-        <Link href="/" className="hover:underline"> Confidentialité </Link> | 
-        <Link href="/" className="hover:underline"> Mentions légales </Link>
+        © 2024 Dolce Vita, Inc. All rights reserved.
       </div>
     </footer>
   );

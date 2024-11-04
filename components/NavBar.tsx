@@ -28,7 +28,9 @@ const Navbar: React.FC = () => {
       <ul className="flex lg:justify-start justify-center space-x-5 pt-2 lg:pt-0">
         <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
         <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
-        <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
+        <Link href="/new">
+  <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
+</Link>
       </ul>
 
       {hoveredItem && (
