@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import localFont from 'next/font/local';
+import { CartProvider } from '../contexts/CartContext';
 
 const myFont = localFont({
   src: [
@@ -29,14 +30,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
+      <CartProvider>
       <body className={`${jost.className} ${myFont.className} min-h-screen flex flex-col antialiased`}>
         <Header />
         <NavBar />
         <main className="flex-grow">
-          {children}
+          
+            {children}
+          
         </main>
         <Footer />
       </body>
+      </CartProvider>
     </html>
   );
 }

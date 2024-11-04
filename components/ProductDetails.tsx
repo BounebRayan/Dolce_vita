@@ -1,4 +1,5 @@
 "use client";
+import { useCart } from '../contexts/CartContext';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -10,6 +11,8 @@ import RelatedProducts from './RelatedProducts';
 type Props = {
   productId: string;
 };
+
+
 
 type Product = {
   productName: string;
@@ -50,6 +53,10 @@ const colorMapping: { [key: string]: string } = {
 };
 
 const ProductDetails = ({ productId }: Props) => {
+
+  const {items, addToCart } = useCart();
+
+
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>(''); 
@@ -70,11 +77,22 @@ const ProductDetails = ({ productId }: Props) => {
   }, [productId]);
 
   const handleAddToCart = () => {
+
+    const item = {
+      id: productId,
+      name: product?.productName,
+      price: product?.price,
+      quantity: 1,
+      color: selectedColor,
+      image: product?.images[0]
+    };
+
     if (!selectedColor) {
       alert("Please select a color before adding to cart.");
       return;
     }
-    console.log(`Product added to cart with color: ${selectedColor}`);
+    addToCart(item);
+    console.log(item);
   };
 
   if (!product) return <div className="text-center mt-10">Loading...</div>;
