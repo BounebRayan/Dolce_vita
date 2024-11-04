@@ -43,8 +43,8 @@ export default function MagasinsPage() {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className='my-4 grid grid-cols-2 mx-12 gap-4'>
-      <div className='flex items-center justify-center h-[700px]'>
+    <div className='my-4 grid grid-cols-1 md:grid-cols-2 mx-4 md:mx-12 gap-4'>
+      <div className='flex items-center justify-center h-[500px] md:h-[700px]'>
         <GoogleMap
           center={{ lat: selectedLocation.lat, lng: selectedLocation.lng }}
           zoom={7}
@@ -54,30 +54,30 @@ export default function MagasinsPage() {
             <Marker
               key={location.id}
               position={{ lat: location.lat, lng: location.lng }}
-              onClick={() => setSelectedLocation(location)} // Update selectedLocation when pin is clicked
+              onClick={() => setSelectedLocation(location)}
             />
           ))}
         </GoogleMap>
       </div>
       <div>
-        <div className='text-2xl font-md mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
+        <div className='text-2xl font-semibold mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
         {locations.map((location) => (
           <div key={location.id} className="border-t border-gray-300 p-3">
             <div
-              className="flex items-center cursor-pointer justify-between"
-              onClick={() => setSelectedLocation(location)} // Update selectedLocation when title is clicked
+              className="flex items-center cursor-pointer justify-between py-2 hover:bg-gray-100 rounded"
+              onClick={() => setSelectedLocation(location)}
             >
               <span className="mr-2">{location.name}</span>
               {selectedLocation.id === location.id ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
-            {selectedLocation.id === location.id && ( // Show description only for the selected location
-              <div>
-                <p>{selectedLocation.address}</p>
-                <p>Téléphone: {selectedLocation.phone}</p>
-                <p>Email: {selectedLocation.email}</p>
-                <h4>Horaires</h4>
-                <p>Lundi au Samedi: {selectedLocation.horaires.lundiSamedi}</p>
-                <p>Dimanche: {selectedLocation.horaires.dimanche}</p>
+            {selectedLocation.id === location.id && (
+              <div className="mt-2">
+                <p className="text-sm">{location.address}</p>
+                <p className="text-sm">Téléphone: {location.phone}</p>
+                <p className="text-sm">Email: {location.email}</p>
+                <h4 className="font-semibold">Horaires</h4>
+                <p className="text-sm">Lundi au Samedi: {location.horaires.lundiSamedi}</p>
+                <p className="text-sm">Dimanche: {location.horaires.dimanche}</p>
               </div>
             )}
           </div>

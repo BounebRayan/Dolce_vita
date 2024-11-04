@@ -56,7 +56,7 @@ export default function Section(prop: SectionProp) {
   return (
     <section className="px-3 mt-3">
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-4 mx-10 px-2 pt-3">
+      <div className="flex flex-col items-start mb-4 mx-4 sm:mx-6 md:mx-10 px-2 pt-3">
         <h2 className="text-xl md:text-2xl font-md">{prop.name}</h2>
         <a href="#" className="text-black text-sm underline mt-0.5">
           Tout Voir
@@ -80,7 +80,7 @@ export default function Section(prop: SectionProp) {
           </button>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-2 md:mx-6 lg:mx-10">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mx-4 sm:mx-6 md:mx-10">
             {products
               .slice(currentIndex, currentIndex + itemsPerPage)
               .map((product) => (

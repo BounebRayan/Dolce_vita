@@ -17,7 +17,7 @@ interface Product {
   price: number;
   reviewsCount: number;
   reviewsValue: number;
-  createdAt: string; // Ensure this is in your data model for sorting by date
+  createdAt: string;
 }
 
 const SubcategoryPage = () => {
@@ -35,7 +35,7 @@ const SubcategoryPage = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
 
   // Sorting states
-  const [sortAttribute, setSortAttribute] = useState<string>('price'); // Default to 'price'
+  const [sortAttribute, setSortAttribute] = useState<string>('price');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
@@ -61,14 +61,13 @@ const SubcategoryPage = () => {
 
   const handleSortToggle = (attribute: string) => {
     if (sortAttribute === attribute) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); // Toggle order
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
       setSortAttribute(attribute);
-      setSortOrder('asc'); // Reset to ascending when changing attribute
+      setSortOrder('asc');
     }
   };
 
-  // Filter and sort products
   const filteredProducts = products
     .filter(product => {
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
@@ -78,12 +77,8 @@ const SubcategoryPage = () => {
       return matchesPrice && matchesRating && matchesOnSale && matchesSubcategory;
     })
     .sort((a, b) => {
-      if (sortAttribute === 'price') {
-        return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
-      }
-      if (sortAttribute === 'reviews') {
-        return sortOrder === 'asc' ? a.reviewsValue - b.reviewsValue : b.reviewsValue - a.reviewsValue;
-      }
+      if (sortAttribute === 'price') return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
+      if (sortAttribute === 'reviews') return sortOrder === 'asc' ? a.reviewsValue - b.reviewsValue : b.reviewsValue - a.reviewsValue;
       if (sortAttribute === 'date') {
         const dateA = new Date(a.createdAt).getTime();
         const dateB = new Date(b.createdAt).getTime();
@@ -95,11 +90,11 @@ const SubcategoryPage = () => {
   if (loading) return <div className='mt-4 text-center'>Loading...</div>;
 
   return (
-    <div className="flex mx-12 mt-2">
-      <aside className="w-1/6 pr-4 border-r h-full">
-        <h2 className="text-xl font-medium mb-1">Filtres</h2>
+    <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-12 mt-2">
+      <aside className="w-full lg:w-1/6 pr-4 sm:border-r border-b sm:border-b-0 h-full mb-4 lg:mb-0">
+        <h2 className="text-xl font-medium mb-2">Filtres</h2>
 
-        <h3 className="font-medium mb-3">Plage de prix</h3>
+        <h3 className="font-medium mb-2">Plage de prix</h3>
         <div className='px-1'>
           <Range
             step={1}
@@ -117,12 +112,12 @@ const SubcategoryPage = () => {
             )}
           />
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-sm">
           <span>{priceRange[0]} DT</span>
           <span>{priceRange[1]} DT</span>
         </div>
 
-        <h3 className="font-medium my-1">Avis clients</h3>
+        <h3 className="font-medium my-2">Avis clients</h3>
         <div className="flex mb-4">
           {[1, 2, 3, 4, 5].map((star) => (
             <span
@@ -146,25 +141,25 @@ const SubcategoryPage = () => {
         </label>
       </aside>
 
-      <main className="w-3/4 pl-4">
-        <h1 className="text-3xl font-md mb-2 capitalize">{decodedCategory}</h1>
+      <main className="w-full lg:w-3/4 pl-0 lg:pl-4">
+        <h1 className="text-2xl lg:text-3xl font-medium mb-2 capitalize">{decodedCategory}</h1>
 
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           {['price', 'date', 'reviews'].map((attribute) => (
             <button
               key={attribute}
               onClick={() => handleSortToggle(attribute)}
-              className={`px-4 py-2 font-medium rounded-sm ${sortAttribute === attribute ? 'bg-gray-200' : 'bg-gray-100'}`}
+              className={`px-3 py-1 text-sm font-medium rounded-sm ${sortAttribute === attribute ? 'bg-gray-200' : 'bg-gray-100'}`}
             >
               {attribute === 'price' ? 'Prix' : attribute === 'date' ? 'Date' : 'Avis'}
               {sortAttribute === attribute && (
-                sortOrder === 'asc' ? <FaArrowUp className="inline ml-2" /> : <FaArrowDown className="inline ml-2" />
+                sortOrder === 'asc' ? <FaArrowUp className="inline ml-1" /> : <FaArrowDown className="inline ml-1" />
               )}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
@@ -172,11 +167,11 @@ const SubcategoryPage = () => {
                   <img
                     src={product.images[0]}
                     alt={product.productName}
-                    className="w-[360px] h-[360px] object-cover rounded-sm"
+                    className="w-full h-[200px] sm:h-[250px] lg:h-[360px] object-cover rounded-sm"
                     loading='lazy'
                   />
-                  <h3 className="mt-2 text-[13px] sm:text-[14px] font-bold">{product.productName}</h3>
-                  <p className="text-[13px] sm:text-[14px] text-gray-600">{product.price.toFixed(2)} DT</p>
+                  <h3 className="mt-2 text-sm lg:text-[13px] font-bold">{product.productName}</h3>
+                  <p className="text-sm text-gray-600">{product.price.toFixed(2)} DT</p>
                 </div>
               </Link>
             ))
