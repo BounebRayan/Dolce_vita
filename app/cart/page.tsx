@@ -1,6 +1,17 @@
 "use client";
+import Link from 'next/link';
 import { useCart } from '../../contexts/CartContext';
 import { useState } from 'react';
+import Image from 'next/image';
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  color: string;
+  quantity: number;
+  image: string;
+}
 
 const CartPage = () => {
   const { items, removeFromCart, clearCart } = useCart();
@@ -29,22 +40,30 @@ const CartPage = () => {
   };
 
   if (items.length === 0) {
-    return <div className="text-center mt-10">Your cart is empty.</div>;
+    return (
+      <div className='flex flex-col items-center gap-1 text-lg'>
+        <div className="text-center mt-10">Il semble que votre panier soit vide</div>
+        <Link href={'/'} className='underline'>Retour à la page d'accueil</Link>
+      </div>
+    );
   }
 
   return (
     <div className="p-4 md:mx-12 lg:mx-32 mt-6">
-      <h1 className="text-2xl font-medium mb-4">Your Shopping Cart</h1>
+      <h1 className="text-2xl font-medium mb-4 md:text-3xl">Votre panier</h1>
 
       <div className="grid gap-6">
-        {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between border-b border-gray-300 pb-4">
+        {items.map((item: CartItem) => (
+          <div key={item.id} className="flex items-center  justify-between border-b border-gray-300 pb-4">
             <div className="flex items-center gap-4">
-              <img src={item.image} alt={item.name} width={80} height={80} className="object-cover rounded-sm" />
+              <div className='w-[100px] h-[100px] overflow-hidden'>
+              <Image src={item.image} alt={item.name} width={120} height={120} className="object-cover rounded-sm" />
+              </div>
               <div>
                 <h2 className="text-lg font-medium">{item.name}</h2>
-                <p>Price: {item.price.toFixed(2)} DT</p>
-                <p>Quantity: {item.quantity}</p>
+                <p>Prix: {item.price.toFixed(2)} DT</p>
+                <p>Couleur: {item.color}</p>
+                <p>Quantité: {item.quantity}</p>
               </div>
             </div>
             <button
@@ -57,16 +76,16 @@ const CartPage = () => {
         ))}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex">
         <button
           onClick={handleClearCart}
-          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-sm mr-4"
+          className="flex-grow sm:flex-grow-0 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-sm mr-4"
         >
           Clear Cart
         </button>
         <button
           onClick={handleSubmitCart}
-          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-sm"
+          className="flex-grow sm:flex-grow-0 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-sm"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Submit Cart'}

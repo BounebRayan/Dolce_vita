@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
       className="pb-2 bg-white text-black relative px-10 z-50 border-b mb-2"
       onMouseLeave={handleMouseLeave}
     >
-      <ul className="flex lg:justify-start justify-center space-x-5 pt-2 lg:pt-0">
+      <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
         <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
         <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
         <Link href="/new">
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
 
       {hoveredItem && (
         <div
-          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b border-r shadow-lg sm:w-1/5 w-full"
+          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b border-r shadow-lg md:w-[300px] w-full"
           style={{
             top: navbarRef.current?.offsetHeight, // Position the submenu just below the navbar
             left: 0,
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
             {categories[hoveredItem as keyof typeof categories].map((category) => (
               <li key={category}>
                 <Link
-                  href={`/categories/${category.toLowerCase()}`}
+                  href={`/categories/${category.toLowerCase()}`} onClick={()=>{setHoveredItem(null)}}
                   className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
                 >
                   {category}

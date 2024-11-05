@@ -79,7 +79,7 @@ const ProductDetails = ({ productId }: Props) => {
   const handleAddToCart = () => {
 
     const item = {
-      id: productId,
+      id: productId+selectedColor,
       name: product?.productName,
       price: product?.price,
       quantity: 1,
@@ -114,6 +114,7 @@ const ProductDetails = ({ productId }: Props) => {
           <div className="flex flex-row md:flex-col gap-2 overflow-auto">
             {product.images.map((img, index) => (
               <Image
+                loading='lazy'
                 key={index}
                 src={img}
                 alt={`Thumbnail ${index + 1}`}

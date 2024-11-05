@@ -47,7 +47,7 @@ export default function SearchInput() {
   };
 
   return (
-    <form onSubmit={handleSearchSubmit} className="flex items-center border-b-[1px] border-black w-80">
+    <form onSubmit={handleSearchSubmit} className="flex items-center border-b-[1px] border-black lg:w-80 md:w-72 w-80">
       <input
         type="text"
         ref={inputRef}
@@ -61,11 +61,11 @@ export default function SearchInput() {
       />
       {searchValue === '' ? (
         <button type="button" onClick={handleIconClick} className="ml-2">
-          <MagnifyingGlassIcon className="h-5 w-5 text-black" />
+          <MagnifyingGlassIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
         </button>
       ) : (
         <button type="button" onClick={handleClearInput} className="ml-2">
-          <XMarkIcon className="h-5 w-5 text-black" />
+          <XMarkIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
         </button>
       )}
     </form>
