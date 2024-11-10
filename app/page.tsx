@@ -1,7 +1,7 @@
 import AboutUsSection from "@/components/AboutUs";
 import Banner from "@/components/Banner";
 import CategoriesSection from "@/components/CategoriesSection";
-import Section from "@/components/Section";
+import Section from "@/components/Section_v2";
 
 export default function Home() {
   return (
