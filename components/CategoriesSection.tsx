@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { FaArrowRightLong, FaArrowLeftLong } from 'react-icons/fa6';
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 type Category = {
   id: number;
@@ -26,64 +26,65 @@ const categories: Category[] = [
 ];
 
 const CategoriesSection: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 8;
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 3);
-    }
-  };
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const Item_width=240;
 
-  const handleNext = () => {
-    if (currentIndex < categories.length - itemsPerPage) {
-      setCurrentIndex(currentIndex + 3);
-    }
-  };
-
+  const handleScroll = (scrollAmount: number) => {
+    if (containerRef.current) {
+    const newScrollPosition = scrollPosition + scrollAmount;
+    setScrollPosition(newScrollPosition);
+    containerRef.current.scrollLeft = newScrollPosition;}
+  }
+  const isLeftButtonDisabled = scrollPosition <= 0;
+  const isRightButtonDisabled = containerRef.current && containerRef.current.scrollWidth <= containerRef.current.clientWidth + scrollPosition;
+  
   return (
-    <section className="px-3 pt-2 mt-6 mx-4 sm:mx-6 md:mx-10">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-md">Découvrez nos catégories</h2>
-        <div className="flex items-center space-x-4">
-          <div className="flex space-x-2">
-            <button
-              className="p-1 disabled:opacity-50"
-              onClick={handlePrev}
-              disabled={currentIndex === 0}
-            >
-              <FaArrowLeftLong />
-            </button>
-            <button
-              className="p-1 disabled:opacity-50"
-              onClick={handleNext}
-              disabled={currentIndex >= categories.length - itemsPerPage}
-            >
-              <FaArrowRightLong />
-            </button>
-          </div>
-        </div>
+    <section className="px-1 pt-2 mt-6 mx-4 sm:mx-6 md:mx-10">
+      <div className="flex justify-between items-center mb-4 px-2">
+        <h2 className="text-2xl">Découvrez nos catégories</h2>
       </div>
-
-      {/* Responsive grid layout for different screen sizes */}
-      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8">
-        {categories
-          .slice(currentIndex, currentIndex + itemsPerPage)
-          .map((category) => (
+  
+      {/* Categories Content */}
+      <div className="relative mx-2 sm:mr-6 md:mr-6">
+        {/* Scroll Left Button */}
+        <button
+          className={`hidden z-40 lg:block absolute -left-5 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[50%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
+          onClick={() => { if (!isLeftButtonDisabled) handleScroll(-Item_width); }}
+          disabled={isLeftButtonDisabled}
+        >
+          <ChevronLeftIcon className="h-6 w-6 text-black" />
+        </button>
+  
+        {/* Categories Grid */}
+        <div ref={containerRef} className="flex space-x-3 overflow-x-auto lg:overflow-hidden scroll-smooth scrollbar-hide pb-1">
+          {categories.map((category) => (
             <Link key={category.id} href={`/categories/${category.link.toLowerCase()}`}>
-              <div className="relative cursor-pointer transform transition duration-300 hover:scale-105">
+              <div className="flex-none w-[180px] sm:w-[200px] cursor-pointer transform transition-transform hover:scale-105">
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-40 sm:h-48 md:h-56 lg:h-64 rounded-sm object-cover"
+                  className="w-full h-40 sm:h-48 md:h-56 lg:h-56 object-cover rounded-sm"
+                  loading="lazy"
                 />
-                <h3 className="mt-2 text-md uppercase text-center">{category.name}</h3>
+                <h3 className="mt-1 text-sm uppercase text-center">{category.name}</h3>
               </div>
             </Link>
           ))}
+        </div>
+  
+        {/* Scroll Right Button */}
+        <button
+          className={`hidden z-40  shadow-lg shadow-slate-500 lg:block disabled:bg-white absolute -right-7 cursor-pointer disabled:cursor-default border border-black top-[50%] transform -translate-y-1/2 p-2 hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
+          onClick={() => { if (!isRightButtonDisabled) handleScroll(Item_width); }}
+          disabled={!!isRightButtonDisabled}
+        >
+          <ChevronRightIcon className="h-6 w-6 text-black" />
+        </button>
       </div>
     </section>
-  );
-};
+  );}
+  
 
 export default CategoriesSection;

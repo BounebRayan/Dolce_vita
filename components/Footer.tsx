@@ -7,7 +7,7 @@ const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 
 const Footer: FC = () => {
   return (
-    <footer className="bg-transparent py-5 border-t mt-6">
+    <footer className="bg-transparent py-4 border-t mt-6">
       <div className="px-4 sm:px-6 md:px-10 flex flex-col items-center justify-between md:flex-row md:items-center space-y-1 md:space-y-0">
         
         {/* Website Name */}
@@ -17,7 +17,7 @@ const Footer: FC = () => {
           </Link>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation Links 
         <div className="flex flex-col items-center space-y-1 md:space-y-0 md:flex-row md:space-x-6">
           <Link href="/a-propos" className="text-gray-700 hover:text-gray-900">
             À propos
@@ -28,7 +28,10 @@ const Footer: FC = () => {
           <Link href="/" className="text-gray-700 hover:text-gray-900">
             Shop
           </Link>
-        </div>
+        </div>*/}
+        <div className="mt-2 text-center text-sm text-gray-500">
+        © 2024 Dolce Vita, Inc. All rights reserved.
+      </div>
 
         {/* Social Media Links */}
         <div className="flex space-x-4">
@@ -54,9 +57,7 @@ const Footer: FC = () => {
       </div>
 
       {/* Privacy Policy and Terms */}
-      <div className="mt-2 text-center text-sm text-gray-500">
-        © 2024 Dolce Vita, Inc. All rights reserved.
-      </div>
+      
     </footer>
   );
 };

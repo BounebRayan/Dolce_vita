@@ -29,15 +29,15 @@ const Navbar: React.FC = () => {
         <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
         <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
         <Link href="/new">
-  <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
-</Link>
+          <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
+        </Link>
       </ul>
 
       {hoveredItem && (
         <div
           className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b border-r shadow-lg md:w-[300px] w-full"
           style={{
-            top: navbarRef.current?.offsetHeight, // Position the submenu just below the navbar
+            top: navbarRef.current?.offsetHeight,
             left: 0,
           }}
           onMouseEnter={() => setHoveredItem(hoveredItem)}
@@ -70,7 +70,7 @@ const NavItem: React.FC<NavItemProps> = ({ children, onHover }) => (
   <li
     onMouseEnter={onHover}
     onMouseLeave={() => onHover()}
-    className="tracking-[0.25px] font-medium relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
+    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
     style={{ paddingBottom: '2px' }}
   >
     {children}

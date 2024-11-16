@@ -22,14 +22,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  rooms: {
-    type: [String],
-    trim: true,
-  },
-  weight: {
-    type: Number,
-    min: 0,
-  },
   price: {
     type: Number,
     required: true,
@@ -58,21 +50,6 @@ const productSchema = new mongoose.Schema({
   isRecommended: {
     type: Boolean,
     default: false,
-  },
-  reviewsCount: {
-    type: Number,
-    min: 0,
-    default: 0,
-  },
-  reviewsValue: {
-    type: Number,
-    min: 0,
-    max: 5,
-    default: 0,
-  },
-  mainImageNumber: {
-    type: Number,
-    required: true,
   },
   images: 
     {
@@ -106,7 +83,7 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-// Middleware to update the updatedAt field automatically
+ 
 productSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();

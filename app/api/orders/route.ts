@@ -33,14 +33,15 @@ export async function POST(req: Request) {
       }
 
       if (!item.color || !item.image) {
-        return NextResponse.json({ message: 'Each product must have a color and an image specified.' }, { status: 400 });
+        return NextResponse.json({ message: 'Each product must have a color, an image, and a reference specified.' }, { status: 400 });
       }
 
-      totalAmount += product.price * item.quantity;
+      const quantity = item.quantity || 1;
+      totalAmount += product.price * quantity;
 
       orderProducts.push({
         product: item.product,
-        quantity: item.quantity,
+        reference: item.reference,
         color: item.color,
         image: item.image,
       });

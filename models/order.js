@@ -26,14 +26,8 @@ const orderSchema = new mongoose.Schema({
       },
       reference:{
         type:String,
-        required:true
       },
-      quantity: {
-        type: Number,
-        required: true,
-        min: 1,
-        default: 1,
-      },
+
       color: {
         type: String,
         required: true,
@@ -70,4 +64,4 @@ orderSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = mongoose.models.Order || mongoose.model('Order', orderSchema);

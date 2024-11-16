@@ -6,9 +6,11 @@ import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 
 type Product = {
+  salePercentage: number;
+  onSale: any;
   _id: string;
   productName: string;
-  price: string;
+  price: number;
   images: string[];
   mainImageNumber: number;
 };
@@ -21,7 +23,7 @@ const NewPage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`api/products?sort=createdDate`);
+        const response = await fetch(`api/products?sort=createdDate&limit=15`);
         if (!response.ok) throw new Error('Failed to fetch');
         
         const data = await response.json();
@@ -49,13 +51,13 @@ const NewPage = () => {
                   <Image
                     src={product.images[product.mainImageNumber - 1] || '/fallback-image.jpg'}
                     alt={product.productName}
-                    width={360}
-                    height={360}
+                    width={460}
+                    height={460}
                     className="w-full h-60 rounded-sm object-cover mx-auto"
                     loading="lazy"
                   />
-                  <h3 className="mt-2 text-[13px] sm:text-[14px] font-bold">{product.productName}</h3>
-                  <p className="text-[13px] sm:text-[14px] text-gray-600">{product.price} DT</p>
+                  <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
+                  <p className="text-[13px] sm:text-[14px] text-gray-600">{product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0)} DT</p>
                 </div>
               </Link>
             ))}

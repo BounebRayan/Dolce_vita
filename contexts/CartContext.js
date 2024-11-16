@@ -17,38 +17,21 @@ const initialState = {
 const cartReducer = (state, action) => {
   switch (action.type) {
     case ADD_TO_CART:
-      // Check if item is already in the cart
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      let updatedItems;
-      
-      if (existingItem) {
-        // If item exists, update quantity
-        updatedItems = state.items.map(item => 
-          item.id === action.payload.id 
-            ? { ...item, quantity: item.quantity + action.payload.quantity } 
-            : item
-        );
-      } else {
-        // Otherwise, add new item to cart
-        updatedItems = [...state.items, action.payload];
-      }
-      
       return {
         ...state,
-        items: updatedItems,
-        totalItems: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-        totalPrice: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        items: [...state.items, action.payload], // Add new unique item
+        totalItems: state.totalItems + 1, // Increment total items
+        totalPrice: state.totalPrice + action.payload.price, // Update total price
       };
 
     case REMOVE_FROM_CART:
-      // Remove item from cart
-      const filteredItems = state.items.filter(item => item.id !== action.payload.id);
-      
+      const remainingItems = state.items.filter(item => item.id !== action.payload.id);
+
       return {
         ...state,
-        items: filteredItems,
-        totalItems: filteredItems.reduce((sum, item) => sum + item.quantity, 0),
-        totalPrice: filteredItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        items: remainingItems,
+        totalItems: remainingItems.length,
+        totalPrice: remainingItems.reduce((sum, item) => sum + item.price, 0),
       };
 
     case CLEAR_CART:
@@ -58,6 +41,7 @@ const cartReducer = (state, action) => {
       return state;
   }
 };
+
 
 // Create CartContext with default values
 const CartContext = createContext();

@@ -8,6 +8,7 @@ import { FaStar } from 'react-icons/fa';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import RelatedProducts from './RelatedProducts';
 
+
 type Props = {
   productId: string;
 };
@@ -19,21 +20,18 @@ type Product = {
   category: string;
   subCategory: string;
   images: string[];
-  mainImageNumber: number;
   onSale: boolean;
   salePercentage: number;
   price: number;
   description: string;
   availableColors: string[];
-  weight: number;
   dimensions: {
     length: number;
     width: number;
     height: number;
   };
-  reviewsCount: number;
-  reviewsValue: number;
   isRecommended: boolean;
+  unitsSold:number,
 };
 
 const colorMapping: { [key: string]: string } = {
@@ -77,37 +75,40 @@ const ProductDetails = ({ productId }: Props) => {
   }, [productId]);
 
   const handleAddToCart = () => {
-
-    const item = {
-      id: productId+selectedColor,
-      name: product?.productName,
-      price: product?.price,
-      quantity: 1,
-      color: selectedColor,
-      image: product?.images[0]
-    };
-
     if (!selectedColor) {
       alert("Please select a color before adding to cart.");
       return;
     }
-    addToCart(item);
-    console.log(item);
+    const salePrice = product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0);
+    const uniqueId = `${productId}-${Date.now()}`; // Create a unique ID for this item
+  
+    const item = {
+      id: uniqueId, // Unique identifier for the cart entry
+      productId: productId, // Reference to the product
+      name: product?.productName,
+      price: salePrice || 0,
+      quantity: 1, // Fixed quantity since it's unique
+      color: selectedColor,
+      image: product?.images[0],
+    };
+  
+    addToCart(item); // Dispatch addToCart action
+    console.log("Item added to cart:", item);
   };
-
+  
   if (!product) return <div className="text-center mt-10">Loading...</div>;
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-6 p-3 md:mx-12 lg:mx-32 mt-2">
+      <div className="flex flex-col md:flex-row gap-3 p-3 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-44 3xl:mx-52 mt-2">
         {/* Images Section */}
-        <div className="flex flex-col items-center md:flex-row gap-3 md:items-start w-full md:w-[650px]">
-          <div className="mb-4 w-full md:w-[400px] lg:w-[650px] h-auto overflow-hidden px-4">
+        <div className="flex flex-col items-center md:flex-row gap-1 md:items-start w-it lg:w-[650px]">
+          <div className="mb-2 w-full md:w-[400px] lg:w-[750px] h-auto overflow-hidden px-2">
             <Image
               src={selectedImage}
               alt={product.productName}
-              width={650}
-              height={650}
+              width={750}
+              height={750}
               className="object-cover rounded-sm"
             />
           </div>
@@ -128,8 +129,8 @@ const ProductDetails = ({ productId }: Props) => {
         </div>
 
         {/* Product Details Section */}
-        <div className="flex-1 w-full md:max-w-[400px]">
-          <h1 className="text-2xl md:text-3xl font-medium flex items-center gap-2">
+        <div className="flex-1 w-full flex-grow md:max-w-none">
+          <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2">
             {product.productName}
             {product.isRecommended && <FaStar className="text-[#dcc174]" />}
           </h1>
@@ -138,12 +139,12 @@ const ProductDetails = ({ productId }: Props) => {
           {/* Pricing Display */}
           <div className="my-1 mb-2">
             {product.onSale ? (
-              <p className="text-black font-medium text-lg">
-                {(product.price * (1 - product.salePercentage / 100)).toFixed(2)} DT
-                <span className="line-through text-gray-500 ml-2">{product.price.toFixed(2)} DT</span>
+              <p className="text-black font-base text-lg">
+                {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
+                <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
               </p>
             ) : (
-              <p className="font-medium text-lg">{product.price.toFixed(2)} DT</p>
+              <p className="font-base text-lg">{product.price.toFixed(0)} DT</p>
             )}
           </div>
 
@@ -187,12 +188,16 @@ const ProductDetails = ({ productId }: Props) => {
 
           {/* Client Reviews */}
           <div className="border-t border-gray-300 p-3 flex items-center justify-between">
-            <span>Avis clients</span>
+            <span>Popularité</span>
             <div className="flex items-center gap-1">
-              {Array.from({ length: 5 }, (_, i) => (
-                <FaStar key={i} className={`h-4 w-4 ${i < Math.round(product.reviewsValue) ? 'text-yellow-500' : 'text-gray-300'}`} />
-              ))}
-              <span className="text-sm text-gray-600">({product.reviewsCount})</span>
+            {[1, 3, 5, 10, 20].map((threshold, i) => (
+              <FaStar
+                  key={i}
+                  className={`h-4 w-4 ${product.unitsSold > threshold ? 'text-yellow-500' : 'text-gray-300'}`}
+              />
+            ))}
+
+              <span className="text-sm text-gray-600">({product.unitsSold})</span>
             </div>
           </div>
 
@@ -207,7 +212,7 @@ const ProductDetails = ({ productId }: Props) => {
       </div>
 
       {/* Related Products Section */}
-      <RelatedProducts subCategory={product.subCategory} />
+      <RelatedProducts subCategory={product.subCategory} id={productId} />
     </>
   );
 };

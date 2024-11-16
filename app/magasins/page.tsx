@@ -60,7 +60,7 @@ export default function MagasinsPage() {
         </GoogleMap>
       </div>
       <div>
-        <div className='text-2xl font-semibold mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
+        <div className='text-2xl font-light mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
         {locations.map((location) => (
           <div key={location.id} className="border-t border-gray-300 p-3">
             <div
@@ -75,7 +75,7 @@ export default function MagasinsPage() {
                 <p className="text-sm">{location.address}</p>
                 <p className="text-sm">Téléphone: {location.phone}</p>
                 <p className="text-sm">Email: {location.email}</p>
-                <h4 className="font-semibold">Horaires</h4>
+                <h4 className="font-md">Horaires</h4>
                 <p className="text-sm">Lundi au Samedi: {location.horaires.lundiSamedi}</p>
                 <p className="text-sm">Dimanche: {location.horaires.dimanche}</p>
               </div>

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
 
-
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   await connectToDB();
   try {
