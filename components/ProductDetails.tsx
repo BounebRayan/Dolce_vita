@@ -32,6 +32,7 @@ type Product = {
   };
   isRecommended: boolean;
   unitsSold:number,
+  reference:string,
 };
 
 const colorMapping: { [key: string]: string } = {
@@ -85,11 +86,12 @@ const ProductDetails = ({ productId }: Props) => {
     const item = {
       id: uniqueId, // Unique identifier for the cart entry
       productId: productId, // Reference to the product
-      name: product?.productName,
+      productName: product?.productName,
       price: salePrice || 0,
       quantity: 1, // Fixed quantity since it's unique
       color: selectedColor,
       image: product?.images[0],
+      reference: product?.reference,
     };
   
     addToCart(item); // Dispatch addToCart action

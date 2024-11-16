@@ -34,10 +34,15 @@ const CartPage = () => {
       name,
       phoneNumber: phone,
       address,
-      products: items.map((item: { productId: any; color: any; image: any; }) => ({
+      products: items.map((item: {
+        reference: any;
+        productName: any; productId: any; color: any; image: any; 
+}) => ({
         product: item.productId, 
         color: item.color,
         image: item.image,
+        reference : item.reference,
+        productName : item.productName,
       })),
     };
   

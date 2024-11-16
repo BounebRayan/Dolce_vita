@@ -37,10 +37,11 @@ export async function POST(req: Request) {
       }
 
       const quantity = item.quantity || 1;
-      totalAmount += product.price * quantity;
+      totalAmount += product.price.toFixed(0) * quantity;
 
       orderProducts.push({
         product: item.product,
+        productName: item.productName,
         reference: item.reference,
         color: item.color,
         image: item.image,
