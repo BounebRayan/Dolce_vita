@@ -2,11 +2,7 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
 
-export const config = {
-  api: {
-    bodyParser: false, // Disable the default body parser to handle form data manually
-  },
-};
+export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
