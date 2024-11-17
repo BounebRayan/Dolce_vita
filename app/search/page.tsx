@@ -143,7 +143,7 @@ const SearchPage = () => {
                 <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105">
                   <div>
                     <Image
-                      src={product.images[product.mainImageNumber - 1] || '/fallback-image.jpg'}
+                      src={product.images[0]}
                       alt={product.productName}
                       width={360}
                       height={360}
@@ -156,7 +156,7 @@ const SearchPage = () => {
                 </Link>
               ))
             ) : (
-              <div className="flex justify-center items-center h-64">
+              <div className="flex justify-center items-center h-64 w-full">
                 <p className="text-center text-lg">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme 😔</p>
               </div>
             )}

@@ -49,7 +49,7 @@ const NewPage = () => {
               <Link key={product._id} href={`product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105">
                 <div>
                   <Image
-                    src={product.images[product.mainImageNumber - 1] || '/fallback-image.jpg'}
+                    src={product.images[0]}
                     alt={product.productName}
                     width={460}
                     height={460}
