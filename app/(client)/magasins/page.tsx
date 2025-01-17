@@ -23,8 +23,8 @@ const locations = [
     name: 'Dolce Vita Sokra',
     lat: 36.8496,
     lng: 10.1942,
-    address: 'Sokra, Ariana',
-    phone: '24 331 900',
+    address: 'Avenue L’UMA La Soukra, Tunis',
+    phone: '24 331 905',
     email: 'store.sokra@dolcevita.tn',
     horaires: {
       lundiSamedi: '09:00 - 20:00',
@@ -40,7 +40,7 @@ export default function MagasinsPage() {
 
   const [selectedLocation, setSelectedLocation] = useState(locations[0]);
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) return <div className='text-center'>Loading...</div>;
 
   return (
     <div className='my-4 grid grid-cols-1 md:grid-cols-2 mx-4 md:mx-12 gap-4'>

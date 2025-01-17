@@ -23,7 +23,7 @@ export default function Banner() {
           </p>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-4">
-            Trouvez vos meubles de rêve
+          Créez votre refuge de tranquillité
           </h1>
 
           <Link href={'/categories/salons'} className="px-4 py-2 sm:px-6 sm:py-3 bg-[#dcc174] text-black border border-black font-medium rounded-sm hover:bg-[#b89f53] transition-colors duration-300 flex items-center gap-1">

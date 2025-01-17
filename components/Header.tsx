@@ -17,7 +17,7 @@ export default function Header() {
             <div className="bg-[#dcc174] text-black font-normal text-xs w-full p-[10px] gap-1 justify-center flex flex-col items-center sm:flex-row">
                 <div>Besoin d'assistance ? Appelez-nous au : <span className="font-medium">24 331 900</span></div>ou rendez-nous visite dans l'un de 
                 <Link href="/magasins" className="flex items-center gap-1 underline font-medium">
-                    <MapPinIcon className="h-3 w-3 text-black" />Nos Magasins
+                    <MapPinIcon className="h-3 w-3 text-black" />Nos Showrooms
                 </Link>
             </div>
 

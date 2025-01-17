@@ -39,6 +39,10 @@ export async function POST(req: Request) {
       const quantity = item.quantity || 1;
       totalAmount += (product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0) )* quantity;
 
+       // Increment the product's unitsSold
+       product.unitsSold = (product.unitsSold || 0) + quantity;
+       await product.save();
+       
       orderProducts.push({
         product: item.product,
         productName: item.productName,
