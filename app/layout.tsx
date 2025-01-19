@@ -17,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{
     return (
       <html lang="en">
         <body className={`${myFont.className} min-h-screen flex flex-col antialiased`}>{children}</body>
+        
       </html>
     );
   }

@@ -41,8 +41,8 @@ const CategoriesSection: React.FC = () => {
   const isRightButtonDisabled = containerRef.current && containerRef.current.scrollWidth <= containerRef.current.clientWidth + scrollPosition;
   
   return (
-    <section className="px-1 pt-2 mt-6 mx-4 sm:mx-6 md:mx-10">
-      <div className="flex justify-between items-center mb-4 px-2">
+    <section className="px-1 pt-2 mt-4 mx-4 sm:mx-6 md:mx-10">
+      <div className="flex justify-between items-center mb-3 px-4">
         <h2 className="text-2xl">Découvrez nos catégories</h2>
       </div>
   
@@ -51,24 +51,24 @@ const CategoriesSection: React.FC = () => {
         {/* Scroll Left Button */}
         <button
           className={`hidden z-40 lg:block absolute -left-5 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[50%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
-          onClick={() => { if (!isLeftButtonDisabled) handleScroll(-Item_width); }}
+          onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
           disabled={isLeftButtonDisabled}
         >
           <ChevronLeftIcon className="h-6 w-6 text-black" />
         </button>
   
         {/* Categories Grid */}
-        <div ref={containerRef} className="flex space-x-3 overflow-x-auto lg:overflow-hidden scroll-smooth scrollbar-hide pb-1">
+        <div ref={containerRef} className="flex space-x-3 overflow-x-auto lg:overflow-hidden scroll-smooth scrollbar-hide p-2">
           {categories.map((category) => (
             <Link key={category.id} href={`/categories/${category.link.toLowerCase()}`}>
-              <div className="flex-none w-[180px] sm:w-[200px] cursor-pointer transform transition-transform hover:scale-105">
+              <div className="flex-none w-[180px] sm:w-[200px] cursor-pointer transform transition-transform hover:scale-105 border border-black h-full pb-1 flex flex-col justify-center items-center">
                 <img
                   src={category.image}
                   alt={category.name}
                   className="w-full h-40 sm:h-48 md:h-56 lg:h-56 object-cover rounded-sm"
                   loading="lazy"
                 />
-                <h3 className="mt-1 text-sm uppercase text-center">{category.name}</h3>
+                <h3 className="mt-1 text-sm uppercase text-center flex-grow flex items-center justify-center">{category.name}</h3>
               </div>
             </Link>
           ))}
@@ -77,7 +77,7 @@ const CategoriesSection: React.FC = () => {
         {/* Scroll Right Button */}
         <button
           className={`hidden z-40  shadow-lg shadow-slate-500 lg:block disabled:bg-white absolute -right-7 cursor-pointer disabled:cursor-default border border-black top-[50%] transform -translate-y-1/2 p-2 hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
-          onClick={() => { if (!isRightButtonDisabled) handleScroll(Item_width); }}
+          onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
           disabled={!!isRightButtonDisabled}
         >
           <ChevronRightIcon className="h-6 w-6 text-black" />

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function Banner() {
   return (
-    <div className="flex items-center justify-center mx-4 sm:mx-6 md:mx-10 mt-1">
+    <div className="flex items-center justify-center mx-4 sm:mx-6 md:mx-14 mt-2 border border-black rounded-sm">
       <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] rounded-sm overflow-hidden">
         <Image
           src="/images/banner.jpg"

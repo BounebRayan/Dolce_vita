@@ -41,23 +41,24 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
 
   // Filter out the current product from the list
   const filteredProducts = similarProducts.filter((product) => product._id !== id);
+  const gridCols = subCategory === 'Meubles' ? 'xl:grid-cols-2' : 'xl:grid-cols-5';
 
   return (
     <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-44 border-t-[1.5px] border-gray-300 px-3 py-4">
       <h2 className="text-lg md:text-2xl font-light mb-4">Les clients ont également consulté</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ${gridCols} gap-4`}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
-              <div className="cursor-pointer transform transition duration-300 hover:scale-105">
+              <div className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
                 <img
                   src={product.images[0]}
                   alt={product.productName}
                   className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[420px] object-cover rounded-sm"
                   loading="lazy"
                 />
-                <h3 className="mt-1 text-sm sm:text-md font-medium">{product.productName}</h3>
-                <p className="text-sm sm:text-md text-gray-600">{product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0)} DT</p>
+                <h3 className="mt-1 text-sm pl-2 sm:text-md font-medium">{product.productName}</h3>
+                <p className="text-sm sm:text-md pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
               </div>
             </Link>
           ))

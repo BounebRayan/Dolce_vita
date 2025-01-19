@@ -59,19 +59,19 @@ export default function MagasinsPage() {
           ))}
         </GoogleMap>
       </div>
-      <div>
-        <div className='text-2xl font-light mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins</div>
+      <div className='p-1'>
+        <div className='text-2xl font-light mb-4 pl-2'>Vous pouvez nous trouver dans nos magasins à</div>
         {locations.map((location) => (
-          <div key={location.id} className="border-t border-gray-300 p-3">
+          <div key={location.id} className="border-t border-gray-300">
             <div
-              className="flex items-center cursor-pointer justify-between py-2 hover:bg-gray-100 rounded"
+              className={`flex items-center cursor-pointer justify-between py-5 px-4 ${selectedLocation.id === location.id ? 'bg-[#dcc174]' : ''} rounded-sm`}
               onClick={() => setSelectedLocation(location)}
             >
               <span className="mr-2">{location.name}</span>
               {selectedLocation.id === location.id ? <AiOutlineUp /> : <AiOutlineDown />}
             </div>
             {selectedLocation.id === location.id && (
-              <div className="mt-2">
+              <div className="mt-1 ml-2">
                 <p className="text-sm">{location.address}</p>
                 <p className="text-sm">Téléphone: {location.phone}</p>
                 <p className="text-sm">Email: {location.email}</p>

@@ -5,7 +5,7 @@ import connectToDB from '@/config/database';
 export async function GET(req: Request) {
   await connectToDB();
   const { searchParams } = new URL(req.url);
-  const sortField = searchParams.get('sort') || 'createdDate';
+  const sortField = searchParams.get('sort') || 'createdAt';
   const limit = parseInt(searchParams.get('limit') || '12', 12);
 
   const sortCriteria: { [key: string]: 1 | -1 } = sortField === 'unitsSold' ? { unitsSold: -1 } : { [sortField]: -1 };

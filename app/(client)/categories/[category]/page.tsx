@@ -149,15 +149,15 @@ const SubcategoryPage = () => {
           ) : products.length > 0 ? (
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
-                <div className="cursor-pointer transform transition duration-300 hover:scale-105">
+                <div className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
                   <img
                     src={product.images[0]}
                     alt={product.productName}
                     className="w-full h-[200px] sm:h-[250px] lg:h-[360px] object-cover rounded-sm"
                     loading="lazy"
                   />
-                  <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                  <p className="text-sm text-gray-600">{product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0)} DT</p>
+                  <h3 className="mt-1 pl-2 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
+                  <p className="text-sm pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
                 </div>
               </Link>
             ))

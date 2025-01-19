@@ -3,10 +3,16 @@ import Order from '@/models/order';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
 
-export async function GET() {
+export async function GET(req: Request) {
   await connectToDB();
+  const { searchParams } = new URL(req.url);
+  let status = searchParams.get('status') as string;
+  if (!status) {
+    status = 'Pending';
+  }
+  console.log(status);
   try {
-    const orders = await Order.find().populate('products.product');
+    const orders = await Order.find({status: status}).populate('products.product');
     return NextResponse.json(orders, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: 'Failed to fetch orders', error }, { status: 500 });

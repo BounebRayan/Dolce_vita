@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { CartProvider } from '../../contexts/CartContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: "Dolce Vita - Luxury Home Collection",
@@ -27,6 +29,18 @@ export default function ClientLayout({
         <div className="flex-grow">
           
             {children}
+            <ToastContainer 
+          position="top-right" 
+          autoClose={3000} 
+          hideProgressBar={false} 
+          newestOnTop={false} 
+          closeOnClick 
+          rtl={false} 
+          pauseOnFocusLoss 
+          draggable 
+          pauseOnHover 
+          theme="light" 
+        />
           
         </div>
         <Footer />

@@ -41,6 +41,10 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
+  notes: {
+    type: String,
+    required: false
+  },
   totalAmount: {
     type: Number,
     required: true,
@@ -48,7 +52,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled'],
+    enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
     default: 'Pending',
   },
   createdAt: {
@@ -58,6 +62,12 @@ const orderSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  shippedAt: {
+    type: Date
+  },
+  deliveredAt: {
+    type: Date
   },
 });
 
