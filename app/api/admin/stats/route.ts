@@ -1,4 +1,3 @@
-// app/api/order/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import Order from '@/models/order';
 import Product from '@/models/product';
@@ -29,21 +28,6 @@ const getDateRange = (period: string) => {
 
   return startDate;
 };
-
-const categories = [
-  'Accessoires déco',
-  'Vases',
-  'Cadres photo',
-  'Luminaires',
-  'Miroirs',
-  'Déco murale',
-  "Bougies & parfums d'intérieur",
-  'linges de maison',
-  'Salons',
-  'Chambres',
-  'Salles À Manger',
-];
-
 // Fetch order and product stats
 export async function GET(req: NextRequest) {
   try {
@@ -74,71 +58,49 @@ export async function GET(req: NextRequest) {
         },
       ]);
 
-      stats[period] = orderStats[0] || {
-        totalRevenue: 0,
-        totalOrders: 0,
-        totalProductsSold: 0,
+      // Fetch confirmed and pending orders count
+      const totalConfirmedOrders = await Order.countDocuments({
+        ...orderMatch,
+        status: 'Confirmed',
+      });
+
+      const totalPendingOrders = await Order.countDocuments({
+        ...orderMatch,
+        status: 'Pending',
+      });
+
+      const totalCancelledOrders = await Order.countDocuments({
+        ...orderMatch,
+        status: 'Cancelled',
+      });
+
+      const totalShippedOrders = await Order.countDocuments({
+        ...orderMatch,
+        status: 'Shipped',
+      });
+
+      const totalDeliveredOrders = await Order.countDocuments({
+        ...orderMatch,
+        status: 'Delivered',
+      });
+
+      stats[period] = {
+        ...(orderStats[0] || {
+          totalRevenue: 0,
+          totalOrders: 0,
+          totalProductsSold: 0,
+        }),
+        totalConfirmedOrders,
+        totalPendingOrders,
+        totalCancelledOrders,
+        totalShippedOrders,
+        totalDeliveredOrders,
       };
-    }
-
-    // Fetch product stats
-    const productStats: { [key: string]: any } = {};
-
-    for (const period of periods) {
-      const startDate = getDateRange(period);
-
-      const productMatch: any = {
-        createdAt: { $gte: startDate },
-        'products.product.category': { $in: categories },
-      };
-
-      const categoryStats = await Product.aggregate([
-        {
-          $lookup: {
-            from: 'orders',
-            localField: '_id',
-            foreignField: 'products.product',
-            as: 'ordersData',
-          },
-        },
-        { $unwind: '$ordersData' },
-        { $match: { 'ordersData.createdAt': { $gte: startDate } } },
-        {
-          $group: {
-            _id: '$category',
-            totalSold: { $sum: 1 },
-            totalRevenue: { $sum: '$ordersData.totalAmount' },
-            mostSoldItem: {
-              $push: {
-                name: '$name',
-                ref: '$ref',
-                sold: '$ordersData.quantity',
-              },
-            },
-          },
-        },
-        { $sort: { totalSold: -1 } },
-      ]);
-
-      productStats[period] = categoryStats.reduce((acc, category) => {
-        const mostSold = category.mostSoldItem.sort((a: { sold: number; }, b: { sold: number; }) => b.sold - a.sold)[0];
-        acc[category._id] = {
-          totalSold: category.totalSold,
-          totalRevenue: category.totalRevenue,
-          mostSoldItem: {
-            name: mostSold.name,
-            ref: mostSold.ref,
-          },
-        };
-        return acc;
-      }, {});
     }
 
     return NextResponse.json({
-      orderStats: stats,
-      productStats: productStats,
+      orderStats: stats
     });
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
     return NextResponse.json({ error: errorMessage }, { status: 500 });

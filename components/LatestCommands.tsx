@@ -23,7 +23,7 @@ const LastOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('/api/orders');
+        const response = await axios.get('/api/orders?limit=3');
         const sortedOrders = response.data.sort(
           (a: Order, b: Order) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -48,11 +48,11 @@ const LastOrders = () => {
       {orders.length === 0 ? (
         <div className="text-center">No orders found.</div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {orders.map((order) => (
             <div
               key={order._id}
-              className="flex items-center border border-gray-300 rounded-lg p-4 shadow-sm"
+              className="flex items-center border bg-white border-black rounded-md p-4 shadow-sm"
             >
               <img
                 src={order.products[0]?.image || '/placeholder.png'}
@@ -60,7 +60,7 @@ const LastOrders = () => {
                 className="w-12 h-12 object-cover rounded-full mr-4"
               />
               <div className="flex-1">
-                <h2 className="text-lg font-medium">{order.name}</h2>
+                <h2 className="text-lg font-semibold">{order.name}</h2>
                 <p className="text-gray-600">Total: {order.totalAmount.toFixed(2)} DT</p>
               </div>
               <p className="text-sm text-gray-500">
@@ -70,10 +70,10 @@ const LastOrders = () => {
           ))}
         </div>
       )}
-      <div className="mt-6 text-center">
+      <div className="mt-4 text-center">
         <Link
           href="/admin/orders"
-          className="text-blue-600 hover:underline text-lg"
+          className="underline text-base"
         >
           See All Orders
         </Link>

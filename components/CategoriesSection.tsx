@@ -41,7 +41,7 @@ const CategoriesSection: React.FC = () => {
   const isRightButtonDisabled = containerRef.current && containerRef.current.scrollWidth <= containerRef.current.clientWidth + scrollPosition;
   
   return (
-    <section className="px-1 pt-2 mt-4 mx-4 sm:mx-6 md:mx-10">
+    <section className="md:px-1 pt-2 mt-4 mx-0 sm:mx-6 md:mx-10">
       <div className="flex justify-between items-center mb-3 px-4">
         <h2 className="text-2xl">Découvrez nos catégories</h2>
       </div>
@@ -50,7 +50,7 @@ const CategoriesSection: React.FC = () => {
       <div className="relative mx-2 sm:mr-6 md:mr-6">
         {/* Scroll Left Button */}
         <button
-          className={`hidden z-40 lg:block absolute -left-5 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[50%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
+          className={`hidden z-40 lg:block absolute -left-3 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[50%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-[#dcc174] bg-white rounded-sm disabled:opacity-50`}
           onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
           disabled={isLeftButtonDisabled}
         >

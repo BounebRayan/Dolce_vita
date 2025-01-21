@@ -31,6 +31,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('Pending');
+  const [notes,setNotes] = useState<string>('');
 
   const fetchOrders = async (status:string) => {
     try {
@@ -50,7 +51,8 @@ export default function OrdersPage() {
   const confirmOrder = async (orderId: string) => {
     try {
       const response = await axios.put(`/api/orders/${orderId}`, {
-        status: 'Confirmed', // Send the status in the request body
+        status: 'Confirmed',
+        notes: notes // Send the status in the request body
       });
       alert('Order confirmed!');
       fetchOrders(statusFilter); // Refresh orders after confirmation
@@ -73,6 +75,7 @@ export default function OrdersPage() {
     try {
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Cancelled',
+        notes: notes
       });
       alert('Order cancelled!');
       fetchOrders(statusFilter); // Refresh orders after cancellation
@@ -116,6 +119,7 @@ export default function OrdersPage() {
 
   return (
     <div className="p-3 px-12">
+            <h1 className="text-2xl font-semibold mb-2">Commandes</h1>
       <div className="mb-4">
         <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700 mb-1">
         Filtrer par statut :
@@ -127,13 +131,13 @@ export default function OrdersPage() {
           className="border border-gray-300 rounded-sm p-2 w-full"
         >
           <option value="Pending">En Attente</option>
-          <option value="Confirmed">Confirmée</option>
+          <option value="Confirmed">Confirmées</option>
           <option value="Shipped">Expédiées</option>
-          <option value="Delivered">Livrée</option>
-          <option value="Cancelled">Annulée</option>
+          <option value="Delivered">Livrées</option>
+          <option value="Cancelled">Annulées</option>
         </select>
       </div>
-      <h1 className="text-2xl font-semibold mb-6">Commandes</h1>
+
       {orders.length === 0 ? (
         <div className="text-center">Oups! Aucune commande trouvée.</div>
       ) : (
@@ -194,7 +198,7 @@ export default function OrdersPage() {
                       <div>
                         <Link
                           href={`/admin/product/${product.product._id}`}
-                          className="font-medium text-blue-600 hover:underline"
+                          className="font-medium underline"
                         >
                           {product.product.productName}
                         </Link>
@@ -210,7 +214,7 @@ export default function OrdersPage() {
                 </ul>
               </div>
               <h3 className="text-md font-medium mt-1">Notes:</h3>
-              <textarea disabled={order.status === 'Delivered' || order.status === 'Cancelled'} name="notes" id="notes" className='w-full border border-black outline-none px-1'></textarea>
+              <textarea disabled={order.status === 'Delivered' || order.status === 'Cancelled'} name="notes" id="notes" value={notes} onChange={(e)=> setNotes(e.target.value)} className='w-full border border-black outline-none px-1'></textarea>
               <div className='flex justify-center align-middle gap-4'>
               {order.status === 'Pending' && (
                 <button
@@ -234,7 +238,7 @@ export default function OrdersPage() {
                   Mark as delivered
               </button>)}
               {order.status !== "Cancelled" && order.status !== "Delivered"  && <button
-                  className="mt-4 w-full bg-red-600 text-white px-4 py-2 rounded-sm border border-black hover:bg-red-700"
+                  className="mt-4 w-full bg-red-600 text-black px-4 py-2 rounded-sm border border-black hover:bg-red-700"
                   onClick={() => cancellOrder(order._id)}
                 >
                   Cancell Order

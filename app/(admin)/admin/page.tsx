@@ -3,11 +3,17 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { StatsCard } from '@/components/StatsCard';
 import LastOrders from '@/components/LatestCommands';
+import ProductsStatsCard from '@/components/ProductsStatsCard';
 
 interface Stats {
   totalRevenue?: number;
   totalOrders?: number;
   totalProductsSold?: number;
+  totalPendingOrders?: number;
+  totalConfirmedOrders?: number;
+  totalCancelledOrders?: number;
+  totalShippedOrders?: number;
+  totalDeliveredOrders?: number;
 }
 
 interface OrderStats {
@@ -23,7 +29,7 @@ interface StatsData {
 
 const StatsPage = () => {
   const [data, setData] = useState<StatsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingStats, setLoadingStats] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,31 +40,36 @@ const StatsPage = () => {
       } catch (err) {
         setError('An error occurred');
       } finally {
-        setLoading(false);
+        setLoadingStats(false);
       }
     };
 
     fetchStats();
   }, []);
 
-  if (loading) return <div className="mx-3 sm:mx-12 py-4 pt-4 text-center">Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  if (!data) return <div>No data available</div>;
-
-  const { orderStats } = data;
-
   return (
-    <div className="min-h-screen bg-gray-100 mx-3 sm:mx-12 py-4 pt-4">
-      <h1 className="text-2xl font-bold mb-4">Statistiques de vente</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard title="Aujourd’hui" stats={orderStats.today} />
-        <StatsCard title="Cette semaine" stats={orderStats.week} />
-        <StatsCard title="Ce mois" stats={orderStats.month} />
-        <StatsCard title="Cette année" stats={orderStats.year} />
-      </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4">Dernières commandes</h1>
+    <div className="min-h-screen bg-gray-100 mx-3 sm:mx-12 py-4 pt-3">
+      <h1 className="text-2xl font-bold mb-4">Dernières commandes en attente</h1>
       <LastOrders />
+      <h1 className="text-2xl font-bold mb-4">Statistiques de vente</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {loadingStats ? (
+          <div className="col-span-full text-center">Loading...</div>
+        ) : data ? (
+          <>
+            <StatsCard title="Aujourd’hui" stats={data.orderStats.today} />
+            <StatsCard title="Cette semaine" stats={data.orderStats.week} />
+            <StatsCard title="Ce mois" stats={data.orderStats.month} />
+            <StatsCard title="Cette année" stats={data.orderStats.year} />
+          </>
+        ) : (
+          <div className="col-span-full text-center">No data available</div>
+        )}
+      </div>
+      <h1 className="text-2xl font-bold mb-4 mt-5">Statistiques sur les produits</h1>
+      <ProductsStatsCard />
     </div>
   );
 };

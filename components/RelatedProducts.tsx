@@ -3,6 +3,7 @@ import axios from 'axios';
 import Link from 'next/link';
 
 interface Product {
+  category: string;
   salePercentage: number;
   onSale: boolean;
   _id: string;
@@ -41,12 +42,13 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
 
   // Filter out the current product from the list
   const filteredProducts = similarProducts.filter((product) => product._id !== id);
-  const gridCols = subCategory === 'Meubles' ? 'xl:grid-cols-2' : 'xl:grid-cols-5';
+  let gridCols = '';
+  if(similarProducts) {gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-2';}
 
   return (
     <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-44 border-t-[1.5px] border-gray-300 px-3 py-4">
       <h2 className="text-lg md:text-2xl font-light mb-4">Les clients ont également consulté</h2>
-      <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ${gridCols} gap-4`}>
+      <div className={`grid ${gridCols} sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  gap-4`}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>

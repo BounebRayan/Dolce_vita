@@ -264,7 +264,7 @@ const ProductDetails = ({ productId }: Props) => {
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            className="px-4 py-2 bg-[#dcc174] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 border border-black"
+            className="px-4 py-2 bg-[#dcc174] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 border border-black mb-4"
           >
             Ajouter au panier
           </button>

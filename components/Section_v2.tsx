@@ -59,9 +59,9 @@ export default function Section(prop: SectionProp) {
   
 
   return (
-    <section className="px-1">
+    <section className="md:px-1">
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-1 mx-4 sm:mx-6 md:mx-14 sm:px-2 pt-3">
+      <div className="flex flex-col items-start mb-1 mx-4 sm:mx-6 md:mx-14 pt-3">
         <h2 className="text-xl md:text-2xl font-md">{prop.name}</h2>
         <Link href="/new" className="text-black text-sm underline mt-0.5">
           Tout Voir
@@ -74,7 +74,7 @@ export default function Section(prop: SectionProp) {
           <p className="text-lg">Loading...</p>
         </div>
       ) : (
-        <div className="relative mx-2 sm:mx-6 md:mx-10 px-2">
+        <div className="relative sm:mx-6 md:mx-11 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button
             className="hidden lg:block absolute -left-2 border border-black top-[50%]  disabled:hover:bg-white transform -translate-y-1/2 p-2 hover:bg-[#dcc174]  disabled:opacity-20 rounded-sm bg-white z-40 shadow-lg shadow-slate-500"

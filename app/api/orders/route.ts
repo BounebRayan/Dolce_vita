@@ -7,12 +7,17 @@ export async function GET(req: Request) {
   await connectToDB();
   const { searchParams } = new URL(req.url);
   let status = searchParams.get('status') as string;
+  let limit = parseInt(searchParams.get('limit') || '') as number;
+  const sortCriteria : { [key: string]: 1 | -1 } =  { "createdAt": -1 } ;
   if (!status) {
     status = 'Pending';
   }
   console.log(status);
   try {
-    const orders = await Order.find({status: status}).populate('products.product');
+    let orders;
+    if (limit) {
+     orders = await Order.find({status: status}).populate('products.product').sort(sortCriteria).limit(limit);}
+    else { orders = await Order.find({status: status}).populate('products.product').sort(sortCriteria);}
     return NextResponse.json(orders, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: 'Failed to fetch orders', error }, { status: 500 });

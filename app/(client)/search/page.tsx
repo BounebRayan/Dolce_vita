@@ -63,7 +63,7 @@ const SearchPage = () => {
   }, [query, priceRange, onSale, sortAttribute, sortOrder]);
 
   return (
-    <section className="flex flex-col lg:flex-row px-6 mx-4 sm:mx-12 py-4 pt-3">
+    <section className="flex flex-col lg:flex-row mx-4 sm:mx-12 py-4 pt-3">
       <main className="w-full pl-0 lg:pl-4">
         <h2 className="text-2xl font-light mb-2">Résultats de recherche pour: "{searchTerm}"</h2>
 
