@@ -3,6 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRightIcon, ChevronRightIcon, ChevronLeftIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { PiShootingStarDuotone } from 'react-icons/pi';
+import { IoHeartCircle } from 'react-icons/io5';
+import { IoMdHeart } from 'react-icons/io';
 
 type Product = {
   category: any;
@@ -12,6 +15,7 @@ type Product = {
   price: number;
   images: string[];
   onSale :boolean;
+  isRecommended: boolean;
   salePercentage : number;
 };
 
@@ -93,7 +97,7 @@ export default function Section(prop: SectionProp) {
             {products
               .map((product) => (
                 <Link key={product._id} href={`/product/${product._id}`}>
-                  <div className={`flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-105 pb-3 border border-black rounded-sm`}>
+                  <div className={` relative flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-105 pb-3 border border-black rounded-sm`}>
                     <img
                       src={product.images[0] || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
                       alt={product.productName}
@@ -102,6 +106,7 @@ export default function Section(prop: SectionProp) {
                     />
                     <h3 className="mt-1 pl-2 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
                     <p className="text-[13px] pl-2 sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
+                    {product.isRecommended && <IoMdHeart  className="text-white h-7 w-7 absolute top-3 right-3 bg-[#C8C8C8]/80 rounded-full p-1 border border-black"/>}
                   </div>
                 </Link>
               ))}

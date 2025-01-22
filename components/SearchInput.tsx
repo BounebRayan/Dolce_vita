@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -27,11 +27,12 @@ export default function SearchInput() {
     inputRef.current?.focus();
   };
 
-  const handleIconClick = () => {
+  const handleIconClick = (e: FormEvent<Element>) => {
     if (searchValue === '') {
       inputRef.current?.focus();
       inputRef.current!.placeholder = '';
     }
+    handleSearchSubmit(e);
   };
 
   const handleInputBlur = () => {
@@ -63,10 +64,13 @@ export default function SearchInput() {
         <button type="button" onClick={handleIconClick} className="ml-2">
           <MagnifyingGlassIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
         </button>
-      ) : (
+      ) : (<div className='flex items-center'>
+        <button type="button" onClick={handleIconClick} className="ml-2">
+        <MagnifyingGlassIcon className="h-4 w-4 text-black transform transition duration-300 hover:scale-105" />
+      </button>
         <button type="button" onClick={handleClearInput} className="ml-2">
           <XMarkIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
-        </button>
+        </button></div>
       )}
     </form>
   );

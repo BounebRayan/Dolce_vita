@@ -137,9 +137,9 @@ const SearchPage = () => {
         {loading ? (
           <p className="text-center text-lg">Loading products...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.length > 0 ? (
-              products.map((product) => (
+          products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {products.map((product) => (
                 <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
                   <div>
                     <Image
@@ -154,13 +154,13 @@ const SearchPage = () => {
                     <p className="text-[13px] pl-2 sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
                   </div>
                 </Link>
-              ))
-            ) : (
-              <div className="flex justify-center items-center h-64 w-full">
-                <p className="text-center text-lg">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme 😔</p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-64 w-full">
+              <p className="text-center text-lg">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme 😔</p>
+            </div>
+          )
         )}
       </main>
     </section>

@@ -7,10 +7,16 @@ import axios from 'axios';
 import { FaStar } from 'react-icons/fa';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { MdOutlineLocalShipping } from "react-icons/md";
+import { BiSolidStar } from "react-icons/bi";
 import RelatedProducts from './RelatedProducts';
 import { BiColor } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BsFillStarFill } from 'react-icons/bs';
+import { PiShootingStarDuotone } from 'react-icons/pi';
+import { TbInfoHexagon } from 'react-icons/tb';
+import { LuBadgeInfo } from 'react-icons/lu';
+import { FaCircleInfo } from 'react-icons/fa6';
 
 
 type Props = {
@@ -179,10 +185,10 @@ const ProductDetails = ({ productId }: Props) => {
         </div>
 
         {/* Product Details Section */}
-        <div className="flex-1 w-full flex-grow md:max-w-none bg-gray-100 px-5 pt-5 rounded-sm">
-          <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2">
+        <div className="flex-1 w-full flex-grow md:max-w-none bg-gray-100 px-5 pt-5 rounded-sm relative">
+          <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2 "> 
             {product.productName}
-            {product.isRecommended && <FaStar className="text-[#dcc174] h-5" />}
+            {product.isRecommended && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>}
           </h1>
           <p className="text-gray-600">{product.category} - {product.subCategory}</p>
 
@@ -227,18 +233,14 @@ const ProductDetails = ({ productId }: Props) => {
             <span>Popularité</span>
             <div className="flex items-center gap-1">
             {[1, 3, 5, 10, 20].map((threshold, i) => (
-              <FaStar
+              <BsFillStarFill
                   key={i}
                   className={`h-4 w-4 ${product.unitsSold > threshold ? 'text-yellow-500' : 'text-gray-300'}`}
               />
             ))}
 
-              <span className="text-sm text-gray-600">({product.unitsSold})</span>
+              {/*<span className="text-sm text-gray-600">({product.unitsSold})</span>*/}
             </div>
-          </div>
-          {/* Shipping Policy */}
-          <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
-          <p>Livraison Gratuite à partir de 300DT d'Achat!</p>
           </div>
           {/* Color Selection */}
           <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
@@ -260,6 +262,7 @@ const ProductDetails = ({ productId }: Props) => {
               })}
             </div>
           </div>
+          
 
           {/* Add to Cart Button */}
           <button
@@ -268,6 +271,11 @@ const ProductDetails = ({ productId }: Props) => {
           >
             Ajouter au panier
           </button>
+          {/* Shipping Policy */}
+          <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
+          <p className='flex items-center gap-2'><FaCircleInfo   className='h-6 text-gray-800'/>
+          Livraison Gratuite à partir de 300DT d'Achat!</p>
+          </div>
         </div>
       </div>
 
