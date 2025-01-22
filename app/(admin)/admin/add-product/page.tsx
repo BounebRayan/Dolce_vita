@@ -107,7 +107,7 @@ export default function AddProductPage() {
   const handleDeleteColor = (color: string) => {
     setAvailableColors(availableColors.filter(c => c !== color));
   };
-
+  const API_URL = "/api/upload-image/";
   const handleDeleteImage = async (imageName:string) => {
     try {
       const response = await fetch(`${API_URL}?fileName=${encodeURIComponent(imageName)}`, {
@@ -124,7 +124,6 @@ export default function AddProductPage() {
       console.error('Error deleting image:', error);
     }
   };
-  const API_URL = process.env.API_URL || "/api/upload-image/";
   // Handle image upload
   const handleImageUpload = async () => {
     if (!imageUpload) return;

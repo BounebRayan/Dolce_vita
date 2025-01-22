@@ -23,7 +23,7 @@ const NewPage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`api/products?sort=createdDate&limit=16`);
+        const response = await fetch(`api/products?sort=createdAt&limit=16`);
         if (!response.ok) throw new Error('Failed to fetch');
         
         const data = await response.json();
