@@ -31,7 +31,29 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('Pending');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [notes,setNotes] = useState<string>('');
+
+  const handleSearch = async (event: ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === '') {
+      // Reset orders if search query is empty
+      setOrders([]);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/orders/search?q=${encodeURIComponent(query)}`);
+      setOrders(response.data);
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch orders');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchOrders = async (status:string) => {
     try {
@@ -118,8 +140,24 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="p-3 px-12">
+    <div className="p-3 px-4  sm:px-12">
             <h1 className="text-2xl font-semibold mb-2">Commandes</h1>
+            {/* Search Input */}
+            <div><label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
+          Rechercher une commande :
+        </label>
+      <div className="mb-4 flex flex-col md:flex-row gap-4">
+        
+        <input
+          type="text"
+          id="search"
+          value={searchQuery}
+          placeholder="Rechercher par ID, nom ou téléphone"
+          className="border border-gray-300 rounded-sm p-2 w-full"
+        />
+        <button className='border border-black bg-blue-500 p-2'>Rechercher</button>
+      </div></div>
+
       <div className="mb-4">
         <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700 mb-1">
         Filtrer par statut :
@@ -145,7 +183,7 @@ export default function OrdersPage() {
           {orders.map((order) => (
             <div
               key={order._id}
-              className="border border-gray-300 rounded-sm p-4 shadow-sm"
+              className="border border-black bg-white rounded-sm p-4 shadow-sm"
             >
               <div className="flex justify-between items-center mb-1">
                 <h2 className="text-lg font-semibold">ID: {order._id}</h2>
@@ -184,16 +222,16 @@ export default function OrdersPage() {
               
               <div className="mt-2">
                 <h3 className="text-md font-medium mb-2">Produits ({order.products.length}):</h3>
-                <ul className="space-y-2">
+                <ul className="grid md:grid-cols-2 grid-cols-1">
                   {order.products.map((product, idx) => (
                     <li
                       key={idx}
-                      className="flex items-center space-x-4 border-b pb-2 last:border-b-0"
+                      className="flex items-center space-x-4 border-t pb-2"
                     >
                       <img
                         src={product.image}
                         alt={product.product.name}
-                        className="w-12 h-12 object-cover rounded-sm"
+                        className="w-12 h-12 object-cover rounded-md"
                       />
                       <div>
                         <Link

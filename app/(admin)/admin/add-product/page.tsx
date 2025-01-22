@@ -195,7 +195,7 @@ export default function AddProductPage() {
   };
 
   return (
-    <div className="px-8 pb-8 pt-3 mt-1 md:mx-52 mx-12 bg-white">
+    <div className=" px-4 sm:px-8 pb-8 pt-3 mt-1 md:mx-52 sm:mx-12 mx-4 bg-white">
       <h1 className="text-2xl font-semibold mb-4 ">Ajouter un nouveau produit</h1>
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -415,21 +415,21 @@ export default function AddProductPage() {
         {/* Image Upload */}
         <div>
           <label className="block font-medium">Charger des images</label>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center md:justify-between lg:flex-row flex-col gap-2">
           <input
             type="file"
             onChange={(e) => setImageUpload(e.target.files?.[0] || null)}
-            className="mt-1"
+            className=" p-1 border border-black rounded-sm w-full outline-none"
           />
           <button
             type="button"
             onClick={handleImageUpload}
-            className="mt-2 px-3 py-1 border border-black bg-blue-500 text-white rounded-sm"
+            className=" px-3 py-2 border border-black bg-blue-500 text-white rounded-sm w-full lg:w-fit text-nowrap"
           >
             Charger Cette Image
           </button>
           </div>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-1 flex flex-wrap gap-2">
             {images.map((img, index) => (
               <div key={index} className="relative">
               <img

@@ -25,17 +25,17 @@ const AdminNavbar: React.FC = () => {
       className="pb-2 bg-white text-black relative px-10 z-50 border-b mb-2"
       onMouseLeave={handleMouseLeave}
     >
-      <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
+      <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0 mx-2">
       <Link href="/admin">
-          <NavItem onHover={() => setHoveredItem(null)}>Accueil Admin</NavItem>
+          <NavItem onHover={() => setHoveredItem(null)}>Accueil</NavItem>
         </Link>
         <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
         <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
         <Link href="/admin/orders">
           <NavItem onHover={() => setHoveredItem(null)}>Commandes</NavItem>
         </Link>
-        <Link href="/admin/add-product">
-          <NavItem onHover={() => setHoveredItem(null)}>Ajouter Un Produit</NavItem>
+        <Link className=' text-nowrap' href="/admin/add-product">
+          <NavItem onHover={() => setHoveredItem(null)}>Ajout Produit</NavItem>
         </Link>
       </ul>
 
