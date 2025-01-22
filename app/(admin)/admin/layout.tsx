@@ -1,7 +1,9 @@
 import AdminHeader from "@/components/AdminHeader";
 import AdminNavbar from "@/components/AdminNavBar";
 import "../../globals.css";
+import io from 'socket.io-client';
 
+const socket = io();
 export const metadata = {
     title: "Admin Panel - Dolce Vita",
     description: "Manage products and orders.",

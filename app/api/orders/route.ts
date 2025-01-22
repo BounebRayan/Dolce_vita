@@ -3,6 +3,7 @@ import Order from '@/models/order';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
 
+
 export async function GET(req: Request) {
   try {
     await connectToDB();

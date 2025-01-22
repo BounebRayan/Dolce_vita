@@ -3,7 +3,8 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { format } from 'date-fns'; // Import date-fns
+import { format, formatDistanceToNow } from 'date-fns'; // Import date-fns
+import order from '@/models/order';
 
 interface Order {
   _id: string;
@@ -24,6 +25,9 @@ interface Order {
   totalAmount: number;
   status: string;
   createdAt: string;
+  notes: string;
+  shippedAt: string;
+  deliveredAt: string;
 }
 
 export default function OrdersPage() {
@@ -68,10 +72,17 @@ try {
   };
 
   const confirmOrder = async (orderId: string) => {
+    
     try {
+      const order = orders.find((order) => order._id === orderId);
+      if (!order) {
+        alert('Order not found!');
+        return;
+      }
+  
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Confirmed',
-        notes: notes // Send the status in the request body
+        notes: order.notes || ''// Send the status in the request body
       });
       alert('Order confirmed!');
       fetchOrders(statusFilter); // Refresh orders after confirmation
@@ -92,9 +103,16 @@ try {
 
   const cancellOrder = async (orderId: string) => {
     try {
+      const order = orders.find((order) => order._id === orderId);
+      if (!order) {
+        alert('Order not found!');
+        return;
+      }
+  
+
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Cancelled',
-        notes: notes
+        notes: order.notes || ''
       });
       alert('Order cancelled!');
       fetchOrders(statusFilter); // Refresh orders after cancellation
@@ -106,8 +124,15 @@ try {
 
   const shipOrder = async (orderId: string) => {
     try {
+      const order = orders.find((order) => order._id === orderId);
+      if (!order) {
+        alert('Order not found!');
+        return;
+      }
+  
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Shipped',
+        notes: order.notes || '',
         shippedAt: new Date().toISOString(), // Add the shippedAt date
       });
       alert('Order marked as shipped!');
@@ -120,10 +145,18 @@ try {
 
   const deliverOrder = async (orderId: string) => {
     try {
+      const order = orders.find((order) => order._id === orderId);
+      if (!order) {
+        alert('Order not found!');
+        return;
+      }
+  
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Delivered',
+        notes: order.notes || '', // Use the notes field of the specific order
         deliveredAt: new Date().toISOString(), // Add the deliveredAt date
       });
+  
       alert('Order marked as delivered!');
       fetchOrders(statusFilter); // Refresh orders after marking as delivered
     } catch (err: any) {
@@ -131,7 +164,7 @@ try {
       alert('Failed to mark the order as delivered. Please try again.');
     }
   };
-
+  
   function handleStatusFilterChange(event: ChangeEvent<HTMLSelectElement>): void {
     setStatusFilter(event.target.value);
   }
@@ -146,6 +179,18 @@ try {
       alert('Failed to delete the order. Please try again.');
     }
   };
+
+  function updateNotes(id: string, value: string): void {
+    const orderIndex = orders.findIndex((order) => order._id === id);
+    if (orderIndex === -1) {
+      throw new Error('Order not found.');
+    }
+  
+    const updatedOrders = [...orders];
+    updatedOrders[orderIndex] = { ...updatedOrders[orderIndex], notes: value };
+  
+    setOrders(updatedOrders);
+  }
 
   return (
     <div className="p-3 px-4  sm:px-12">
@@ -163,7 +208,7 @@ try {
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Rechercher par ID, nom ou téléphone"
           className="border border-black rounded-sm p-2 w-full outline-none"></input>
-        <button className='border border-black bg-blue-500 p-2' onClick={handleSearchClick}>Rechercher</button>
+        <button className='border border-black bg-gray-300 hover:bg-gray-400 p-2' onClick={handleSearchClick}>Rechercher</button>
       </div></div>
 
       <div className="mb-4">
@@ -192,7 +237,17 @@ try {
           {orders.map((order) => (
             <div
               key={order._id}
-              className="border border-black bg-white rounded-sm p-4 shadow-sm"
+              className={`border border-black bg-white  ${''/*
+                    order.status === 'Pending'
+                      ? 'border-yellow-600'
+                      : order.status === 'Confirmed'
+                      ? 'border-blue-600'
+                      : order.status === 'Shipped'
+                      ? 'border-gray-600'
+                      : order.status === 'Delivered'
+                      ? 'border-green-600'
+                      : 'border-red-600'
+                  */} rounded-sm p-4 shadow-sm`}	
             >
               <div className="flex justify-between items-center mb-1">
                 <h2 className="text-lg font-semibold">ID: {order._id}</h2>
@@ -213,9 +268,12 @@ try {
                 </span>
               </div>
               <p>
-                <strong>Date du commande:</strong>{' '}
-                {format(new Date(order.createdAt), 'PPpp')} {/* Format the date */}
-              </p>
+  <strong>Date du commande:</strong>{' '}
+  {format(new Date(order.createdAt), 'PPpp')} {/* Format the date */}
+  <span className="text-sm text-gray-600 ml-2">
+    ({formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })})
+  </span>
+</p>
               <p>
                 <strong>Client :</strong> {order.name}
               </p>
@@ -228,6 +286,26 @@ try {
               <p>
                 <strong>Montant total:</strong> {order.totalAmount.toFixed(0)} DT
               </p>
+              {order.shippedAt && (
+  <p>
+    <strong>Expédié à:</strong>{' '}
+    {format(new Date(order.shippedAt), 'PPpp')}{' '}
+    <span className="text-sm text-gray-600 ml-2">
+      ({formatDistanceToNow(new Date(order.shippedAt), { addSuffix: true })})
+    </span>
+  </p>
+)}
+
+{order.deliveredAt && (
+  <p>
+    <strong>Livré à :</strong>{' '}
+    {format(new Date(order.deliveredAt), 'PPpp')}{' '}
+    <span className="text-sm text-gray-600 ml-2">
+      ({formatDistanceToNow(new Date(order.deliveredAt), { addSuffix: true })})
+    </span>
+  </p>
+)}
+
               
               <div className="mt-2">
                 <h3 className="text-md font-medium mb-2">Produits ({order.products.length}):</h3>
@@ -261,7 +339,7 @@ try {
                 </ul>
               </div>
               <h3 className="text-md font-medium mt-1">Notes:</h3>
-              <textarea disabled={order.status === 'Delivered' || order.status === 'Cancelled'} name="notes" id="notes" value={notes} onChange={(e)=> setNotes(e.target.value)} className='w-full border border-black outline-none px-1'></textarea>
+              <textarea key={order._id} disabled={order.status === 'Delivered' || order.status === 'Cancelled'} name="notes" id={order._id} value={order.notes} onChange={(e)=> updateNotes(order._id, e.target.value)} className='w-full border border-black outline-none px-1'></textarea>
               <div className='flex justify-center align-middle gap-4'>
               {order.status === 'Pending' && (
                 <button
