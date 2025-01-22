@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import Order from '@/models/order';
 import connectToDB from '@/config/database';
+import Product from '@/models/product';
 
 // Get a single order by ID
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-  await connectToDB();
   try {
+    await connectToDB();
     const order = await Order.findById(params.id).populate('products.product');
     if (!order) {
       return NextResponse.json({ message: 'Order not found' }, { status: 404 });
@@ -18,10 +19,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 // Update order status
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  await connectToDB();
-  const { status } = await req.json();
-  
   try {
+    await connectToDB();
+    const { status } = await req.json();
+    /*if (status && status == "Confirmed") {const order = await Order.findById(params.id).populate('products.product'); for (const item of order.products){const product = await Product.findById(item.product); product.unitsSold = (product.unitsSold || 0) + item.quantity;
+      await product.save();} }
+    if (status && status == "Cancelled") {const order = await Order.findById(params.id).populate('products.product'); for (const item of order.products){const product = await Product.findById(item.product); product.unitsSold = (product.unitsSold || 0) - item.quantity;
+      await product.save();}}*/
     const updatedOrder = await Order.findByIdAndUpdate(
       params.id,
       { status, updatedAt: Date.now() },

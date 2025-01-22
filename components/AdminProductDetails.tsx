@@ -253,7 +253,8 @@ const handleDeleteImage = async (index: number) => {
   return (
     <div className="flex flex-col md:flex-row md:gap-2 gap-4  p-5 md:mx-16 sm:mx-6 mx-2 bg-white mt-1">
       {/* Images Section */}
-      <div className="w-full md:w-1/2 flex gap-2">
+      <div className="w-full md:w-1/2 flex gap-2 relative">
+      <div className="absolute top-4 left-4 bg-white/80 px-2 border border-black rounded-full text-[14px] font-bold">{product.unitsSold} unités vendues</div>
         <div className="">
           <Image
             src={product.images[selectedImageIndex]}

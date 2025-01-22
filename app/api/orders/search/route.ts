@@ -1,32 +1,73 @@
-// /pages/api/orders/search.ts
-import { NextApiRequest, NextApiResponse } from 'next';// Adjust the path as needed
-import Order from '@/models/order';// Adjust the path as needed
+import mongoose from 'mongoose';
+import Order from '@/models/order';
 import connectToDB from '@/config/database';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
-const { searchParams } = new URL(req.url);
-  const searchTerm = searchParams.get("q") || ''; // Search term from query string
-
-  if (req.method !== 'GET') {
-    return NextResponse.json({ message: 'Method not allowed' });
-  }
-
   try {
     await connectToDB();
 
-    // Search across _id, name, and phoneNumber fields (case-insensitive)
-    const orders = await Order.find({
-      $or: [
-        { _id:  searchTerm },
-        { name: searchTerm} ,
-        { phoneNumber: searchTerm},
-      ],
-    }).sort({ createdAt: -1 }); // Sort by creation date, newest first
+    const { searchParams } = new URL(req.url);
+    const searchTerm = searchParams.get("q") || '';
+    const status = searchParams.get("status");
+    const limitParam = searchParams.get("limit");
+    const limit = limitParam ? parseInt(limitParam, 10) : null;
 
-   return NextResponse.json(orders);
+    // Validate the limit parameter
+    if (limitParam && (limit === null || isNaN(limit))) {
+      return NextResponse.json(
+        { message: 'Invalid limit parameter. It must be a number.' },
+        { status: 400 }
+      );
+    }
+
+    // Check if searchTerm can be a valid ObjectId
+    const objectId = mongoose.Types.ObjectId.isValid(searchTerm)
+      ? new mongoose.Types.ObjectId(searchTerm)
+      : null;
+
+    // Construct query
+    const query: { [key: string]: any } = {
+      $and: [],
+    };
+
+    // Add search condition
+    if (searchTerm) {
+      query.$and.push({
+        $or: [
+          objectId ? { _id: objectId } : {},
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { phoneNumber: { $regex: searchTerm, $options: 'i' } },
+        ],
+      });
+    }
+
+    // Add status condition
+    if (status) {
+      query.$and.push({ status });
+    }
+
+    // Remove $and if it's empty
+    if (query.$and.length === 0) {
+      delete query.$and;
+    }
+
+    // Sort criteria
+    const sortCriteria: { [key: string]: 1 | -1 } = { createdAt: -1 };
+
+    // Fetch orders with optional limit and query
+    const ordersQuery = Order.find(query)
+      .populate('products.product')
+      .sort(sortCriteria);
+
+    const orders = limit ? await ordersQuery.limit(limit) : await ordersQuery;
+
+    return NextResponse.json(orders, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: 'Internal server error' });
+    console.error('Error fetching orders:', error);
+    return NextResponse.json(
+      { message: 'Failed to fetch orders', error },
+      { status: 500 }
+    );
   }
 }

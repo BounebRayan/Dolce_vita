@@ -35,7 +35,7 @@ const StatsPage = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/admin/stats');
+        const response = await axios.get('/api/admin/stats');
         setData(response.data);
       } catch (err) {
         setError('An error occurred');
@@ -50,9 +50,9 @@ const StatsPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 mx-3 sm:mx-12 py-4 pt-3">
-      <h1 className="text-2xl font-bold mb-4">Dernières commandes en attente</h1>
-      <LastOrders />
+    <div className=" mt-1 bg-white mx-3 sm:mx-12 p-4 pt-3 rounded-sm">
+      {/*<h1 className="text-2xl font-bold mb-4">Dernières commandes en attente</h1>
+      <LastOrders />*/}
       <h1 className="text-2xl font-bold mb-4">Statistiques de vente</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {loadingStats ? (

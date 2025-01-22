@@ -34,19 +34,15 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [notes,setNotes] = useState<string>('');
 
-  const handleSearch = async (event: ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-
-    if (query.trim() === '') {
-      // Reset orders if search query is empty
-      setOrders([]);
-      return;
-    }
-
-    try {
+  const handleSearchClick = async () => {
+try {
       setLoading(true);
-      const response = await axios.get(`/api/orders/search?q=${encodeURIComponent(query)}`);
+      const response = await axios.get('/api/orders/search', {
+        params: {
+          ...(statusFilter && { status:statusFilter }),
+          ...(searchQuery && { q:searchQuery }),
+        },
+      });
       setOrders(response.data);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch orders');
@@ -57,12 +53,13 @@ export default function OrdersPage() {
 
   const fetchOrders = async (status:string) => {
     try {
-      const response = await axios.get('/api/orders?status=' + status);
-      const sortedOrders = response.data.sort(
-        (a: Order, b: Order) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setOrders(sortedOrders);
+      const response = await axios.get('/api/orders/search', {
+        params: {
+          ...(status && { status }),
+          ...(searchQuery && { q:searchQuery }),
+        },
+      });
+      setOrders(response.data);
     } catch (err: any) {
       setError(err.message || 'Failed to load orders');
     } finally {
@@ -139,6 +136,17 @@ export default function OrdersPage() {
     setStatusFilter(event.target.value);
   }
 
+  const deleteOrder = async (orderId: string) => {
+    try {
+      await axios.delete(`/api/orders/${orderId}`);
+      alert('Order deleted!');
+      fetchOrders(statusFilter);
+    } catch (err: any) {
+      console.error(err);
+      alert('Failed to delete the order. Please try again.');
+    }
+  };
+
   return (
     <div className="p-3 px-4  sm:px-12">
             <h1 className="text-2xl font-semibold mb-2">Commandes</h1>
@@ -152,10 +160,10 @@ export default function OrdersPage() {
           type="text"
           id="search"
           value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Rechercher par ID, nom ou téléphone"
-          className="border border-gray-300 rounded-sm p-2 w-full"
-        />
-        <button className='border border-black bg-blue-500 p-2'>Rechercher</button>
+          className="border border-black rounded-sm p-2 w-full outline-none"></input>
+        <button className='border border-black bg-blue-500 p-2' onClick={handleSearchClick}>Rechercher</button>
       </div></div>
 
       <div className="mb-4">
@@ -166,8 +174,9 @@ export default function OrdersPage() {
           id="statusFilter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="border border-gray-300 rounded-sm p-2 w-full"
-        >
+          className="border border-black rounded-sm p-2 w-full outline-none"
+        > 
+          <option value="">Tous les états</option>
           <option value="Pending">En Attente</option>
           <option value="Confirmed">Confirmées</option>
           <option value="Shipped">Expédiées</option>
@@ -280,6 +289,12 @@ export default function OrdersPage() {
                   onClick={() => cancellOrder(order._id)}
                 >
                   Cancell Order
+              </button>}
+              {order.status == "Cancelled"  && <button
+                  className="mt-4 w-full bg-red-600 text-black px-4 py-2 rounded-sm border border-black hover:bg-red-700"
+                  onClick={() => deleteOrder(order._id)}
+                >
+                  Delete Order
               </button>}
               </div>
             </div>

@@ -4,32 +4,55 @@ import Product from '@/models/product';
 import connectToDB from '@/config/database';
 
 export async function GET(req: Request) {
-  await connectToDB();
-  const { searchParams } = new URL(req.url);
-  let status = searchParams.get('status') as string;
-  let limit = parseInt(searchParams.get('limit') || '') as number;
-  const sortCriteria : { [key: string]: 1 | -1 } =  { "createdAt": -1 } ;
-  if (!status) {
-    status = 'Pending';
-  }
-  console.log(status);
   try {
-    let orders;
-    if (limit) {
-     orders = await Order.find({status: status}).populate('products.product').sort(sortCriteria).limit(limit);}
-    else { orders = await Order.find({status: status}).populate('products.product').sort(sortCriteria);}
+    await connectToDB();
+
+    const { searchParams } = new URL(req.url);
+    const status = searchParams.get('status');
+    const limitParam = searchParams.get('limit');
+    const limit = limitParam ? parseInt(limitParam, 10) : null; 
+    const sortCriteria: { [key: string]: 1 | -1 } = { createdAt: -1 };
+
+    // Validate the limit parameter
+    if (limitParam && (limit === null || isNaN(limit))) {
+      return NextResponse.json(
+        { message: 'Invalid limit parameter. It must be a number.' },
+        { status: 400 }
+      );
+    }
+
+    console.log(
+      `Fetching orders with${status ? ` status: ${status},` : ''} limit: ${
+        limit || 'No limit'
+      }`
+    );
+
+    // Construct the query
+    const query: { [key: string]: any } = {};
+    if (status) {
+      query.status = status;
+    }
+
+    // Fetch orders with optional limit and query
+    const ordersQuery = Order.find(query)
+      .populate('products.product')
+      .sort(sortCriteria);
+    const orders = limit ? await ordersQuery.limit(limit) : await ordersQuery;
+
     return NextResponse.json(orders, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: 'Failed to fetch orders', error }, { status: 500 });
+    console.error('Error fetching orders:', error);
+    return NextResponse.json(
+      { message: 'Failed to fetch orders', error},
+      { status: 500 }
+    );
   }
 }
 
-// Create a new order
 export async function POST(req: Request) {
-  await connectToDB();
-  const { name, phoneNumber, address, products } = await req.json();
-
   try {
+    await connectToDB();
+    const { name, phoneNumber, address, products } = await req.json();
     if (!name || !phoneNumber || !address || !products || !products.length) {
       return NextResponse.json({ message: 'All fields are required.' }, { status: 400 });
     }
@@ -51,8 +74,8 @@ export async function POST(req: Request) {
       totalAmount += (product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0) )* quantity;
 
        // Increment the product's unitsSold
-       product.unitsSold = (product.unitsSold || 0) + quantity;
-       await product.save();
+       //product.unitsSold = (product.unitsSold || 0) + quantity;
+       //await product.save();
        
       orderProducts.push({
         product: item.product,
@@ -74,6 +97,6 @@ export async function POST(req: Request) {
     await newOrder.save();
     return NextResponse.json(newOrder, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: 'Error creating order', error }, { status: 400 });
+    return NextResponse.json({ message: 'Error creating order', error }, { status: 500 });
   }
 }
