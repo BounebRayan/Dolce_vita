@@ -51,7 +51,7 @@ Before running the app locally, ensure you have the following installed:
 
 2. Navigate to the project folder:
    ```bash
-   cd your-repository-name
+   cd Dolce_vita
    ```
 
 3. Install dependencies:
