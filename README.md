@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [Your Website Name]
+
+A minimalist e-commerce platform for selling furniture and decorations, built using **Next.js**. The website offers a clean, user-friendly interface with dedicated zones for clients and admins, allowing for easy browsing, ordering, and product management.
+
+## Features
+
+- **Client Zone**:
+  - Browse furniture and decorations with a sleek, minimal design.
+  - Filter and search products effortlessly.
+  - Place and manage orders directly from your dashboard.
+
+- **Admin Zone**:
+  - Manage products (add, edit, or delete items).
+  - View and manage customer orders.
+  - Secure authentication to access admin functions.
+
+- **Technical Highlights**:
+  - **Next.js** for fast and responsive performance.
+  - **API Integration** for dynamic data handling.
+  - **Authentication** for secure admin login and access.
+
+## Screenshots
+
+![Screenshot](https://i.ibb.co/h1ZZXFk/Screenshot-2025-01-23-181754.png)
+
+_Above: A glimpse of the minimalist design and clean UI of the platform._
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+Before running the app locally, ensure you have the following installed:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js**: Framework for building the app.
+- **React**: UI components.
+- **Node.js**: Backend services.
+- **Database**: MongoDB.
+- **Authentication**: Secure login admins with jwt tokens.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/your-repository-name.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Navigate to the project folder:
+   ```bash
+   cd your-repository-name
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+4. Create a `.env` file and set up the required environment variables (mongoURI and ADMIN_SECRET_KEY).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+6. Open your browser and go to `http://localhost:3000` to see the app in action and `http://localhost:3000/admin` for the admin zone.
+
+
+
