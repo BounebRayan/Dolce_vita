@@ -1,4 +1,4 @@
-# [Your Website Name]
+# Dolce Vita
 
 A minimalist e-commerce platform for selling furniture and decorations, built using **Next.js**. The website offers a clean, user-friendly interface with dedicated zones for clients and admins, allowing for easy browsing, ordering, and product management.
 
