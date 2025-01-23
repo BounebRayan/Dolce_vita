@@ -2,10 +2,15 @@ import { NextResponse } from 'next/server';
 import Order from '@/models/order';
 import connectToDB from '@/config/database';
 import Product from '@/models/product';
+import { verifyToken } from '@/lib/verify';
 
 // Get a single order by ID
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
     await connectToDB();
     const order = await Order.findById(params.id).populate('products.product');
     if (!order) {
@@ -72,8 +77,13 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 // Delete an order
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  await connectToDB();
+
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
+  await connectToDB();
     const deletedOrder = await Order.findByIdAndDelete(params.id);
     
     if (!deletedOrder) {

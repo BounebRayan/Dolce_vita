@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { FaChevronDown, FaChevronUp, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { isAuthenticated } from '@/lib/auth';
 
 type Product = {
   salePercentage: number;
@@ -37,13 +38,18 @@ const SearchPage = () => {
     setSortOrder(order);
     setSortDropdownOpen(false);
   };
+    useEffect(() => {
+      if (!isAuthenticated()) {
+        window.location.href = '/admin/login'; // Redirect to login page
+      }
+    }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `/api/products/search?query=${encodeURIComponent(query)}&priceMin=${priceRange[0]}&priceMax=${priceRange[1]}&onSale=${onSale}&sort=${sortAttribute}&order=${sortOrder}`
+          `/api/products/reference?query=${encodeURIComponent(query)}&priceMin=${priceRange[0]}&priceMax=${priceRange[1]}&onSale=${onSale}&sort=${sortAttribute}&order=${sortOrder}`
         );
         if (!response.ok) throw new Error('Failed to fetch');
 
@@ -143,7 +149,7 @@ const SearchPage = () => {
                 <Link key={product._id} href={`/admin/product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105">
                   <div>
                     <Image
-                      src={product.images[product.mainImageNumber - 1] || '/fallback-image.jpg'}
+                      src={product.images[0]}
                       alt={product.productName}
                       width={360}
                       height={360}

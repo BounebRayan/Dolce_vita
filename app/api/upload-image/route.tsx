@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
+import { verifyToken } from '@/lib/verify';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
     const formData = await req.formData();  // Parse the incoming form data
 
     const file = formData.get('file');  // Access the file from the form data
@@ -44,6 +49,10 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
     // Parse the incoming request body
     const { searchParams } = new URL(req.url);
     const fileName = searchParams.get('fileName'); 
@@ -56,7 +65,7 @@ export async function DELETE(req: Request) {
     }
 
     // Construct the file path
-    const filePath = path.join(process.cwd(), 'public', fileName);
+    const filePath = path.join(process.cwd(), 'public','images', fileName);
     console.log(filePath);
 
     // Check if the file exists

@@ -2,6 +2,7 @@ import { NextRequest,NextResponse } from "next/server";
 
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
+import { verifyToken } from "@/lib/verify";
 // Helper function to calculate date range
 const getDateRange = (months: number) => {
   const now = new Date();
@@ -12,6 +13,10 @@ const getDateRange = (months: number) => {
 // Get product statistics
 export async function GET(req: NextRequest)  {
   try {
+    const authResult = await verifyToken(req);
+    if (!authResult.valid) {
+      return NextResponse.json({ message: authResult.error }, { status: 401 });
+    }
     // Get most sold products for different time periods
     const timeRanges = {
       month: getDateRange(1),

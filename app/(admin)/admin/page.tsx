@@ -4,6 +4,7 @@ import axios from 'axios';
 import { StatsCard } from '@/components/StatsCard';
 import LastOrders from '@/components/LatestCommands';
 import ProductsStatsCard from '@/components/ProductsStatsCard';
+import { isAuthenticated } from '@/lib/auth';
 
 interface Stats {
   totalRevenue?: number;
@@ -33,9 +34,22 @@ const StatsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      window.location.href = '/admin/login'; // Redirect to login page
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/api/admin/stats');
+        const token = localStorage.getItem('admin_password');
+
+  if (!token) {
+    return;
+  }
+        const response = await axios.get('/api/admin/stats',{headers: {
+          Authorization: `Bearer ${token}`,
+        },});
         setData(response.data);
       } catch (err) {
         setError('An error occurred');

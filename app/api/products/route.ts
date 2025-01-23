@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
+import { verifyToken } from '@/lib/verify';
 // Get all products
 export async function GET(req: Request) {
   await connectToDB();
@@ -20,8 +21,13 @@ export async function GET(req: Request) {
 
 // Create a new product
 export async function POST(req: Request) {
-  await connectToDB();
+
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
+    await connectToDB();
     const productData = await req.json();
     const newProduct = new Product({
       ...productData,

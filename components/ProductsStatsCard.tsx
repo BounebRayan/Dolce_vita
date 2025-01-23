@@ -26,8 +26,16 @@ const ProductsStatsCard: React.FC = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
+
       try {
-        const response = await axios.get('/api/admin/productStats');
+        const token = localStorage.getItem('admin_password');
+
+  if (!token) {
+    return;
+  }
+        const response = await axios.get('/api/admin/productStats', {headers: {
+          Authorization: `Bearer ${token}`,
+        },});
         setStats(response.data.stats);
         console.log(response.data);
         setSuccessfulSubcategories(response.data.successfulSubcategories);

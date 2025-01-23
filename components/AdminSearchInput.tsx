@@ -63,10 +63,13 @@ export default function AdminSearchInput() {
         <button type="button" onClick={handleIconClick} className="ml-2">
           <MagnifyingGlassIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
         </button>
-      ) : (
+      ) : (<div className='flex items-center'>
+        <button type="button" onClick={handleIconClick} className="ml-2">
+        <MagnifyingGlassIcon className="h-4 w-4 text-black transform transition duration-300 hover:scale-105" />
+      </button>
         <button type="button" onClick={handleClearInput} className="ml-2">
           <XMarkIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105" />
-        </button>
+        </button></div>
       )}
     </form>
   );

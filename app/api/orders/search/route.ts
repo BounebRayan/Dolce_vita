@@ -2,10 +2,16 @@ import mongoose from 'mongoose';
 import Order from '@/models/order';
 import connectToDB from '@/config/database';
 import { NextResponse } from 'next/server';
+import { verifyToken } from '@/lib/verify';
 
 export async function GET(req: Request) {
   try {
+    const authResult = await verifyToken(req);
+    if (!authResult.valid) {
+      return NextResponse.json({ message: authResult.error }, { status: 401 });
+    }
     await connectToDB();
+
 
     const { searchParams } = new URL(req.url);
     const searchTerm = searchParams.get("q") || '';

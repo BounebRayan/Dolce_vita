@@ -111,7 +111,18 @@ const AdminProductDetails = ({ productId }: Props) => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`/api/products/${productId}`);
+        const token = localStorage.getItem('admin_password');
+
+        if (!token) {
+          return;
+        }
+        
+        const response = await axios.get(`/api/products/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token for authentication
+            },
+          });
         setProduct(response.data);
         setSelectedImageIndex(response.data.images[0] ? 0 : -1); // Select the first image by default
       } catch (error) {
@@ -151,9 +162,20 @@ const AdminProductDetails = ({ productId }: Props) => {
     updatedImages.unshift(selectedImage);
 
     try {
+      const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
       const updatedProduct = { ...product, images: updatedImages };
 
-      await axios.put(`/api/products/${productId}`, updatedProduct);
+      await axios.put(`/api/products/${productId}`, updatedProduct,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token for authentication
+          },
+        });
       setProduct(updatedProduct);
       setSelectedImageIndex(0); // Set the first image as selected
       alert("Main image updated successfully!");
@@ -163,9 +185,20 @@ const AdminProductDetails = ({ productId }: Props) => {
   };
 
   const handleSaveChanges = async () => {
+    const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
     if (product) {
       try {
-        await axios.put(`/api/products/${productId}`, product);
+        await axios.put(`/api/products/${productId}`, product,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token for authentication
+            },
+          });
         alert("Product updated successfully!");
       } catch (error) {
         console.error("Failed to update product:", error);
@@ -175,9 +208,20 @@ const AdminProductDetails = ({ productId }: Props) => {
   };
 
   const handleDeleteProduct = async () => {
+    const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
     if (product) {
       try {
-        await axios.delete(`/api/products/${productId}`);
+        await axios.delete(`/api/products/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token for authentication
+            },
+          });
         alert("Product deleted successfully!");
       } catch (error) {
         console.error("Failed to update product:", error);
@@ -189,6 +233,12 @@ const AdminProductDetails = ({ productId }: Props) => {
   const API_URL = process.env.API_URL || "/api/upload-image/";
 
 const handleLocalImageUpload = async () => {
+  const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
   if (!localImage || !product) return;
 
   const uniqueFileName = `${Date.now()}_${localImage.name}`;
@@ -196,7 +246,12 @@ const handleLocalImageUpload = async () => {
   formData.append("file", new File([localImage], uniqueFileName));
 
   try {
-    const response = await axios.post(API_URL, formData);
+    const response = await axios.post(API_URL, formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
+      });
 
     const imageUrl = response.data.imageUrl;
     const updatedProduct = {
@@ -204,7 +259,11 @@ const handleLocalImageUpload = async () => {
       images: [...product.images, imageUrl],
     };
 
-    await axios.put(`/api/products/${productId}`, updatedProduct);
+    await axios.put(`/api/products/${productId}`, updatedProduct,{
+      headers: {
+        Authorization: `Bearer ${token}`, // Add token for authentication
+      },
+    });
     setProduct(updatedProduct);
     setLocalImage(null);
     alert("Image uploaded successfully!");
@@ -231,13 +290,27 @@ const handleDeleteImage = async (index: number) => {
   const updatedProduct = { ...product, images: updatedImages };
 
   try {
+    const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
     // Update product in the database
-    await axios.put(`/api/products/${productId}`, updatedProduct);
+    await axios.put(`/api/products/${productId}`, updatedProduct,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
+      });
     setProduct(updatedProduct);
 
     // Delete the image from the server
     await fetch(`${API_URL}?fileName=${encodeURIComponent(imageName)}`, {
       method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`, // Add token for authentication
+    },
     });
 
     alert("Image deleted successfully!");
@@ -281,9 +354,9 @@ const handleDeleteImage = async (index: number) => {
               />
               <button
                 onClick={() => handleDeleteImage(index)}
-                className="absolute top-1 right-1 text-black bg-slate-200/50 p-1 rounded-full"
+                className="absolute sm:top-1 sm:right-1 right-0.5 top-0.5 text-black bg-white sm:p-1 p-0.5 rounded-full"
               >
-                <XMarkIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105"/>
+                <XMarkIcon className="sm:h-5 sm:w-5 h-4 w-4 text-black transform transition duration-300 hover:scale-105"/>
               </button>
             </div>
           ))}

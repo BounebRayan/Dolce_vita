@@ -2,11 +2,17 @@ import { NextResponse } from 'next/server';
 import Order from '@/models/order';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
+import { verifyToken } from '@/lib/verify';
 
 
 export async function GET(req: Request) {
   try {
+    const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
     await connectToDB();
+
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');

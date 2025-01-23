@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { isAuthenticated } from '@/lib/auth';
 
 interface Product {
   _id: string;
@@ -22,7 +23,7 @@ interface Product {
 const SubcategoryPage = () => {
   const params = useParams();
   const { category } = params;
-  const categoryStr = Array.isArray(category) ? category[0] : category;
+  const categoryStr =decodeURIComponent( Array.isArray(category) ? category[0] : category);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -37,6 +38,11 @@ const SubcategoryPage = () => {
     setSortOrder(order);
     setSortDropdownOpen(false);
   };
+    useEffect(() => {
+      if (!isAuthenticated()) {
+        window.location.href = '/admin/login'; // Redirect to login page
+      }
+    }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {

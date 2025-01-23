@@ -22,7 +22,8 @@ interface Product {
 const SubcategoryPage = () => {
   const params = useParams();
   const { category } = params;
-  const categoryStr = Array.isArray(category) ? category[0] : category;
+  console.log(category);
+  const categoryStr =decodeURIComponent( Array.isArray(category) ? category[0] : category);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -41,6 +42,7 @@ const SubcategoryPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
+      console.log(categoryStr);
       try {
         const response = await axios.get('/api/products/subcategory', {
           params: {

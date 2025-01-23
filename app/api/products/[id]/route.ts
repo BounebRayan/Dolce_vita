@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
+import { verifyToken } from '@/lib/verify';
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   await connectToDB();
@@ -16,10 +17,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-    await connectToDB();
-    const productData = await req.json();
-  
     try {
+      const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
+      await connectToDB();
+      const productData = await req.json();
       const updatedProduct = await Product.findByIdAndUpdate(
         params.id,
         productData,
@@ -36,8 +40,13 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 
   export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    await connectToDB();
+
     try {
+      const authResult = await verifyToken(req);
+  if (!authResult.valid) {
+    return NextResponse.json({ message: authResult.error }, { status: 401 });
+  }
+      await connectToDB();
       const deletedProduct = await Product.findByIdAndDelete(params.id);
       if (!deletedProduct) {
         return NextResponse.json({ message: 'Product not found' }, { status: 404 });

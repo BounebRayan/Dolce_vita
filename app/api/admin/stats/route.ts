@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Order from '@/models/order';
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
+import { verifyToken } from '@/lib/verify';
 
 // Helper function to get date ranges
 const getDateRange = (period: string) => {
@@ -31,6 +32,10 @@ const getDateRange = (period: string) => {
 // Fetch order and product stats
 export async function GET(req: NextRequest) {
   try {
+    const authResult = await verifyToken(req);
+    if (!authResult.valid) {
+      return NextResponse.json({ message: authResult.error }, { status: 401 });
+    }
     await connectToDB();
 
     const periods = ['today', 'week', 'month', 'year'];

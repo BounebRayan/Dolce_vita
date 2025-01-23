@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { format, formatDistanceToNow } from 'date-fns'; // Import date-fns
 import order from '@/models/order';
+import { isAuthenticated } from '@/lib/auth';
 
 interface Order {
   _id: string;
@@ -36,12 +37,25 @@ export default function OrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('Pending');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [notes,setNotes] = useState<string>('');
+      useEffect(() => {
+        if (!isAuthenticated()) {
+          window.location.href = '/admin/login'; 
+        }
+      }, []);
+  
 
   const handleSearchClick = async () => {
 try {
+  const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
       setLoading(true);
       const response = await axios.get('/api/orders/search', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           ...(statusFilter && { status:statusFilter }),
           ...(searchQuery && { q:searchQuery }),
@@ -57,7 +71,15 @@ try {
 
   const fetchOrders = async (status:string) => {
     try {
+      const token = localStorage.getItem('admin_password');
+
+  if (!token) {
+    return;
+  }
       const response = await axios.get('/api/orders/search', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           ...(status && { status }),
           ...(searchQuery && { q:searchQuery }),
@@ -79,10 +101,22 @@ try {
         alert('Order not found!');
         return;
       }
+      const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  alert('You are not authorized to perform this action.');
+  return;
+}
+
   
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Confirmed',
         notes: order.notes || ''// Send the status in the request body
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
       alert('Order confirmed!');
       fetchOrders(statusFilter); // Refresh orders after confirmation
@@ -108,11 +142,21 @@ try {
         alert('Order not found!');
         return;
       }
-  
+      const token = localStorage.getItem('admin_password');
+
+      if (!token) {
+        return;
+      }
+      
 
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Cancelled',
         notes: order.notes || ''
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
       alert('Order cancelled!');
       fetchOrders(statusFilter); // Refresh orders after cancellation
@@ -129,11 +173,21 @@ try {
         alert('Order not found!');
         return;
       }
-  
+      const token = localStorage.getItem('admin_password');
+
+      if (!token) {
+        return;
+      }
+      
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Shipped',
         notes: order.notes || '',
         shippedAt: new Date().toISOString(), // Add the shippedAt date
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
       alert('Order marked as shipped!');
       fetchOrders(statusFilter); // Refresh orders after marking as shipped
@@ -150,11 +204,21 @@ try {
         alert('Order not found!');
         return;
       }
-  
+      const token = localStorage.getItem('admin_password');
+
+      if (!token) {
+        return;
+      }
+      
       const response = await axios.put(`/api/orders/${orderId}`, {
         status: 'Delivered',
         notes: order.notes || '', // Use the notes field of the specific order
         deliveredAt: new Date().toISOString(), // Add the deliveredAt date
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
   
       alert('Order marked as delivered!');
@@ -171,7 +235,18 @@ try {
 
   const deleteOrder = async (orderId: string) => {
     try {
-      await axios.delete(`/api/orders/${orderId}`);
+      const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
+      await axios.delete(`/api/orders/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token for authentication
+          },
+        });
       alert('Order deleted!');
       fetchOrders(statusFilter);
     } catch (err: any) {

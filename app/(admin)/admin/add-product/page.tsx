@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { isAuthenticated } from "@/lib/auth";
 
 const categories = { 
   deco: [
@@ -90,6 +91,12 @@ export default function AddProductPage() {
   const colorKeys = Object.keys(colors);
   const [selectedColor, setSelectedColor] = useState<string>("");
 
+    useEffect(() => {
+      if (!isAuthenticated()) {
+        window.location.href = '/admin/login'; // Redirect to login page
+      }
+    }, []);
+
   const subcategories = category === 'Déco' 
     ? categories.deco 
     : category === 'Meubles' 
@@ -110,8 +117,16 @@ export default function AddProductPage() {
   const API_URL = "/api/upload-image/";
   const handleDeleteImage = async (imageName:string) => {
     try {
+      const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
       const response = await fetch(`${API_URL}?fileName=${encodeURIComponent(imageName)}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
   
       if (response.ok) {
@@ -132,9 +147,18 @@ export default function AddProductPage() {
     const formData = new FormData();
     formData.append("file", new File([imageUpload], uniqueFileName));
 
+    const token = localStorage.getItem('admin_password');
+
+if (!token) {
+  return;
+}
+
     const response = await fetch(API_URL, {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const result = await response.json();
@@ -167,10 +191,17 @@ export default function AddProductPage() {
       images,
     };
 
+    const token = localStorage.getItem('admin_password');
+
+    if (!token) {
+      return;
+    }
+    
     const response = await fetch("/api/products", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Add token for authentication
       },
       body: JSON.stringify(newProduct),
     });
