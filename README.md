@@ -46,7 +46,7 @@ Before running the app locally, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/your-repository-name.git
+   git clone https://github.com/BounebRayan/Dolce_vita.git
    ```
 
 2. Navigate to the project folder:
