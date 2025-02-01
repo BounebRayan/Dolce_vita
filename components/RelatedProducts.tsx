@@ -46,21 +46,21 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
   if(similarProducts) {gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-2';}
 
   return (
-    <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-44 border-t-[1.5px] border-gray-300 px-3 py-4">
+    <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-40 border-t-[1.5px] border-gray-300 px-3 py-4">
       <h2 className="text-lg md:text-2xl font-light mb-4">Les clients ont également consulté</h2>
       <div className={`grid ${gridCols} sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3  gap-4`}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
-              <div className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
+              <div className="cursor-pointer transform transition hover:scale-[1.02] duration-300 pb-1">
                 <img
                   src={product.images[0]}
                   alt={product.productName}
-                  className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[420px] object-cover rounded-sm"
+                  className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[420px] object-cover"
                   loading="lazy"
                 />
                 <h3 className="mt-1 text-sm pl-2 sm:text-md font-medium">{product.productName}</h3>
-                <p className="text-sm sm:text-md pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
+                {product.category === "Déco" && <p className="text-sm sm:text-md pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
               </div>
             </Link>
           ))

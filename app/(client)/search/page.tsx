@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { FaChevronDown, FaChevronUp, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
 type Product = {
+  category: string;
   salePercentage: number;
   _id: string;
   productName: string;
@@ -140,7 +141,7 @@ const SearchPage = () => {
           products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {products.map((product) => (
-                <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
+                <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition hover:scale-[1.02] duration-300 rounded-sm pb-1">
                   <div>
                     <Image
                       src={product.images[0]}
@@ -151,7 +152,7 @@ const SearchPage = () => {
                       loading="lazy"
                     />
                     <h3 className="mt-1 pl-2 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
-                    <p className="text-[13px] pl-2 sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
+                    {product.category === "Déco" && <p className="text-[13px] pl-2 sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
                   </div>
                 </Link>
               ))}

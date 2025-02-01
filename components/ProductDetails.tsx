@@ -188,12 +188,12 @@ const ProductDetails = ({ productId }: Props) => {
         <div className="flex-1 w-full flex-grow md:max-w-none bg-gray-100 px-5 pt-5 rounded-sm relative">
           <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2 "> 
             {product.productName}
-            {product.isRecommended && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>}
+            {/*product.isRecommended && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>*/}
           </h1>
           <p className="text-gray-600">{product.category} - {product.subCategory}</p>
 
           {/* Pricing Display */}
-          <div className="my-1 mb-2">
+          {product.category === "Déco" && <div className="my-1 mb-2">
             {product.onSale ? (
               <p className="text-black font-base text-lg">
                 {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
@@ -202,11 +202,11 @@ const ProductDetails = ({ productId }: Props) => {
             ) : (
               <p className="font-base text-lg">{product.price.toFixed(0)} DT</p>
             )}
-          </div>
-          {/* reference */}
+          </div>}
+          {/* reference 
           <div className="border-t border-gray-300 p-3">
           <p>Référence : {product.reference} </p>
-          </div>
+          </div>*/}
 
           {/* Collapsible Description */}
           <div className="border-t border-gray-300 p-3">
@@ -229,7 +229,7 @@ const ProductDetails = ({ productId }: Props) => {
           </div>}
 
           {/* Client Reviews */}
-          <div className="border-t border-gray-300 p-3 flex items-center justify-between">
+          {product.category === "Déco" && <div className="border-t border-gray-300 p-3 flex items-center justify-between">
             <span>Popularité</span>
             <div className="flex items-center gap-1">
             {[1, 3, 5, 10, 20].map((threshold, i) => (
@@ -241,9 +241,9 @@ const ProductDetails = ({ productId }: Props) => {
 
               {/*<span className="text-sm text-gray-600">({product.unitsSold})</span>*/}
             </div>
-          </div>
+          </div>}
           {/* Color Selection */}
-          <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
+          {product.availableColors && product.category === "Déco" && <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
             <span>Sélectionnez une couleur</span>
             <div className="flex gap-2">
               {product.availableColors.map((color, index) => {
@@ -261,21 +261,36 @@ const ProductDetails = ({ productId }: Props) => {
                 );
               })}
             </div>
-          </div>
+          </div>}
+
+          {product.availableColors && product.category === "Meubles" && <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
+            <span>Couleur disponibles</span>
+            <div className="flex gap-2">
+              {product.availableColors.map((color, index) => {
+                const mappedColor = colorMapping[color.toLowerCase()] || color;
+                return (
+                  <div  key={index}
+                   title={color} className={`w-6 h-6 border border-gray-600`} style={{ backgroundColor: mappedColor }}>
+                  
+                  </div>
+                );
+              })}
+            </div>
+          </div>}
           
 
           {/* Add to Cart Button */}
-          <button
+          {product.category === "Déco" && <button
             onClick={handleAddToCart}
-            className="px-4 py-2 bg-[#dcc174] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 border border-black mb-4"
+            className="px-4 py-2 bg-[#dcc174] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 mb-4"
           >
             Ajouter au panier
-          </button>
+          </button>}
           {/* Shipping Policy */}
-          <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
+          {product.category === "Déco" && <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
           <p className='flex items-center gap-2'><FaCircleInfo   className='h-6 text-gray-800'/>
           Livraison Gratuite à partir de 300DT d'Achat!</p>
-          </div>
+          </div>}
         </div>
       </div>
 

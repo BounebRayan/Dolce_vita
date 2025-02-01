@@ -126,10 +126,23 @@ const CartPage = () => {
 
       <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-sm shadow-md">
         <h2 className="text-2xl font-light mb-1">Récapitulatif de la commande</h2>
-        <p className="text-lg mb-1">Montant Total: {totalPrice} DT</p>
-        <div className="border-t border-gray-300 pt-3 pb-1 flex justify-center items-center gap-2">
-                  <MdOutlineLocalShipping className='h-5 w-5 text-black' /><p>Livraison à domicile sur toute la Tunisie (dans 48h)</p>
-        </div>
+        <p className="text-lg mb-1">Montant Total: {totalPrice > 300 ? totalPrice + ' DT': (totalPrice + 8) + ' DT (frais de transport de 8 DT inclus)' } </p>
+        <div className="flex flex-col gap-0.5 mt-1">
+  <label htmlFor="promoCode" className="text-sm font-medium text-gray-700">
+    Code Promo
+  </label>
+  <input
+    type="text"
+    id="promoCode"
+    className="p-2 border border-gray-300 mb-2 outline-none"
+    placeholder="Entrez votre code promo"
+  />
+  <button className="p-2 border border-black w-full">
+    Soumettre
+  </button>
+</div>
+
+
         
         {showForm ? (
           <form onSubmit={handleFormSubmit} className="mt-2 space-y-3">
@@ -184,6 +197,11 @@ const CartPage = () => {
             >
               Vider le panier
             </button>
+            <div className="border-t border-gray-300 pt-3 pb-1 flex justify-center items-center gap-2 mt-2">
+                  <MdOutlineLocalShipping className='h-5 w-5 text-black' /><p>Livraison à domicile sur toute la Tunisie (dans 48h)</p>
+        </div>
+
+
       </div>
     </div>
   );

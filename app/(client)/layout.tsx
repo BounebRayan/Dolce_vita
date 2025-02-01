@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { CartProvider } from '../../contexts/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer2 from "@/components/Footer2";
 
 export const metadata: Metadata = {
   title: "Dolce Vita - Luxury Home Collection",
@@ -43,7 +44,7 @@ export default function ClientLayout({
         />
           
         </div>
-        <Footer />
+        <Footer2/>
       </div>
       </CartProvider>
     </div>

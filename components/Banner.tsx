@@ -6,13 +6,13 @@ import Link from 'next/link';
 
 export default function Banner() {
   return (
-    <div className="flex items-center justify-center mx-4 sm:mx-6 md:mx-[60px] mt-2 border border-black rounded-sm">
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] rounded-sm overflow-hidden">
+    <div className="flex items-center justify-center mx-4 sm:mx-6 md:mx-[47px] mt-1.5">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
         <Image
           src="/images/banner.jpg"
           alt="Banner Image"
           fill
-          className="object-cover rounded-sm"
+          className="object-cover"
           priority
         />
         
@@ -26,8 +26,8 @@ export default function Banner() {
           Créez votre refuge de tranquillité
           </h1>
 
-          <Link href={'/categories/salons'} className="px-4 py-2 sm:px-6 sm:py-3 bg-[#dcc174] text-black border border-black font-medium rounded-sm hover:bg-[#b89f53] transition-colors duration-300 flex items-center gap-1">
-            Découvrez nos Salons<ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
+          <Link href={'/meubles'} className="px-4 py-2 sm:px-6 sm:py-3 bg-[#F6DB8D] text-black border border-black font-medium hover:bg-[#dcc174] transition-colors duration-300 flex items-center gap-1">
+            Découvrez nos Meubles<ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
           </Link>
 
         </div>

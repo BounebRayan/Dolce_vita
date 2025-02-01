@@ -9,12 +9,18 @@ const Navbar: React.FC = () => {
 
   const categories = {
     deco: [
-      'Accessoires déco', 'Vases', 'Cadres photo', 'Luminaires', 'Miroirs',
-      'Déco murale', "Bougies & parfums d'intérieur", "linges de maison"
+      'Accessoires Déco', "Bougies & Parfums d’Intérieur", 'Art de la Table', 'Linge de Maison',
+      'Vases', 'Statues', 'Porte-Bougies', 'Cadres Photo', 'Miroirs', 'Décorations Murales',
+      'Luminaires', 'Plantes'
     ],
-    meuble: ['Salons', 'Chambres', 'Salles À Manger'],
+    meuble: [
+      'Salons', 'Chambres', 'Salles à Manger', 
+      'Canapés', 'Tables Basses', 'Meubles TV', 
+      "Meubles d’Entrée"
+    ],
   };
-
+  
+  
   const handleMouseLeave = () => {
     setHoveredItem(null);
   };
@@ -27,10 +33,10 @@ const Navbar: React.FC = () => {
     >
       <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
       <Link href="/">
-          <NavItem onHover={() => setHoveredItem(null)}>Accueil</NavItem>
+          <NavItem onHover={() => setHoveredItem(null)}>ACCUEIL</NavItem>
         </Link>
-        <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
-        <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
+        <NavItem onHover={() => setHoveredItem('meuble')}>MEUBLES</NavItem>
+        <NavItem onHover={() => setHoveredItem('deco')}>DÉCORATIONS</NavItem>
         {/*<Link href="/new">
           <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
         </Link>*/}

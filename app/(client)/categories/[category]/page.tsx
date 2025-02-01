@@ -75,8 +75,8 @@ const SubcategoryPage = () => {
       <main className="w-full pl-0 lg:pl-4">
         <h1 className="text-2xl lg:text-4xl font-light mb-2 capitalize">{decodedCategory}</h1>
 
-        <div className="flex items-center justify-between">
-          <label className="flex items-center">
+        {products[0] && products[0].category === "Déco" && <div className="flex items-center justify-between">
+       <label className="flex items-center">
             <div
               className={`relative w-8 h-5 flex items-center rounded-full p-1 cursor-pointer ${
                 onSale ? 'bg-[#dcc174]' : 'bg-gray-300'
@@ -142,7 +142,7 @@ const SubcategoryPage = () => {
               )}
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* Product Grid with Conditional Loading Spinner */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridCols} gap-4`}>
@@ -151,7 +151,7 @@ const SubcategoryPage = () => {
           ) : products.length > 0 ? (
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
-                <div className="cursor-pointer transform transition duration-300 hover:scale-105 border border-black rounded-sm pb-1">
+                <div className="cursor-pointer transform transition duration-300 hover:scale-105 rounded-sm pb-1">
                   <img
                     src={product.images[0]}
                     alt={product.productName}
@@ -159,7 +159,7 @@ const SubcategoryPage = () => {
                     loading="lazy"
                   />
                   <h3 className="mt-1 pl-2 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                  <p className="text-sm pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>
+                  {product.category === "Déco" && <p className="text-sm pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
                 </div>
               </Link>
             ))

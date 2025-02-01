@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const limit = parseInt(searchParams.get('limit') || '12', 12);
 
   try {
-    const products = await Product.find({'onSale':true}).limit(limit);
+    const products = await Product.find({'onSale':true, category: "Déco"}).limit(limit);
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: 'Failed to fetch products', error }, { status: 500 });

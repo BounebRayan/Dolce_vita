@@ -8,11 +8,14 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const sortField = searchParams.get('sort') || 'createdAt';
   const limit = parseInt(searchParams.get('limit') || '12', 12);
+  const category= searchParams.get("category") || 'all';
 
   const sortCriteria: { [key: string]: 1 | -1 } = sortField === 'unitsSold' ? { unitsSold: -1 } : { [sortField]: -1 };
 
   try {
-    const products = await Product.find().sort(sortCriteria).limit(limit);
+    let products;
+    if (category === 'all') { products = await Product.find().sort(sortCriteria).limit(limit); }
+    else { products = await Product.find({ category: category }).sort(sortCriteria).limit(limit); }
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: 'Failed to fetch products', error }, { status: 500 });
