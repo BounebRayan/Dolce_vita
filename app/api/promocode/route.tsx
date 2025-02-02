@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import PromoCode from "@/models/PromoCode";
+import PromoCode from "@/models/promoCode";
 import connectToDB from "@/config/database";
 
 
