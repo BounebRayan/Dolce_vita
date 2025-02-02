@@ -1,54 +1,45 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 
-const Navbar: React.FC = () => {
+export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const navbarRef = useRef<HTMLElement>(null);
 
   const categories = {
     deco: [
-      'Accessoires Déco', "Bougies & Parfums d’Intérieur", 'Art de la Table', 'Linge de Maison',
-      'Vases', 'Statues', 'Porte-Bougies', 'Cadres Photo', 'Miroirs', 'Décorations Murales',
-      'Luminaires', 'Plantes'
+      'Accessoires Déco',  'Art de la Table', 'Vases', 'Luminaires', 'Miroirs',
+      'Statues', "Bougies & Parfums d’Intérieur", 'Porte-Bougies', 'Linge de Maison', 'Cadres Photo',
+      'Décorations Murales', 'Plantes'
     ],
     meuble: [
       'Salons', 'Chambres', 'Salles à Manger', 
-      'Canapés', 'Tables Basses', 'Meubles TV', 
-      "Meubles d’Entrée"
+      'Canapés & Fauteuils', 'Tables basses & Tables de coin', 'Meubles TV', 
+      "Consoles & Meubles d’Entrée"
     ],
   };
-  
-  
-  const handleMouseLeave = () => {
+
+  const handleMouseLeave = useCallback(() => {
     setHoveredItem(null);
-  };
+  }, []);
 
   return (
-    <nav
-      ref={navbarRef}
-      className="pb-2 bg-white text-black relative px-10 z-50 border-b mb-2"
-      onMouseLeave={handleMouseLeave}
-    >
+    <nav className="pb-1 relative px-10 z-50 border-b mb-2" onMouseLeave={handleMouseLeave}>
+
+      {/* nav bar elements */}
       <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
-      <Link href="/">
+        <Link href="/" aria-label="Accueil">
           <NavItem onHover={() => setHoveredItem(null)}>ACCUEIL</NavItem>
         </Link>
         <NavItem onHover={() => setHoveredItem('meuble')}>MEUBLES</NavItem>
         <NavItem onHover={() => setHoveredItem('deco')}>DÉCORATIONS</NavItem>
-        {/*<Link href="/new">
-          <NavItem onHover={() => setHoveredItem(null)}>Nouveautés</NavItem>
-        </Link>*/}
       </ul>
-
+      
+      {/* dropdown */}
       {hoveredItem && (
         <div
-          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b border-r shadow-lg md:w-[300px] w-full"
-          style={{
-            top: navbarRef.current?.offsetHeight,
-            left: 0,
-          }}
+          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b md:border-r shadow-lg md:w-[330px] w-full"
+          style={{ top: '100%', left: 0 }}
           onMouseEnter={() => setHoveredItem(hoveredItem)}
           onMouseLeave={handleMouseLeave}
         >
@@ -56,7 +47,8 @@ const Navbar: React.FC = () => {
             {categories[hoveredItem as keyof typeof categories].map((category) => (
               <li key={category}>
                 <Link
-                  href={`/categories/${category.toLowerCase()}`} onClick={()=>{setHoveredItem(null)}}
+                  href={`/categories/${category.toLowerCase()}`}
+                  onClick={() => setHoveredItem(null)}
                   className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
                 >
                   {category}
@@ -66,6 +58,7 @@ const Navbar: React.FC = () => {
           </ul>
         </div>
       )}
+
     </nav>
   );
 };
@@ -78,12 +71,8 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ children, onHover }) => (
   <li
     onMouseEnter={onHover}
-    onMouseLeave={() => onHover()}
-    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
-    style={{ paddingBottom: '2px' }}
+    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 pb-1"
   >
     {children}
   </li>
 );
-
-export default Navbar;

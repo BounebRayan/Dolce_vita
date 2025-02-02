@@ -8,6 +8,7 @@ import { CartProvider } from '../../contexts/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer2 from "@/components/Footer2";
+import localFont from "next/font/local";
 
 export const metadata: Metadata = {
   title: "Dolce Vita - Luxury Home Collection",
@@ -15,6 +16,17 @@ export const metadata: Metadata = {
 };
 
 const jost = Jost({ subsets: ["latin"] });
+
+const myFont4 = localFont({
+  src: [
+    { path: '../fonts/Satochi/Satoshi-Light.otf', weight: '300', style: 'normal' },
+    { path: '../fonts/Satochi/Satoshi-Regular.otf', weight: '400', style: 'normal' },
+    { path: '../fonts/Satochi/Satoshi-Medium.otf', weight: '500', style: 'normal' },
+    { path: '../fonts/Satochi/Satoshi-Bold.otf', weight: '700', style: 'normal' },
+  ],
+});
+
+
 
 export default function ClientLayout({
   children,
@@ -24,7 +36,7 @@ export default function ClientLayout({
   return (
     <div lang="fr">
       <CartProvider>
-      <div className={`${jost.className} min-h-screen flex flex-col antialiased`}>
+      <div className={`${myFont4.className} min-h-screen flex flex-col antialiased font-normal `}>
         <Header />
         <NavBar />
         <div className="flex-grow">

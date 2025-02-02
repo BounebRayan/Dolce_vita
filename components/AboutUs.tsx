@@ -6,7 +6,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const AboutUsSection = () => {
   return (
-    <section className=" mb-6 mx-4 sm:mx-10 md:mx-[47px] mt-6 bg-[#F5F5F1] flex flex-col lg:flex-row items-center lg:items-start rounded-sm">
+    <section className=" mb-6 mx-3 sm:mx-10 md:mx-10 mt-6 bg-[#F5F5F1] flex flex-col lg:flex-row items-center lg:items-start rounded-sm">
 
       {/* Left Side: Image */}
       <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] bg-black">

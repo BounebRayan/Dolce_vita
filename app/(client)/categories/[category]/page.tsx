@@ -5,6 +5,8 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import CategoriesSection from '@/components/CategoriesSection';
+import InsideCategories from '@/components/InsideCategories';
 
 interface Product {
   _id: string;
@@ -71,12 +73,13 @@ const SubcategoryPage = () => {
   const gridCols = products[0]?.category === 'Meubles' ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 
   return (
-    <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-12 mt-3">
+    <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-12 mt-1 md:mt-2">
       <main className="w-full pl-0 lg:pl-4">
-        <h1 className="text-2xl lg:text-4xl font-light mb-2 capitalize">{decodedCategory}</h1>
-
-        {products[0] && products[0].category === "Déco" && <div className="flex items-center justify-between">
-       <label className="flex items-center">
+        <h1 className="text-[28px] font-light mb-2 capitalize">{decodedCategory}</h1>
+        <InsideCategories/>
+      <div className='border-t mt-6 pt-3'></div>
+        {products[0] && products[0].category === "Déco" && <div>
+       {/*<label className="flex items-center">
             <div
               className={`relative w-8 h-5 flex items-center rounded-full p-1 cursor-pointer ${
                 onSale ? 'bg-[#dcc174]' : 'bg-gray-300'
@@ -90,7 +93,7 @@ const SubcategoryPage = () => {
               ></div>
             </div>
             <span className="ml-2 text-sm">En solde</span>
-          </label>
+          </label>*/}
           <div className="relative mb-2 flex justify-end items-end">
             <div>
               <button
@@ -151,15 +154,15 @@ const SubcategoryPage = () => {
           ) : products.length > 0 ? (
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
-                <div className="cursor-pointer transform transition duration-300 hover:scale-105 rounded-sm pb-1">
+                <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
                   <img
                     src={product.images[0]}
                     alt={product.productName}
                     className="w-full h-[200px] sm:h-[250px] lg:h-[360px] object-cover rounded-sm"
                     loading="lazy"
                   />
-                  <h3 className="mt-1 pl-2 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                  {product.category === "Déco" && <p className="text-sm pl-2 text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
+                  <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
+                  {product.category === "Déco" && <p className="text-sm text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
                 </div>
               </Link>
             ))

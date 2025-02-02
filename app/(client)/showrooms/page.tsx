@@ -10,7 +10,7 @@ const locations = [
     lng: 10.592508,
     address: '4022, Avenue Yasser Arafat Sahloul, Sousse',
     phone: '24 331 900',
-    email: 'store.sousse@dolcevita.tn',
+    email: 'dolce.vita.home.collection@gmail.com',
     horaires: {
       lundiSamedi: '09:00 - 20:00',
       dimanche: '09:00 - 15:00',
@@ -23,7 +23,7 @@ const locations = [
     lng: 10.1942,
     address: '151, Avenue L’UMA La Soukra, Tunis',
     phone: '24 331 905',
-    email: 'store.sokra@dolcevita.tn',
+    email: 'dolce.vita.home.collection@gmail.com',
     horaires: {
       lundiSamedi: '09:00 - 20:00',
       dimanche: '09:00 - 15:00',

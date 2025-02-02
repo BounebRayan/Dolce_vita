@@ -6,6 +6,17 @@ import Link from 'next/link';
 import { PiShootingStarDuotone } from 'react-icons/pi';
 import { IoHeartCircle } from 'react-icons/io5';
 import { IoMdHeart } from 'react-icons/io';
+import localFont from 'next/font/local';
+
+const myFont = localFont({
+  src: [
+    { path: '../app/fonts/Zodiak/Zodiak-Thin.otf', weight: '100', style: 'normal' },
+    { path: '../app/fonts/Zodiak/Zodiak-Light.otf', weight: '300', style: 'normal' },
+    { path: '../app/fonts/Zodiak/Zodiak-Regular.otf', weight: '400', style: 'normal' },
+    { path: '../app/fonts/Zodiak/Zodiak-Bold.otf', weight: '700', style: 'normal' },
+  ],
+});
+
 
 type Product = {
   category: any;
@@ -65,8 +76,8 @@ export default function Section(prop: SectionProp) {
   return (
     <section className="md:px-1 mb-3 group">
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-1 mx-4 sm:mx-6 md:mx-11">
-        <h2 className="text-xl md:text-2xl font-md">{prop.name}</h2>
+      <div className="flex flex-col items-start mb-1 mx-3 sm:mx-6 md:mx-9">
+        <h2 className={` ${myFont.className} text-2xl font-light`}>{prop.name}</h2>
         <Link href="/new" className="text-black text-sm underline mt-0.5">
           Tout Voir
         </Link>
@@ -83,7 +94,7 @@ export default function Section(prop: SectionProp) {
     ))}
   </div>
 ) :(
-        <div className="relative sm:mx-6 md:mx-9 mx-1">
+        <div className="relative sm:mx-6 md:mx-7 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button
             className={`hidden lg:block absolute -left-6 border border-black top-[45%] disabled:hover:bg-white transform -translate-y-1/2 p-2 hover:bg-[#F6DB8D] bg-white z-40 shadow-lg shadow-slate-500 opacity-0 transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
@@ -111,7 +122,7 @@ export default function Section(prop: SectionProp) {
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
                     {product.category !== 'Meubles' && <p className="text-[13px] sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
-                    {product.isRecommended && <IoMdHeart  className="text-[#F6DB8D] drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.3)] text h-7 w-7 absolute top-4 right-4 rounded-full p-1"/>}
+                    {product.isRecommended && <IoMdHeart  className="text-[#F6DB8D] animate-bounce drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.3)] text h-7 w-7 absolute top-4 right-4 rounded-full p-1"/>}
                   </div>
                 </Link>
               ))}

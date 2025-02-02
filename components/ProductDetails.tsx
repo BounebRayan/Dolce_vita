@@ -156,7 +156,7 @@ const ProductDetails = ({ productId }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 p-3 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-44 3xl:mx-52 mt-2 ">
+      <div className="flex flex-col md:flex-row gap-4 p-3 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-36 mt-4 ">
         {/* Images Section */}
         <div className="flex flex-col items-center md:flex-row gap-1 md:items-start w-it lg:w-[650px] ">
           <div className="mb-2 w-full md:w-[400px] lg:w-[750px] h-auto overflow-hidden px-2">
