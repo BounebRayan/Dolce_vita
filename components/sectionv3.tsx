@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRightIcon, ChevronRightIcon, ChevronLeftIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { PiShootingStarDuotone } from 'react-icons/pi';
 import { IoHeartCircle } from 'react-icons/io5';
@@ -93,7 +93,7 @@ export default function Section(prop: SectionProp) {
       />
     ))}
   </div>
-) :(
+) : (
         <div className="relative sm:mx-6 lg:mx-20 xl:mx-32 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button

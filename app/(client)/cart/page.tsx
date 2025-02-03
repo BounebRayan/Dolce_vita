@@ -81,6 +81,7 @@ const CartPage = () => {
       name,
       phoneNumber: phone,
       address,
+      totalPrice: totalPriceWithShipping,
       products: items.map((item: { productId: any; color: any; image: any; reference: any; productName: any; price: any; }) => ({
         product: item.productId,
         color: item.color,
