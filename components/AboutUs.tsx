@@ -18,10 +18,10 @@ const AboutUsSection = () => {
       </div>
 
       {/* Right Side: Text */}
-      <div className="w-full lg:w-1/2 px-6 sm:px-10 md:px-16 lg:px-20 pb-6 lg:py-20 flex flex-col items-center">
-      <img src="/images/image2vector.svg" alt="Logo" className="w-24 h-32" />
-        <p className="text-lg sm:text-xl text-black text-center">
-        Découvrez notre nouvelle collection d’articles uniques, conçus avec des matériaux nobles qui allient authenticité et élégance.
+      <div className="w-full lg:w-1/2 px-6 sm:px-10 md:px-16 lg:px-20 pb-6 flex flex-col items-center my-auto">
+        <img src="/images/image2vector.svg" alt="Logo" className="w-24 h-32"/>
+        <p className="text-lg sm:text-xl text-black text-center block">
+        Spécialiste en ameublement et décoration en Tunisie, Dolce vita vous garanti un design mobilier au confort inégalé afin de faire de votre ‘foyer’, un vrai cocon.. Découvrez nos salons modernes, salles à manger intemporelles, chambres à coucher sublimes et décorez vos intérieurs avec des canapés de style, des meubles TV tendances et des fauteuils confortables…
         </p>
         {/*<Link href={"/new"}>
         <button className="border border-black px-4 py-2 sm:px-5 sm:py-2 flex items-center gap-1 mt-3 hover:bg-[#b89f53] bg-[#dcc174] transition-colors duration-300">

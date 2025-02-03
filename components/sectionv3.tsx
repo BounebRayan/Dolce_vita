@@ -74,9 +74,9 @@ export default function Section(prop: SectionProp) {
   
 
   return (
-    <section className="md:px-1 mb-3 group">
+    <section className={`md:px-1 mb-3 group ${products.length === 0 ? 'hidden' : 'block'}`}>
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-1 mx-3 sm:mx-6 md:mx-9">
+      <div className="flex flex-col items-center mb-1 mx-3 sm:mx-6 md:mx-9 w-full">
         <h2 className={` ${myFont.className} text-2xl font-light`}>{prop.name}</h2>
         <Link href="/new" className="text-black text-sm underline mt-0.5">
           Tout Voir
@@ -94,7 +94,7 @@ export default function Section(prop: SectionProp) {
     ))}
   </div>
 ) :(
-        <div className="relative sm:mx-6 md:mx-7 mx-1">
+        <div className="relative sm:mx-6 lg:mx-20 xl:mx-32 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button
             className={`hidden lg:block absolute -left-4 border border-black top-[45%] disabled:hover:bg-white transform -translate-y-1/2 p-2 hover:bg-gray-200 bg-white z-40 shadow-lg shadow-slate-500 opacity-0 transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}

@@ -151,7 +151,7 @@ const SearchPage = () => {
                       className="w-full h-60 rounded-sm object-cover mx-auto"
                       loading="lazy"
                     />
-                    <h3 className="mt-1 pl-2 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
+                    <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
                     {product.category === "Déco" && <p className="text-[13px] pl-2 sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
                   </div>
                 </Link>
@@ -159,7 +159,7 @@ const SearchPage = () => {
             </div>
           ) : (
             <div className="flex justify-center items-center h-64 w-full">
-              <p className="text-center text-lg">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme 😔</p>
+              <p className="text-center text-lg ml-2">Aucun produit n’a été trouvé, essayez d’utiliser un autre terme</p>
             </div>
           )
         )}

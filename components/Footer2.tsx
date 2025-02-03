@@ -10,7 +10,7 @@ const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 export default function Footer2() {
   return (
     <footer className="bg-white text-black py-8 px-6 md:px-16 border-t mt-7">
-      <div className="mx-[11px] grid grid-cols-1 md:grid-cols-5 gap-8 text-sm">
+      <div className="mx-[11px] grid grid-cols-1 lg:grid-cols-5 gap-7 text-sm md:text-base text-center lg:text-left">
         {/* Informations sur l'entreprise */}
         <div>
           <Link href="/" className={`${playfair_Display.className} text-2xl font-bold text-gray-900`}>
@@ -24,7 +24,7 @@ export default function Footer2() {
 
         {/* Découvrez nos meubles */}
         <div>
-          <h3 className="font-bold uppercase text-sm border-b w-fit pb-1">DÉCOUVREZ NOS MEUBLES</h3>
+          <h3 className="font-bold uppercase text-sm border-b pb-1">DÉCOUVREZ NOS MEUBLES</h3>
           <ul className="mt-2 space-y-1">
             <li><Link href="/categories/salons" className="hover:underline">Salons</Link></li>
             <li><Link href="/categories/chambres" className="hover:underline">Chambres à coucher</Link></li>
@@ -35,7 +35,7 @@ export default function Footer2() {
 
         {/* Meublez vos salons */}
         <div>
-          <h3 className="font-bold uppercase text-sm border-b w-fit pb-1">MEUBLEZ VOS SALONS</h3>
+          <h3 className="font-bold uppercase text-sm border-b pb-1">MEUBLEZ VOS SALONS</h3>
           <ul className="mt-2 space-y-1">
             <li><Link href="/categories/canapés & fauteuils" className="hover:underline">Canapés & Fauteuils</Link></li>
             <li><Link href="/categories/tables basses & tables de coin" className="hover:underline">Tables basses & Tables de coin</Link></li>
@@ -44,8 +44,8 @@ export default function Footer2() {
         </div>
 
         {/* Décorez votre maison */}
-        <div>
-          <h3 className="font-bold uppercase text-sm border-b w-fit pb-1">DÉCOREZ VOTRE MAISON</h3>
+        <div >
+          <h3 className="font-bold uppercase text-sm border-b pb-1">DÉCOREZ VOTRE MAISON</h3>
           <ul className="mt-2 space-y-1">
             <li><Link href="/categories/accessoires déco" className="hover:underline">Accessoires Déco</Link></li>
             <li><Link href="/categories/statues" className="hover:underline">Statues</Link></li>
@@ -56,8 +56,8 @@ export default function Footer2() {
 
         {/* Suivez-nous sur les réseaux sociaux */}
         <div>
-          <h3 className="font-bold uppercase text-sm border-b w-fit pb-1">SUIVEZ-NOUS SUR LES RÉSEAUX SOCIAUX</h3>
-          <ul className="mt-2 space-y-1">
+          <h3 className="font-bold uppercase text-sm border-b pb-1">SUIVEZ-NOUS SUR LES RÉSEAUX SOCIAUX</h3>
+          <ul className="mt-2 flex flex-row lg:flex-col gap-2 items-center lg:items-start justify-center lg:justify-start">
             <li className="flex items-center gap-2">
               <FaFacebook size={24} />
               <Link href="https://www.facebook.com/DolceVitaLuxuryHomeCollection" className="hover:underline">Facebook</Link>

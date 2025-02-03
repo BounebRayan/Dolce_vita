@@ -167,7 +167,7 @@ const SubcategoryPage = () => {
               </Link>
             ))
           ) : (
-            <p>Aucun produit n’a été trouvé 😔</p>
+            <p className='ml-2'>Aucun produit n’a été trouvé</p>
           )}
         </div>
       </main>
