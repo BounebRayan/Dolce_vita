@@ -3,7 +3,8 @@
 import { Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import React from "react";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaLinkSlash } from "react-icons/fa6";
 
 const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 
@@ -65,6 +66,10 @@ export default function Footer2() {
             <li className="flex items-center gap-2">
               <FaInstagram size={24} />
               <Link href="https://www.instagram.com/dolce_vita_home_collection" className="hover:underline">Instagram</Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaLinkedin size={24} />
+              <Link href="https://www.linkedin.com/company/dolce-vita-home-collection" className="hover:underline">LinkedIn</Link>
             </li>
           </ul>
         </div>
