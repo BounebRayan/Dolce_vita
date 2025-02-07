@@ -22,8 +22,7 @@ const AboutUsSection = () => {
         <img src="/images/logo.png" alt="Logo" className="h-32 mt-5 md:mt-0"/>
         <p className="text-lg sm:text-xl text-black text-center block">
         Dolce Vita Home Collection : Leader en Ameublement et Décoration en Tunisie <br />
-        Découvrez notre sélection exclusive de meubles et d’accessoires de décoration, soigneusement imaginés pour répondre aux exigences des amateurs de design et de qualité. Que vous cherchiez un canapé élégant pour votre salon, une table à manger épurée pour vos repas en famille ou des accessoires décoratifs pour sublimer vos espaces, Dolce Vita Home Collection propose des pièces qui allient esthétique et fonctionnalité.
-        <br />Visitez nos showrooms à Tunis La Soukra et Sousse Sahloul pour explorer nos collections et laissez-vous inspirer par l’art de vivre Dolce Vita.
+        Découvrez notre sélection de meubles et accessoires alliant design et qualité. Trouvez le canapé, la table ou la décoration parfaite pour sublimer votre intérieur. <br /> Visitez nos showrooms à Tunis La Soukra et Sousse Sahloul pour découvrir l’art de vivre Dolce Vita.
         </p>
         {/*<Link href={"/new"}>
         <button className="border border-black px-4 py-2 sm:px-5 sm:py-2 flex items-center gap-1 mt-3 hover:bg-[#b89f53] bg-[#dcc174] transition-colors duration-300">
