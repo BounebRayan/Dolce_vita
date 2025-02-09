@@ -158,7 +158,7 @@ const SubcategoryPage = () => {
                   <img
                     src={product.images[0]}
                     alt={product.productName}
-                    className="w-full h-[200px] sm:h-[250px] lg:h-[360px] object-cover rounded-sm"
+                    className="w-full h-[300px] sm:h-[320px] lg:h-[360px] object-cover rounded-sm"
                     loading="lazy"
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>

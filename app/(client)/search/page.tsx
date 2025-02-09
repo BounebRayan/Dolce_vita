@@ -148,7 +148,7 @@ const SearchPage = () => {
                       alt={product.productName}
                       width={360}
                       height={360}
-                      className="w-full h-60 rounded-sm object-cover mx-auto"
+                      className="w-full h-[300px] rounded-sm object-cover mx-auto"
                       loading="lazy"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
