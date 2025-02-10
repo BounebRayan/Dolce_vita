@@ -106,7 +106,7 @@ export default function Section(prop: SectionProp) {
 
           {/* Products Grid - Scrollable on mobile, paginated on desktop */}
           <div
-            className="flex space-x-2 overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth pt-3 pl-2"
+            className="flex space-x-3 overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth pt-3 pl-2"
             style={{ maxHeight: '500px' }}
             ref={containerRef}
           >
@@ -117,7 +117,7 @@ export default function Section(prop: SectionProp) {
                     <img
                       src={product.images[0] || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
                       alt={product.productName}
-                      className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] object-cover"
+                      className="w-full aspect-[6/4]  object-cover"
                       loading="lazy"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>

@@ -34,9 +34,9 @@ export default function Banner() {
     <div className="flex items-center justify-center mx-4 sm:mx-6 lg:mx-[42px] mt-1 sm:mt-1.5">
       <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
 
-        <Image src="/images/banner.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
+        <Image src="/images/banner2.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
         
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/60 text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/30 text-center">
 
           <p className={`${Satoshi.className} text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
             Élégance et confort

@@ -71,12 +71,13 @@ const SubcategoryPage = () => {
 
   // Determine grid layout based on the category of the first product
   const gridCols = products[0]?.category === 'Meubles' ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
+  const aspect = products[0]?.category === 'Meubles' ? 'aspect-[6/4]' : 'aspect-[4/5]';
 
   return (
     <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-12 mt-1 md:mt-2">
       <main className="w-full pl-0 lg:pl-4">
         <h1 className="text-[28px] font-light mb-2 capitalize">{decodedCategory}</h1>
-        <InsideCategories/>
+        <InsideCategories type={products[0]?.category}/>
       <div className='border-t mt-6 pt-3'></div>
         {products[0] && products[0].category === "Déco" && <div>
        {/*<label className="flex items-center">
@@ -158,7 +159,7 @@ const SubcategoryPage = () => {
                   <img
                     src={product.images[0]}
                     alt={product.productName}
-                    className="w-full h-[300px] sm:h-[320px] lg:h-[360px] object-cover rounded-sm"
+                    className={`w-full object-cover rounded-sm ${aspect}`}	
                     loading="lazy"
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>

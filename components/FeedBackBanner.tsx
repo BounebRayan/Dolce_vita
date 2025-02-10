@@ -13,6 +13,16 @@ const testimonials = [
     id: 2,
     quote: "Je suis très satisfait de la qualité des produits et du service client",
     author: "Amen Allah M."
+  },
+  {
+    id: 3,
+    quote: "Un espace fabuleux, des articles de décoration très chics , je suis énormément satisfaite, ainsi, un grand merci au personnels pour leurs attitudes professionnels et leurs accueils chaleureux que je remarques très rarement dans d'autres services.",
+    author: "Yasmine Ben Harzallah"
+  },
+  {
+    id: 4,
+    quote: "Espace agreable bien ranger surtout les personnels de magasin sont aimable et genereux",
+    author: "Samar Chaouch"
   }
 ];
 
@@ -22,7 +32,7 @@ export default function FeedbackBanner() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-    }, 20000); // Change quote every 30 seconds
+    }, 10000); // Change quote every 30 seconds
 
     return () => clearInterval(interval);
   }, []);

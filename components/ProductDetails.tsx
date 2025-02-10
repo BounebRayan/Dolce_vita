@@ -215,11 +215,13 @@ const ProductDetails = ({ productId }: Props) => {
               onClick={() => setShowDescription(!showDescription)}
             >
               <span className="mr-2">Description</span>
-              {showDescription ? <AiOutlineUp /> : <AiOutlineDown />}
+              {//showDescription ? <AiOutlineUp /> : <AiOutlineDown />
+              }
             </div>
-            {showDescription && (
+            {//showDescription && (
               <p className="mt-2 text-gray-700 text-sm">{product.description}</p>
-            )}
+            //)
+            }
           </div>
 
           {/* Dimensions */}
@@ -282,7 +284,7 @@ const ProductDetails = ({ productId }: Props) => {
           {/* Add to Cart Button */}
           {product.category === "Déco" && <button
             onClick={handleAddToCart}
-            className="px-4 py-2 bg-[#dcc174] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 mb-4"
+            className="px-4 py-2 bg-[#F6DB8D] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 mb-4"
           >
             Ajouter au panier
           </button>}

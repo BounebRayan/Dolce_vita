@@ -21,8 +21,7 @@ type Category = {
   image: string;
 };
 
-const categories: Category[] = [
-  { id: 1, link: "/meubles", name: 'Meubles', image: '/images/categories/meubles.jpg' },
+const categoriesdeco: Category[] = [
   { id: 2, link: "/categories/accessoires déco", name: 'Accessoires déco', image: '/images/categories/accesoires.jpg' },
   { id: 3, link: "/categories/vases", name: 'Vases', image: '/images/categories/vases.jpg' },
   { id: 4, link: "/categories/bougies & parfums d'intérieur", name: "Bougies & parfums d'intérieur", image: '/images//categories/bougie.jpg' },
@@ -35,11 +34,25 @@ const categories: Category[] = [
   { id: 11, link: "/categories/linges de maison", name: 'Art de la Table', image: '/images/categories/art_de_table.jpg' },
   { id: 12, link: "/categories/linges de maison", name: 'Statues', image: '/images/categories/figure.jpg' },
   { id: 13, link: "/categories/linges de maison", name: 'Plantes', image: '/images/categories/plantes.jpg' },
-  { id: 14, link: "/categories/linges de maison", name: 'Outlet', image: '/images/categories/outlet.jpg' },
-];
 
-const InsideCategories: React.FC = () => {
+];
+const categoriesmeuble: Category[] = [
+  { id: 2, link: "/categories/Salons", name: 'Salons', image: '/images/categories/accesoires.jpg' },
+  { id: 3, link: "/categories/Salles à Manger", name: 'Salles a manges', image: '/images/categories/vases.jpg' },
+  { id: 4, link: "/categories/Chambres", name: "Chambres", image: '/images//categories/bougie.jpg' },
+  { id: 5, link: "/categories/Canapés & Fauteuils", name: 'Canapés & Fauteuils', image: '/images/categories/luminaires.jpg' },
+  { id: 5, link: "/categories/Meubles TV", name: 'Meubles TV', image: '/images/categories/luminaires.jpg' },
+  { id: 5, link: "/categories/Tables basses & Tables de coin", name: 'Tables basses & Tables de coin', image: '/images/categories/luminaires.jpg' },
+  { id: 5, link: "/categories/Consoles & Meubles d’Entrée", name: 'Consoles & Meubles d’Entrée', image: '/images/categories/luminaires.jpg' },
+
+];
+interface InsideCategoriesProps {
+  type: string;
+}
+
+const InsideCategories: React.FC<InsideCategoriesProps> = ({ type }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const categories = type === 'Meubles' ? categoriesmeuble : categoriesdeco;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const Item_width=240;
@@ -57,41 +70,20 @@ const InsideCategories: React.FC = () => {
     <section>
   
       {/* Categories Content */}
-      <div className="relative  group">
-        {/* Scroll Left Button */}
-        <button
-          className={`hidden z-40 lg:block absolute -left-6 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-gray-200 bg-white  opacity-0  transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
-          onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
-          disabled={isLeftButtonDisabled}
-        >
-          <ChevronLeftIcon className="h-6 w-6 text-black" />
-        </button>
+      <div className="relative group">
   
         {/* Categories Grid */}
         <div ref={containerRef} className="flex space-x-2 overflow-x-auto lg:overflow-hidden scroll-smooth scrollbar-hide">
           {categories.map((category) => (
             <Link key={category.id}  href={`${category.link.toLowerCase()}`}>
-              <div className="flex-none w-[210px] sm:w-[210px] cursor-pointer transform transition-transform hover:scale-[1.02] duration-300 h-full pb-1">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover"
-                  loading="lazy"
-                />
-                <h3 className=" text-[13px] uppercase">{category.name}</h3>
+              <div className="flex-none rounded-sm border-[1.5px] py-2 px-3 cursor-pointer transform transition-transform hover:scale-[1.02] duration-300 h-full pb-1">
+                <h3 className=" text-[13px] uppercase whitespace-nowrap ">{category.name}</h3>
               </div>
             </Link>
           ))}
         </div>
   
-        {/* Scroll Right Button */}
-        <button
-          className={`hidden z-40  shadow-lg shadow-slate-500 lg:block disabled:bg-white absolute -right-6 cursor-pointer disabled:cursor-default border border-black top-[47%] transform -translate-y-1/2 p-2 hover:bg-gray-200 bg-white opacity-0 transition-opacity duration-300 ${isRightButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
-          onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
-          disabled={!!isRightButtonDisabled}
-        >
-          <ChevronRightIcon className="h-6 w-6 text-black" />
-        </button>
+ 
       </div>
     </section>
   );}

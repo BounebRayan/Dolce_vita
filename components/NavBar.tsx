@@ -49,7 +49,7 @@ export default function Navbar() {
                 <Link
                   href={`/categories/${category.toLowerCase()}`}
                   onClick={() => setHoveredItem(null)}
-                  className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
+                  className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
                 >
                   {category}
                 </Link>
@@ -71,7 +71,7 @@ interface NavItemProps {
 const NavItem: React.FC<NavItemProps> = ({ children, onHover }) => (
   <li
     onMouseEnter={onHover}
-    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 pb-1"
+    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 pb-1"
   >
     {children}
   </li>
