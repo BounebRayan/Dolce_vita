@@ -1,65 +1,78 @@
-import { FC } from 'react';
-import { FaInstagram, FaFacebook } from 'react-icons/fa';
+"use client";
+
 import { Playfair_Display } from "next/font/google";
-import Link from 'next/link';
+import Link from "next/link";
+import React from "react";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 
-const Footer: FC = () => {
+export default function Footer() {
   return (
-    <footer className="bg-transparent py-4 border-t mt-6">
-      <div className="px-4 sm:px-6 md:px-10 flex flex-col items-center justify-between md:flex-row md:items-center space-y-1 md:space-y-0">
-        
-        {/* Website Name */}
-        <div className="text-center">
+    <footer className="bg-white text-black py-8 px-6 md:px-16 border-t mt-7">
+      <div className="mx-[11px] grid grid-cols-1 lg:grid-cols-5 gap-7 text-sm md:text-base text-center lg:text-left">
+        {/* Informations sur l'entreprise */}
+        <div>
           <Link href="/" className={`${playfair_Display.className} text-2xl font-bold text-gray-900`}>
-            Dolce Vita
+            DOLCE VITA
           </Link>
+          <p className="text-gray-500 text-xs">DEPUIS 2021</p>
+          <p className="mt-2">Meubles – Décorations</p>
+          <p className="mt-1">151, Avenue de l’UMA, La Soukra, Tunis</p>
+          <p className="mt-1">4022, Avenue Yasser Arafat, Sahloul, Sousse</p>
         </div>
 
-        {/* Navigation Links 
-        <div className="flex flex-col items-center space-y-1 md:space-y-0 md:flex-row md:space-x-6">
-          <Link href="/a-propos" className="text-gray-700 hover:text-gray-900">
-            À propos
-          </Link>
-          <Link href="/magasins" className="text-gray-700 hover:text-gray-900">
-            Contact et FAQ
-          </Link>
-          <Link href="/" className="text-gray-700 hover:text-gray-900">
-            Shop
-          </Link>
-        </div>*/}
-        <div className="mt-2 text-center text-sm text-gray-500">
-        © 2024 Dolce Vita, Inc. All rights reserved.
-      </div>
+        {/* Découvrez nos meubles */}
+        <div>
+          <h3 className="font-bold uppercase text-sm border-b pb-1">DÉCOUVREZ NOS MEUBLES</h3>
+          <ul className="mt-2 space-y-1">
+            <li><Link href="/categories/salons" className="hover:underline">Salons</Link></li>
+            <li><Link href="/categories/chambres" className="hover:underline">Chambres à coucher</Link></li>
+            <li><Link href="/categories/salles à manger" className="hover:underline">Salles à manger</Link></li>
+            <li><Link href="/categories/Consoles & meubles d’entrée" className="hover:underline">Consoles & Meubles d’entrée</Link></li>
+          </ul>
+        </div>
 
-        {/* Social Media Links */}
-        <div className="flex space-x-4">
-          <a
-            href="https://www.instagram.com/dolce_vita_home_collection/"
-            aria-label="Instagram"
-            className="text-gray-700 hover:text-gray-900"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaInstagram size={20} />
-          </a>
-          <a
-            href="https://www.facebook.com/DolceVitaLuxuryHomeCollection"
-            aria-label="Facebook"
-            className="text-gray-700 hover:text-gray-900"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaFacebook size={20} />
-          </a>
+        {/* Meublez vos salons */}
+        <div>
+          <h3 className="font-bold uppercase text-sm border-b pb-1">MEUBLEZ VOS SALONS</h3>
+          <ul className="mt-2 space-y-1">
+            <li><Link href="/categories/canapés & fauteuils" className="hover:underline">Canapés & Fauteuils</Link></li>
+            <li><Link href="/categories/tables basses & tables de coin" className="hover:underline">Tables basses & Tables de coin</Link></li>
+            <li><Link href="/categories/meubles tv" className="hover:underline">Meubles TV</Link></li>
+          </ul>
+        </div>
+
+        {/* Décorez votre maison */}
+        <div >
+          <h3 className="font-bold uppercase text-sm border-b pb-1">DÉCOREZ VOTRE MAISON</h3>
+          <ul className="mt-2 space-y-1">
+            <li><Link href="/categories/accessoires déco" className="hover:underline">Accessoires Déco</Link></li>
+            <li><Link href="/categories/statues" className="hover:underline">Statues</Link></li>
+            <li><Link href="/categories/vases" className="hover:underline">Vases</Link></li>
+            <li><Link href="/categories/miroirs" className="hover:underline">Miroirs</Link></li>
+          </ul>
+        </div>
+
+        {/* Suivez-nous sur les réseaux sociaux */}
+        <div>
+          <h3 className="font-bold uppercase text-sm border-b pb-1">SUIVEZ-NOUS SUR LES RÉSEAUX SOCIAUX</h3>
+          <ul className="mt-2 flex flex-row lg:flex-col gap-2 items-center lg:items-start justify-center lg:justify-start">
+            <li className="flex items-center gap-2">
+              <FaFacebook size={24} />
+              <Link href="https://www.facebook.com/DolceVitaLuxuryHomeCollection" className="hover:underline">Facebook</Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaInstagram size={24} />
+              <Link href="https://www.instagram.com/dolce_vita_home_collection" className="hover:underline">Instagram</Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaLinkedin size={24} />
+              <Link href="https://www.linkedin.com/company/dolce-vita-home-collection" className="hover:underline">LinkedIn</Link>
+            </li>
+          </ul>
         </div>
       </div>
-
-      {/* Privacy Policy and Terms */}
-      
     </footer>
   );
-};
-
-export default Footer;
+}

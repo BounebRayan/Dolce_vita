@@ -1,8 +1,8 @@
-import AboutUsSection from "@/components/AboutUs";
-import Banner from "@/components/Banner";
-import CategoriesSection from "@/components/CategoriesSection";
-import FeedbackBanner from "@/components/FeedBackBanner";
-import Section from "@/components/Section_v2";
+import AboutUsSection from "@/components/HomePage/AboutUs";
+import Banner from "@/components/HomePage/Banner";
+import CategoriesSection from "@/components/HomePage/CategoriesSection";
+import FeedbackBanner from "@/components/HomePage/FeedBackBanner";
+import Section from "@/components/HomePage/Section_v2";
 
 export default function Home() {
   return (

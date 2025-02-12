@@ -5,7 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import CategoriesSection from '@/components/CategoriesSection';
+import CategoriesSection from '@/components/HomePage/CategoriesSection';
 import InsideCategories from '@/components/InsideCategories';
 
 interface Product {

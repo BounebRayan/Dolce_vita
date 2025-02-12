@@ -43,7 +43,7 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
   // Filter out the current product from the list
   const filteredProducts = similarProducts.filter((product) => product._id !== id);
   let gridCols = '';
-  if(similarProducts) {gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-2';}
+  if(similarProducts) {gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-1 sm:grid-cols-2';}
 
   return (
     <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-36 border-t-[1.5px] border-gray-300 px-3 py-4">
@@ -65,7 +65,7 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
             </Link>
           ))
         ) : (
-          <p>Aucun produit similaire n'a été trouvé 😔</p>
+          <p>Aucun produit similaire n'a été trouvé</p>
         )}
       </div>
     </div>

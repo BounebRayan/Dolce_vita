@@ -1,6 +1,6 @@
 'use client';
 
-import AdminProductDetails from '@/components/AdminProductDetails';
+import AdminProductDetails from '@/components/Admin/AdminProductDetails';
 import { isAuthenticated } from '@/lib/auth';
 import { useEffect } from 'react';
 

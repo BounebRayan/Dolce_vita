@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { StatsCard } from '@/components/StatsCard';
 import LastOrders from '@/components/LatestCommands';
-import ProductsStatsCard from '@/components/ProductsStatsCard';
+import ProductsStatsCard from '@/components/Admin/ProductsStatsCard';
 import { isAuthenticated } from '@/lib/auth';
 
 interface Stats {

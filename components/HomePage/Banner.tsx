@@ -6,28 +6,21 @@ import localFont from 'next/font/local';
 
 const Zodiak = localFont({
   src: [
-    { path: '../app/fonts/Zodiak/Zodiak-Thin.otf', weight: '100', style: 'normal' },
-    { path: '../app/fonts/Zodiak/Zodiak-Light.otf', weight: '300', style: 'normal' },
-    { path: '../app/fonts/Zodiak/Zodiak-Regular.otf', weight: '400', style: 'normal' },
-    { path: '../app/fonts/Zodiak/Zodiak-Bold.otf', weight: '700', style: 'normal' },
-  ],
-});
-
-const Satoshi = localFont({
-  src: [
-    { path: '../app/fonts/Satochi/Satoshi-Light.otf', weight: '300', style: 'normal' },
-    { path: '../app/fonts/Satochi/Satoshi-Regular.otf', weight: '400', style: 'normal' },
-    { path: '../app/fonts/Satochi/Satoshi-Bold.otf', weight: '700', style: 'normal' },
+    { path: '../../public/fonts/Zodiak/Zodiak-Thin.otf', weight: '100', style: 'normal' },
+    { path: '../../public/fonts/Zodiak/Zodiak-Light.otf', weight: '300', style: 'normal' },
+    { path: '../../public/fonts/Zodiak/Zodiak-Regular.otf', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/Zodiak/Zodiak-Bold.otf', weight: '700', style: 'normal' },
   ],
 });
 
 const Sora = localFont({
   src: [
-    { path: '../app/fonts/Sora/Sora-Light.otf', weight: '300', style: 'normal' },
-    { path: '../app/fonts/Sora/Sora-Regular.otf', weight: '400', style: 'normal' },
-    { path: '../app/fonts/Sora/Sora-Bold.otf', weight: '700', style: 'normal' },
+    { path: '../../public/fonts/Sora/Sora-Light.otf', weight: '300', style: 'normal' },
+    { path: '../../public/fonts/Sora/Sora-Regular.otf', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/Sora/Sora-Bold.otf', weight: '700', style: 'normal' },
   ],
 });
+
 
 export default function Banner() {
   return (
@@ -38,7 +31,7 @@ export default function Banner() {
         
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/30 text-center">
 
-          <p className={`${Satoshi.className} text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
+          <p className={`text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
             Élégance et confort
           </p>
 

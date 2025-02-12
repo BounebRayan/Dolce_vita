@@ -1,23 +1,23 @@
 
 import localFont from 'next/font/local';
 
-const myFont = localFont({
-    src: [
-      { path: '/fonts/BrandonText-Thin.otf', weight: '100', style: 'normal' },
-      { path: '/fonts/BrandonText-Light.otf', weight: '300', style: 'normal' },
-      { path: '/fonts/BrandonText-Regular.otf', weight: '400', style: 'normal' },
-      { path: '/fonts/BrandonText-Bold.otf', weight: '700', style: 'normal' },
-    ],
-  });
-
+const satoshi = localFont({
+  src: [
+    { path: '../public/fonts/Satoshi/Satoshi-Light.otf', weight: '300', style: 'normal' },
+    { path: '../public/fonts/Satoshi/Satoshi-Regular.otf', weight: '400', style: 'normal' },
+    { path: '../public/fonts/Satoshi/Satoshi-Medium.otf', weight: '500', style: 'normal' },
+    { path: '../public/fonts/Satoshi/Satoshi-Bold.otf', weight: '700', style: 'normal' },
+  ],
+});
 
 export default function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
     return (
       <html lang="en">
-        <body className={`${myFont.className} min-h-screen flex flex-col antialiased`}>{children}</body>
-        
+        <body className={`${satoshi.className} min-h-screen flex flex-col subpixel-antialiased`}>
+          {children}
+        </body>  
       </html>
     );
   }

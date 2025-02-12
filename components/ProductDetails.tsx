@@ -17,6 +17,7 @@ import { PiShootingStarDuotone } from 'react-icons/pi';
 import { TbInfoHexagon } from 'react-icons/tb';
 import { LuBadgeInfo } from 'react-icons/lu';
 import { FaCircleInfo } from 'react-icons/fa6';
+import MobileImageCarousel from './MobileImageCarousel';
 
 
 type Props = {
@@ -159,7 +160,13 @@ const ProductDetails = ({ productId }: Props) => {
       <div className="flex flex-col md:flex-row gap-4 p-3 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-36 mt-4 ">
         {/* Images Section */}
         <div className="flex flex-col items-center md:flex-row gap-1 md:items-start w-it lg:w-[650px] ">
-          <div className="mb-2 w-full md:w-[400px] lg:w-[750px] h-auto overflow-hidden px-2">
+        <div className="block md:hidden">
+  <MobileImageCarousel images={product.images} />
+</div>
+
+          <div className="mb-2 w-full md:w-[400px] lg:w-[750px] h-auto overflow-hidden px-2 hidden md:block">
+            {/* Show carousel only for mobile */}
+
             <Image
               src={selectedImage}
               alt={product.productName}
@@ -168,7 +175,7 @@ const ProductDetails = ({ productId }: Props) => {
               className="object-cover rounded-sm"
             />
           </div>
-          <div className="flex flex-row md:flex-col gap-2 overflow-auto">
+          <div className="flex flex-row md:flex-col gap-2 overflow-auto hidden md:block">
             {product.images.map((img, index) => (
               <Image
                 loading='lazy'

@@ -1,5 +1,5 @@
-import AdminHeader from "@/components/AdminHeader";
-import AdminNavbar from "@/components/AdminNavBar";
+import AdminHeader from "@/components/Admin/AdminHeader";
+import AdminNavbar from "@/components/Admin/AdminNavBar";
 import "../../globals.css";
 export const metadata = {
     title: "Admin Panel - Dolce Vita",

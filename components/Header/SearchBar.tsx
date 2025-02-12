@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useState, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-export default function SearchInput() {
+export default function SearchBar() {
   const [searchValue, setSearchValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function SearchInput() {
 
   return (
     <form onSubmit={handleSearchSubmit} className="w-80 md:w-72 lg:w-80 border-b border-black flex items-center">
+
       {/* Search Input */}
       <input
         type="text"
@@ -40,6 +41,9 @@ export default function SearchInput() {
           </button>
         )}
       </div>
+
     </form>
   );
 }
+
+// Done
