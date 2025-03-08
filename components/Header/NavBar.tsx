@@ -24,7 +24,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="pb-1 relative px-10 z-50 border-b mb-2" onMouseLeave={handleMouseLeave}>
+    <nav className="pb-1.5 relative lg:px-10 px-6 z-50 mb-0.5 md:w-fit" onMouseLeave={handleMouseLeave}>
 
       {/* nav bar elements */}
       <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
@@ -38,12 +38,12 @@ export default function Navbar() {
       {/* dropdown */}
       {hoveredItem && (
         <div
-          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b md:border-r shadow-lg md:w-[330px] w-full"
+          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b md:border-r shadow-lg md:w-[350px] w-full"
           style={{ top: '100%', left: 0 }}
           onMouseEnter={() => setHoveredItem(hoveredItem)}
           onMouseLeave={handleMouseLeave}
         >
-          <ul className="flex flex-col space-y-4">
+          <ul className="flex flex-col space-y-2.5">
             {categories[hoveredItem as keyof typeof categories].map((category) => (
               <li key={category}>
                 <Link

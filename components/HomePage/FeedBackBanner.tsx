@@ -38,11 +38,11 @@ export default function FeedbackBanner() {
   }, []);
 
   return (
-    <div className="relative text-black px-6 py-4 md:px-12 md:py-6 bg-cover bg-center bg-no-repeat mx-3 sm:mx-6 md:mx-10 bg-gray-100 flex items-center justify-center min-h-[150px]">
+    <div className="relative rounded-md text-black px-6 py-4 md:px-12 md:py-6 bg-cover bg-center bg-no-repeat mx-3 sm:mx-6 md:mx-7 bg-gray-100 flex items-center justify-center min-h-[150px]">
       <PiQuotesDuotone className="text-4xl absolute left-4 top-4 text-gray-700 opacity-40" />
       <div className="text-center transition-opacity duration-500 ease-in-out p-4 rounded-lg">
         <p className="text-lg md:text-xl font-base italic">"{testimonials[currentIndex].quote}"</p>
-        <p className="text-sm md:text-base font-semibold mt-2">— {testimonials[currentIndex].author}</p>
+        <p className="text-sm md:text-base font-semibold mt-2 text-[#b8a46b] ">— {testimonials[currentIndex].author}</p>
       </div>
     </div>
   );

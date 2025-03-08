@@ -22,7 +22,7 @@ export default function Header() {
             <AnouncementBar/>
             
             {/* Main header */}
-            <div className="px-8 md:px-10 pt-4 pb-1 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="px-4 md:px-6 lg:px-10 pt-3.5 pb-1 flex flex-col md:flex-row justify-between items-center space-y-2.5 md:space-y-0">
 
                 <div className="text-center lg:text-left">
                     <Link href="/" className={`${playfair_Display.className} font-medium text-3xl md:text-4xl tracking-wide`}>

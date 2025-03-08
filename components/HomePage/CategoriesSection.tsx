@@ -54,7 +54,7 @@ const CategoriesSection: React.FC = () => {
   const isRightButtonDisabled = containerRef.current && containerRef.current.scrollWidth <= containerRef.current.clientWidth + scrollPosition;
   
   return (
-    <section className="lg:px-1 pt-2 mt-4 mx-0 sm:mx-2 lg:mx-5 mb-2">
+    <section className="lg:px-1 pt-2 mt-3 mx-0 sm:mx-2 lg:mx-3 mb-2">
 
       {/* Categories Title */}
       <div className="flex justify-between items-center mb-1 px-4">
@@ -79,9 +79,9 @@ const CategoriesSection: React.FC = () => {
             <Link key={category.id}  href={`${category.link.toLowerCase()}`}>
               <div className="flex-none w-[180px] sm:w-[210px] cursor-pointer transform transition-transform hover:scale-[1.02] duration-300 h-full pb-1">
                 <img
-                  src={category.image}
+                  src={"https://placehold.co/600x400/F5F5F1/F5F5F1" }
                   alt={category.name}
-                  className="w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover"
+                  className="w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover rounded-md"
                   loading="lazy"
                 />
                 <h3 className="text-[13px] uppercase">{category.name}</h3>

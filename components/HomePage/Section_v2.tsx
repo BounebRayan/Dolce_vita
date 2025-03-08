@@ -74,9 +74,9 @@ export default function Section(prop: SectionProp) {
   
 
   return (
-    <section className="md:px-1 mb-3 group">
+    <section className="md:px-1 mb-1 group">
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-1 mx-3 sm:mx-6 md:mx-9">
+      <div className="flex flex-col items-start mb-0.5 mx-3 sm:mx-6 md:mx-6">
         <h2 className={` ${myFont.className} text-2xl font-light`}>{prop.name}</h2>
         <Link href="/new" className="text-black text-sm underline mt-0.5">
           Tout Voir
@@ -85,16 +85,16 @@ export default function Section(prop: SectionProp) {
 
       {/* Loading Indicator */}
       {loading ? (
-  <div className="relative sm:mx-6 md:mx-9 mx-1 flex space-x-2 overflow-x-auto scrollbar-hide scroll-smooth pt-3 pl-2">
+  <div className="relative sm:mx-6 md:mx-4 mx-1 flex space-x-2 overflow-x-auto scrollbar-hide scroll-smooth pt-3 pl-2">
     {[...Array(5)].map((_, index) => (
       <div 
         key={index} 
-        className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] h-[300px] bg-gray-200 animate-pulse rounded-lg"
+        className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] h-[300px] bg-gray-200 animate-pulse rounded-md"
       />
     ))}
   </div>
 ) :(
-        <div className="relative sm:mx-6 md:mx-7 mx-1">
+        <div className="relative sm:mx-6 md:mx-4 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button
             className={`hidden lg:block absolute -left-4 border border-black top-[45%] disabled:hover:bg-white transform -translate-y-1/2 p-2 hover:bg-gray-200 bg-white z-40 shadow-lg shadow-slate-500 opacity-0 transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
@@ -113,11 +113,11 @@ export default function Section(prop: SectionProp) {
             {products
               .map((product) => (
                 <Link key={product._id} href={`/product/${product._id}`}>
-                  <div className={` relative flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-[1.01] pb-3`}>
+                  <div className={`  relative flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-[1.01] pb-3`}>
                     <img
                       src={product.images[0] || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
                       alt={product.productName}
-                      className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] object-cover"
+                      className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] object-cover rounded-md"
                       loading="lazy"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>

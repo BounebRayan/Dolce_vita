@@ -6,10 +6,13 @@ import { isAuthenticated } from "@/lib/auth";
 
 const categories = { 
   deco: [
-    'Accessoires déco', 'Vases', 'Cadres photo', 'Luminaires', 'Miroirs',
-    'Déco murale', "Bougies & parfums d'intérieur", "linges de maison"
+    'Accessoires Déco',  'Art de la Table', 'Vases', 'Luminaires', 'Miroirs',
+      'Statues', "Bougies & Parfums d’Intérieur", 'Porte-Bougies', 'Linge de Maison', 'Cadres Photo',
+      'Décorations Murales', 'Plantes'
   ],
-  meuble: ['Salons', 'Chambres', 'Salles À Manger'],
+  meuble: ['Salons', 'Chambres', 'Salles à Manger', 
+      'Canapés & Fauteuils', 'Tables basses & Tables de coin', 'Meubles TV', 
+      "Consoles & Meubles d’Entrée"],
 };
 
 const colors = { 

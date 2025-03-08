@@ -24,16 +24,16 @@ const Sora = localFont({
 
 export default function Banner() {
   return (
-    <div className="flex items-center justify-center mx-4 sm:mx-6 lg:mx-[42px] mt-1 sm:mt-1.5">
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
+    <div className="flex items-center justify-center sm:mx-3 ">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden sm:rounded-lg">
 
         <Image src="/images/banner2.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
         
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/30 text-center">
-
-          <p className={`text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
+        <img src="/images/logo.png" alt="Logo" className="md:h-36 h-24 mt-5 md:mt-0"/>
+          {/*<p className={`text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
             Élégance et confort
-          </p>
+          </p>*/}
 
           <h1 className={`${Zodiak.className} text-2xl sm:text-3xl md:text-4xl lg:text-[56px] font-normal mb-4`}>
           Créez votre refuge de tranquillité
