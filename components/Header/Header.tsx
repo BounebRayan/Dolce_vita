@@ -9,7 +9,6 @@ import { useCart } from "../../contexts/CartContext";
 import { Playfair_Display } from "next/font/google";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
-
 const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 
 export default function Header() {
@@ -39,7 +38,7 @@ export default function Header() {
                     <Link href="/cart" className="relative">
                         <ShoppingCartIcon className="h-6 w-6 cursor-pointer relative transform transition duration-300 hover:scale-105"/>
                         {totalItems > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                            <span className="absolute -top-1.5 -right-1.5 bg-[#C94C4C] text-white rounded-full font-semibold text-[11px] w-[18px] h-[18px] flex items-center justify-center">
                                 {totalItems}
                             </span>
                         )}
@@ -53,5 +52,3 @@ export default function Header() {
         </header>
     );
 }
-
-// Done
