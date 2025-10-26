@@ -9,7 +9,7 @@ const playfair_Display = Playfair_Display({ subsets: ['latin'] });
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-black py-8 px-6 md:px-16 border-t mt-7">
+    <footer className="bg-white text-black py-8 px-6 md:px-16 border-t">
       <div className="mx-[11px] grid grid-cols-1 lg:grid-cols-5 gap-7 text-sm md:text-base text-center lg:text-left">
         {/* Informations sur l'entreprise */}
         <div>

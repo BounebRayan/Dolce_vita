@@ -1,7 +1,6 @@
 import AboutUsSection from "@/components/HomePage/AboutUs";
 import Banner from "@/components/HomePage/Banner";
 import CategoriesSection from "@/components/HomePage/CategoriesSection";
-import FeedbackBanner from "@/components/HomePage/FeedBackBanner";
 import Section from "@/components/HomePage/Section_v2";
 import TestimonialSection from "@/components/HomePage/Testimonoals";
 

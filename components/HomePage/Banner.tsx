@@ -24,10 +24,10 @@ const Sora = localFont({
 
 export default function Banner() {
   return (
-    <div className="flex items-center justify-center sm:mx-3 ">
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden sm:rounded-lg">
+    <div className="flex items-center justify-center">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
 
-        <Image src="/images/banner2.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
+        <Image src="/images/banner.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
         
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/30 text-center">
         <img src="/images/logo.png" alt="Logo" className="md:h-36 h-24 mt-5 md:mt-0"/>
