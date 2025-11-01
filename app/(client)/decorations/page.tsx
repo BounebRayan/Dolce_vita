@@ -17,7 +17,7 @@ interface Product {
   salePercentage: number;
 }
 
-const MeublesPage = () => {
+const DecorationsPage = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,7 @@ const MeublesPage = () => {
       try {
         const response = await axios.get('/api/products/subcategory', {
           params: {
-            category: 'Meubles',
+            category: 'Déco',
             sortAttribute: 'unitsSold',
             sortOrder: 'desc'
           }
@@ -45,9 +45,9 @@ const MeublesPage = () => {
   return (
     <div className="mx-4 sm:mx-8 lg:mx-12 mt-1 md:mt-2">
       <div className="mb-8">
-        <h1 className="text-3xl font-light mb-4">Meubles</h1>
+        <h1 className="text-3xl font-light mb-4">Décorations</h1>
         <p className="text-gray-600 mb-6">
-          Découvrez notre collection de meubles pour aménager votre intérieur
+          Découvrez notre collection de décorations pour embellir votre intérieur
         </p>
       </div>
 
@@ -55,10 +55,10 @@ const MeublesPage = () => {
       <div className="mb-12">
         <h2 className="text-2xl font-light mb-6">Nos Catégories</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {categories.meuble.map((category) => (
+          {categories.deco.map((category) => (
             <Link 
               key={category.type} 
-              href={`/meubles/${category.type}`}
+              href={`/decorations/${category.type}`}
               className="group"
             >
               <div className="bg-gray-100 p-6 rounded-sm hover:bg-gray-200 transition-colors">
@@ -75,17 +75,27 @@ const MeublesPage = () => {
       {!loading && featuredProducts.length > 0 && (
         <div className="mb-12">
           <h2 className="text-2xl font-light mb-6">Produits Populaires</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {featuredProducts.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
                   <img
                     src={product.images[0]}
                     alt={product.productName}
-                    className="w-full object-cover rounded-sm aspect-[6/4]"
+                    className="w-full object-cover rounded-sm aspect-[4/5]"
                     loading="lazy"
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
+                  <p className="text-sm text-gray-600">
+                    {product.onSale ? (
+                      <div>
+                        {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
+                        <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
+                      </div>
+                    ) : (
+                      <div>{product.price.toFixed(0)} DT</div>
+                    )}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -96,4 +106,4 @@ const MeublesPage = () => {
   );
 };
 
-export default MeublesPage;
+export default DecorationsPage;

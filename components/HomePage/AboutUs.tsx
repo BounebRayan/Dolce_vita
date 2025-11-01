@@ -1,17 +1,35 @@
 'use client';
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const AboutUsSection = () => {
+  const [aboutUsImage, setAboutUsImage] = useState('https://placehold.co/1280x720/F5F5F1/F5F5F1');
+
+  useEffect(() => {
+    const fetchAboutUsImage = async () => {
+      try {
+        const response = await fetch('/api/homepage-images');
+        const data = await response.json();
+        if (data.images?.aboutUs) {
+          setAboutUsImage(data.images.aboutUs);
+        }
+      } catch (error) {
+        console.error('Error fetching about us image:', error);
+      }
+    };
+
+    fetchAboutUsImage();
+  }, []);
+
   return (
     <section className=" mb-6 sm:mx-3 md:mx-7 mt-6 flex flex-col lg:flex-row items-center lg:items-start sm:rounded-lg bg-[#F5F5F1]">
 
       {/* Left Side: Image */}
       <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] sm:rounded-lg ">
         <img
-          src="/images/aboutus.jpg"
+          src={aboutUsImage}
           alt="About Us"
           className="w-full h-full object-cover sm:rounded-lg"
           loading="lazy"

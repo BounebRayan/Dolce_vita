@@ -3,7 +3,8 @@ import axios from 'axios';
 import Link from 'next/link';
 
 interface Product {
-  category: string;
+  category: 'Meubles' | 'Déco';
+  subCategory?: string;
   salePercentage: number;
   onSale: boolean;
   _id: string;
@@ -13,7 +14,7 @@ interface Product {
 }
 
 interface Props {
-  subCategory: string;
+  subCategory: string | undefined;
   id: string;
 }
 
@@ -25,9 +26,9 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
     const fetchSimilarProducts = async () => {
       try {
         const response = await axios.get(`/api/products/subcategory`, {
-          params: { subcategory: subCategory, limit: 5 },
+          params: { subcategory: subCategory },
         });
-        setSimilarProducts(response.data);
+        setSimilarProducts(response.data.slice(0, 5)); // Limit to 5 products
       } catch (error) {
         console.error('Error fetching similar products:', error);
       } finally {
@@ -43,7 +44,9 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
   // Filter out the current product from the list
   const filteredProducts = similarProducts.filter((product) => product._id !== id);
   let gridCols = '';
-  if(similarProducts) {gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-1 sm:grid-cols-2';}
+  if(similarProducts.length > 0) {
+    gridCols = similarProducts[0].category === 'Meubles' ? 'xl:grid-cols-3 grid-cols-1' : 'xl:grid-cols-5 grid-cols-1 sm:grid-cols-2';
+  }
 
   return (
     <div className="mt-3 mx-4 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-36 border-t-[1.5px] border-gray-300 px-3 py-4">

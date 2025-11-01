@@ -6,19 +6,20 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import CategoriesSection from '@/components/HomePage/CategoriesSection';
-import InsideCategories from '@/components/InsideCategories';
+import InsideCategories from '@/components/ProductPage/InsideCategories';
 
 interface Product {
   _id: string;
   productName: string;
-  category: string;
+  category: 'Meubles' | 'Déco';
+  subCategory?: string;
   images: string[];
   mainImageNumber: number;
   onSale: boolean;
   price: number;
   unitsSold: number;
   createdAt: string;
-  salePercentage : number;
+  salePercentage: number;
 }
 
 const SubcategoryPage = () => {
@@ -48,7 +49,7 @@ const SubcategoryPage = () => {
       try {
         const response = await axios.get('/api/products/subcategory', {
           params: {
-            subcategory: categoryStr,
+            category: categoryStr,
             onSale: onSale ? 'true' : 'false',
             sortAttribute,
             sortOrder,

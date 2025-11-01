@@ -35,7 +35,7 @@ type SectionProp = {
   url: string;
 };
 
-export default function Section(prop: SectionProp) {
+export default function ProductsSection(prop: SectionProp) {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -89,8 +89,24 @@ export default function Section(prop: SectionProp) {
     {[...Array(5)].map((_, index) => (
       <div 
         key={index} 
-        className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] h-[300px] bg-gray-200 animate-pulse rounded-md"
-      />
+        className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] cursor-pointer transform transition duration-300 pb-3"
+      >
+        {/* Image placeholder */}
+        <div className="relative w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200 rounded-md overflow-hidden">
+          {/* Shimmer effect */}
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+        </div>
+        
+        {/* Product name placeholder */}
+        <div className="mt-1 h-4 w-3/4 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded overflow-hidden relative">
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+        </div>
+        
+        {/* Price placeholder */}
+        <div className="mt-1 h-4 w-1/3 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded overflow-hidden relative">
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+        </div>
+      </div>
     ))}
   </div>
 ) :(

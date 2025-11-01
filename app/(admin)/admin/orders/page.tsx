@@ -391,17 +391,23 @@ if (!token) {
                       className="flex items-center space-x-4 border-t pb-2"
                     >
                       <img
-                        src={product.image}
-                        alt={product.product.name}
+                        src={product.image || '/images/placeholder.jpg'}
+                        alt={product.product?.productName || 'Product image'}
                         className="w-12 h-12 object-cover rounded-md"
                       />
                       <div>
-                        <Link
-                          href={`/admin/product/${product.product._id}`}
-                          className="font-medium underline"
-                        >
-                          {product.product.productName}
-                        </Link>
+                        {product.product ? (
+                          <Link
+                            href={`/admin/product/${product.product._id}`}
+                            className="font-medium underline"
+                          >
+                            {product.product.productName}
+                          </Link>
+                        ) : (
+                          <span className="font-medium text-gray-500">
+                            Product deleted
+                          </span>
+                        )}
                         <p className="text-sm text-gray-600">
                           <strong>Color:</strong> {product.color}
                         </p>

@@ -2,18 +2,12 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import { categories } from '@/config/categories';
+import { CategoryItem } from '@/config/categories';
 
 const AdminNavbar: React.FC = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const navbarRef = useRef<HTMLElement>(null);
-
-  const categories = {
-    deco: [
-      'Accessoires déco', 'Vases', 'Cadres photo', 'Luminaires', 'Miroirs',
-      'Déco murale', "Bougies & parfums d'intérieur", "linges de maison"
-    ],
-    meuble: ['Salons', 'Chambres', 'Salles À Manger'],
-  };
 
   const handleMouseLeave = () => {
     setHoveredItem(null);
@@ -50,13 +44,13 @@ const AdminNavbar: React.FC = () => {
           onMouseLeave={handleMouseLeave}
         >
           <ul className="flex flex-col space-y-4">
-            {categories[hoveredItem as keyof typeof categories].map((category) => (
-              <li key={category}>
+            {categories[hoveredItem as keyof typeof categories].map((category: CategoryItem) => (
+              <li key={category.type}>
                 <Link
-                  href={`/admin/categories/${category.toLowerCase()}`} onClick={()=>{setHoveredItem(null)}}
+                  href={`/admin/categories/${category.type}`} onClick={()=>{setHoveredItem(null)}}
                   className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#dcc174] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
                 >
-                  {category}
+                  {category.text}
                 </Link>
               </li>
             ))}

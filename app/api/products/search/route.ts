@@ -6,6 +6,8 @@ export async function GET(req: Request) {
   await connectToDB();
   const { searchParams } = new URL(req.url);
   const searchQuery = searchParams.get('query') || '';
+  const category = searchParams.get('category') || '';
+  const subCategory = searchParams.get('subCategory') || '';
   const priceMin = parseFloat(searchParams.get('priceMin') || '0');
   const priceMax = parseFloat(searchParams.get('priceMax') || '20000');
   const onSale = searchParams.get('onSale') === 'true';
@@ -17,11 +19,20 @@ export async function GET(req: Request) {
   }
 
   try {
-    const products = await Product.find({
-      productName: { $regex: searchQuery, $options: 'i' },
+    const searchCriteria: any = {
+      isAvailable: true,
+      $or: [
+        { productName: { $regex: searchQuery, $options: 'i' } },
+        { description: { $regex: searchQuery, $options: 'i' } }
+      ],
       price: { $gte: priceMin, $lte: priceMax },
       ...(onSale && { onSale: true }),
-    })
+    };
+
+    if (category) searchCriteria.category = category;
+    if (subCategory) searchCriteria.subCategory = subCategory;
+
+    const products = await Product.find(searchCriteria)
       .sort({ [sort]: order });
 
     return NextResponse.json(products, { status: 200 });
