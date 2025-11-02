@@ -117,7 +117,7 @@ export default function ProductsSection(prop: SectionProp) {
             onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
             disabled={isLeftButtonDisabled}
           >
-            <ChevronLeftIcon className="h-6 w-6 text-black" />
+            <ChevronLeftIcon className="h-6 w-6 text-white" />
           </button>
 
           {/* Products Grid - Scrollable on mobile, paginated on desktop */}
@@ -150,7 +150,7 @@ export default function ProductsSection(prop: SectionProp) {
           onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
             disabled={!!isRightButtonDisabled}
           >
-            <ChevronRightIcon className="h-6 w-6 text-black" />
+            <ChevronRightIcon className="h-6 w-6 text-white" />
           </button>
         </div>
       )}

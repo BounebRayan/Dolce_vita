@@ -24,13 +24,16 @@ const Sora = localFont({
 
 
 export default function Banner() {
-  const [bannerImage, setBannerImage] = useState('https://placehold.co/1280x720/F5F5F1/F5F5F1');
+  const [bannerImage, setBannerImage] = useState<string | null>(null);
   const [bannerOpacity, setBannerOpacity] = useState(30);
 
   useEffect(() => {
     const fetchBannerImage = async () => {
       try {
-        const response = await fetch('/api/homepage-images');
+        // Browser will use HTTP cache based on Cache-Control headers from API
+        const response = await fetch('/api/homepage-images', {
+          cache: 'default' // Use browser's default caching behavior
+        });
         const data = await response.json();
         if (data.images?.banner) {
           setBannerImage(data.images.banner);
@@ -48,9 +51,21 @@ export default function Banner() {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden bg-[#F5F5F1]">
 
-        <Image src={bannerImage} alt="Banner Image" className="object-cover bg-[#C8C8C8]" loading='eager' fill style={{ opacity: bannerOpacity / 100 }}/>
+        {bannerImage && (
+          <Image 
+            src={bannerImage} 
+            alt="" 
+            className="object-cover" 
+            loading="eager"
+            priority
+            fill 
+            sizes="100vw"
+            quality={90}
+            style={{ opacity: bannerOpacity / 100 }}
+          />
+        )}
         
         <div 
           className="absolute inset-0 flex flex-col items-center justify-center text-center"

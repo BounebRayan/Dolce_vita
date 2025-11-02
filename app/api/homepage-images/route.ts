@@ -3,7 +3,8 @@ import { verifyToken } from '@/lib/verify';
 import connectToDB from '@/config/database';
 import HomepageImages from '@/models/homepageImages';
 
-export const dynamic = 'force-dynamic';
+// Allow caching with revalidation every 60 seconds
+export const revalidate = 60;
 
 export async function GET() {
   try {
@@ -20,7 +21,11 @@ export async function GET() {
       categoryOrder: homepageImages.categoryOrder
     };
     
-    return NextResponse.json({ images });
+    // Add caching headers - cache for 5 minutes, revalidate in background
+    const response = NextResponse.json({ images });
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    
+    return response;
   } catch (error) {
     console.error('Error fetching homepage images:', error);
     return NextResponse.json({ error: 'Error fetching homepage images' }, { status: 500 });

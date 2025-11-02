@@ -135,7 +135,7 @@ const CategoriesSection: React.FC = () => {
           onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
           disabled={isLeftButtonDisabled}
         >
-          <ChevronLeftIcon className="h-4 w-4 text-black"/>
+          <ChevronLeftIcon className="h-4 w-4 text-white"/>
         </button>
   
         {/* Categories Grid */}
@@ -209,7 +209,7 @@ const CategoriesSection: React.FC = () => {
           onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
           disabled={!!isRightButtonDisabled}
         >
-          <ChevronRightIcon className="h-4 w-4 text-black"/>
+          <ChevronRightIcon className="h-4 w-4 text-white"/>
         </button>
 
       </div>
