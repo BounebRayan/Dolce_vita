@@ -79,6 +79,9 @@ type Product = {
   salePercentage: number;
   price: number;
   description: string;
+  shortDescription?: string;
+  brand?: string;
+  isPurchasable?: boolean;
   availableColors: Array<{
     name: string;
     hex: string;
@@ -193,7 +196,18 @@ if (!token) {
 
     if (product) {
       try {
-        await axios.put(`/api/products/${productId}`, product,
+        // Prepare update data, ensuring isPurchasable and brand are always included
+        const updateData: any = {
+          ...product,
+          isPurchasable: product.category === 'Meubles' ? (product.isPurchasable || false) : true, // Déco is always purchasable
+        };
+        
+        // Ensure brand is always included (use default if empty)
+        if (!updateData.brand || !updateData.brand.trim()) {
+          updateData.brand = 'Dolce Vita Collection';
+        }
+        
+        await axios.put(`/api/products/${productId}`, updateData,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add token for authentication
@@ -416,6 +430,30 @@ if (!token) {
           placeholder="Description du produit"
         ></textarea>
          </div>
+         <div>
+         <label className="block font-medium mb-1">Description courte (optionnel)</label>
+        <textarea
+          className="border p-2 w-full rounded-sm outline-none"
+          value={product.shortDescription || ''}
+          onChange={(e) =>
+            setProduct({ ...product, shortDescription: e.target.value || undefined })
+          }
+          placeholder="Court texte affiché sous le prix dans la carte produit"
+          maxLength={300}
+        ></textarea>
+         </div>
+         <div>
+         <label className="block font-medium mb-1">Marque (optionnel)</label>
+        <input
+          className="border p-2 w-full rounded-sm outline-none"
+          value={product.brand || ''}
+          onChange={(e) =>
+            setProduct({ ...product, brand: e.target.value || undefined })
+          }
+          placeholder="Dolce Vita Collection (par défaut)"
+          maxLength={100}
+        />
+         </div>
         <div>
   <label className="block font-medium">Catégorie</label>
   <div className="mt-2 flex flex-row items-start gap-1">
@@ -614,7 +652,21 @@ if (!token) {
                 setProduct({ ...product, onSale: e.target.checked })
               }
             />
-          </div> </div>
+          </div>
+          {product.category === "Meubles" && (
+            <div className="flex gap-2">
+              <label className="block font-medium">Produit achetable ?</label>
+              <input
+                type="checkbox"
+                checked={product.isPurchasable || false}
+                onChange={(e) =>
+                  setProduct({ ...product, isPurchasable: e.target.checked })
+                }
+                className="mt-1"
+              />
+            </div>
+          )}
+          </div>
           
 
         <div className="grid grid-cols-2 gap-2">

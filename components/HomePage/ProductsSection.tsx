@@ -28,6 +28,8 @@ type Product = {
   onSale :boolean;
   isRecommended: boolean;
   salePercentage : number;
+  brand?: string;
+  isPurchasable?: boolean;
 };
 
 type SectionProp = {
@@ -137,7 +139,18 @@ export default function ProductsSection(prop: SectionProp) {
                       loading="lazy"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
-                    {product.category !== 'Meubles' && <p className="text-[13px] sm:text-[14px] text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
+                    {product.category === 'Meubles' && product.brand && (
+                      <p className="text-[12px] sm:text-[13px] text-gray-500">{product.brand}</p>
+                    )}
+                    {(product.category === 'Déco' || (product.category === 'Meubles' && product.isPurchasable)) && (
+                      <p className="text-[13px] sm:text-[14px] text-gray-600">
+                        {product?.onSale ? (
+                          <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div>
+                        ) : (
+                          <div>{product?.price.toFixed(0)} DT</div>
+                        )}
+                      </p>
+                    )}
                     {product.isRecommended && <IoMdHeart  className="text-[#F6DB8D] animate-bounce drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.3)] text h-7 w-7 absolute top-4 right-4 rounded-full p-1"/>}
                   </div>
                 </Link>

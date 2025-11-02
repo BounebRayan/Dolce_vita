@@ -50,6 +50,12 @@ const productSchema = new mongoose.Schema({
     trim: true,
     maxlength: 300
   },
+  brand: {
+    type: String,
+    trim: true,
+    maxlength: 100,
+    default: 'Dolce Vita Collection'
+  },
   images: {
     type: [String],
     validate: {
@@ -90,6 +96,11 @@ const productSchema = new mongoose.Schema({
   isAvailable: {
     type: Boolean,
     default: true,
+    index: true
+  },
+  isPurchasable: {
+    type: Boolean,
+    default: false,
     index: true
   },
   

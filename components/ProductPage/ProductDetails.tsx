@@ -3,21 +3,15 @@ import { useCart } from '../../contexts/CartContext';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import axios from 'axios';
-import { FaStar } from 'react-icons/fa';
-import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
-import { MdOutlineLocalShipping } from "react-icons/md";
-import { BiSolidStar } from "react-icons/bi";
 import RelatedProducts from './RelatedProducts';
-import { BiColor } from 'react-icons/bi';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsFillStarFill } from 'react-icons/bs';
-import { PiShootingStarDuotone } from 'react-icons/pi';
-import { TbInfoHexagon } from 'react-icons/tb';
-import { LuBadgeInfo } from 'react-icons/lu';
-import { FaCircleInfo } from 'react-icons/fa6';
+import { FaCircleInfo, FaCheck } from 'react-icons/fa6';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import MobileImageCarousel from './MobileImageCarousel';
+import { getCategoryText, getSubsubcategoryByType } from '@/config/categories';
 
 
 type Props = {
@@ -30,11 +24,15 @@ type Product = {
   productName: string;
   category: 'Meubles' | 'Déco';
   subCategory?: string;
+  subSubCategory?: string;
   images: string[];
   onSale: boolean;
   salePercentage: number;
   price: number;
   description: string;
+  shortDescription?: string;
+  brand?: string;
+  isPurchasable?: boolean;
   availableColors: Array<{
     name: string;
     hex: string;
@@ -51,74 +49,14 @@ type Product = {
   reference: string;
 };
 
-const colorMapping: { [key: string]: string } = {
-  "rouge": "#f56565",
-  "bleu": "#4299e1",
-  "vert": "#48bb78",
-  "jaune": "#ecc94b",
-  "noir": "#000000",
-  "blanc": "#ffffff",
-  "gris": "#a0aec0",
-  "rose": "#fbb6ce",
-  "orange": "#ed8936",
-  "violet": "#9f7aea",
-  "noyer": "#8B5A2B",
-  "chêne clair": "#D2B48C",
-  "chêne foncé": "#8B4513",
-  "marron": "#6B4226",
-  "beige": "#f5f5dc",
-  "chocolat": "#3E2723",
-  "sable": "#F4A300",
-  "crème": "#FFF5E1",
-  "pierre": "#B4A48D",
-  "gris souris": "#A8A8A8",
-  "vert sauge": "#B2AC88",
-  "caramel": "#FFD700",
-  "bordeaux": "#800000",
-  "pistache": "#93C572",
-  "taupe": "#483C32",
-  "taupe clair": "#B2A18D",
-  "vert d'eau": "#A0D1B1",
-  "émeraude": "#50C878",
-  "noir charbon": "#333333",
-  "blanc cassé": "#F8F8F8",
-  "gris clair": "#D3D3D3",
-  "moutarde": "#FFDB58",
-  "bleu pétrole": "#006F73",
-  "ocre": "#C2A000",
-  "gris perle": "#E8E8E8",
-  "gris foncé": "#595959",
-  "lavande": "#E6E6FA",
-  "pierre de lune": "#B4B0A4",
-  "menthe": "#98FF98",
-  "safran": "#F4C430",
-  "azur": "#007FFF",
-  "magenta": "#FF00FF",
-  "aubergine": "#580F41",
-  "bleu marine": "#003366",
-  "gris cendré": "#8A8D8F",
-  "vert olive": "#556B2F",
-  "pêche": "#FFDAB9",
-  "corail": "#FF7F50",
-  "or": "#FFD700",
-  "argent": "#C0C0C0",
-  "bleu ciel": "#87CEEB",
-  "noisette": "#6F4F1A",
-  "canard": "#006F73",
-  "rose pâle": "#FADCD9",
-  "aubergine clair": "#7A2A59"
-}
-
-
 const ProductDetails = ({ productId }: Props) => {
 
   const {items, addToCart } = useCart();
 
 
   const [product, setProduct] = useState<Product | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string>('');
-  const [selectedColor, setSelectedColor] = useState<string>(''); 
-  const [showDescription, setShowDescription] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+  const [selectedColor, setSelectedColor] = useState<string>('');
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -126,7 +64,7 @@ const ProductDetails = ({ productId }: Props) => {
         const response = await axios.get(`/api/products/${productId}`);
         setProduct(response.data);
         setSelectedColor(response.data.availableColors[0]?.name || '');
-        setSelectedImage(response.data.images[response.data.mainImageNumber] || response.data.images[0]);
+        setSelectedImageIndex(response.data.mainImageNumber || 0);
       } catch (error) {
         console.error('Failed to fetch product details:', error);
       }
@@ -136,8 +74,15 @@ const ProductDetails = ({ productId }: Props) => {
   }, [productId]);
 
   const handleAddToCart = () => {
-    if (!selectedColor) {
-      alert("Veuillez sélectionner une couleur avant de l’ajouter au panier.");
+    // Check if product is purchasable (for Déco or Meubles with isPurchasable)
+    const isProductPurchasable = product?.category === 'Déco' || (product?.category === 'Meubles' && product?.isPurchasable);
+    
+    if (!isProductPurchasable) {
+      return;
+    }
+    
+    if (!selectedColor && product?.availableColors && product.availableColors.length > 0) {
+      alert("Veuillez sélectionner une couleur avant de l'ajouter au panier.");
       return;
     }
     const salePrice = product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0);
@@ -150,162 +95,297 @@ const ProductDetails = ({ productId }: Props) => {
       price: salePrice || 0,
       quantity: 1, // Fixed quantity since it's unique
       color: selectedColor,
-      image: product?.images[0],
+      image: product?.images[selectedImageIndex] || product?.images[0],
       reference: product?.reference,
     };
   
     addToCart(item); // Dispatch addToCart action
     console.log("Item added to cart:", item);
   };
+
+  const handlePreviousImage = () => {
+    if (product && product.images.length > 0) {
+      setSelectedImageIndex((prev) => (prev === 0 ? product.images.length - 1 : prev - 1));
+    }
+  };
+
+  const handleNextImage = () => {
+    if (product && product.images.length > 0) {
+      setSelectedImageIndex((prev) => (prev === product.images.length - 1 ? 0 : prev + 1));
+    }
+  };
   
+  // Build breadcrumb path
+  const buildBreadcrumbs = () => {
+    const breadcrumbs = [
+      { label: 'Accueil', href: '/' }
+    ];
+
+    if (product) {
+      // Add category
+      breadcrumbs.push({
+        label: product.category === 'Déco' ? 'Décorations' : 'Meubles',
+        href: product.category === 'Déco' ? '/decorations' : '/meubles'
+      });
+
+      // Add subcategory if exists
+      if (product.subCategory) {
+        const categoryText = getCategoryText(product.subCategory);
+        breadcrumbs.push({
+          label: categoryText,
+          href: `/categories/${product.subCategory}`
+        });
+      }
+
+      // Add subsubcategory if exists
+      if (product.subSubCategory && product.subCategory) {
+        const subsubCategory = getSubsubcategoryByType(product.subCategory, product.subSubCategory);
+        if (subsubCategory) {
+          breadcrumbs.push({
+            label: subsubCategory.text,
+            href: `/categories/${product.subCategory}/${product.subSubCategory}`
+          });
+        }
+      }
+
+      // Add product name (non-clickable)
+      breadcrumbs.push({
+        label: product.productName,
+        href: ''
+      });
+    }
+
+    return breadcrumbs;
+  };
+
   if (!product) return <div className="text-center mt-10">Loading...</div>;
+
+  const breadcrumbs = buildBreadcrumbs();
+  const isProductPurchasable = product.category === 'Déco' || (product.category === 'Meubles' && product.isPurchasable);
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 p-3 md:mx-12 lg:mx-18 xl:mx-24 2xl:mx-36 mt-4 ">
-        {/* Images Section */}
-        <div className="flex flex-col items-center md:flex-row gap-1 md:items-start w-it lg:w-[650px] ">
-        <div className="block md:hidden">
-  <MobileImageCarousel images={product.images} />
-</div>
+      {/* Breadcrumb Navigation */}
+      <div className="px-3 md:px-12 lg:px-18 xl:px-24 2xl:px-36 mt-4 mb-4">
+        <nav className="flex items-center text-sm text-gray-700">
+          {breadcrumbs.map((crumb, index) => (
+            <div key={index} className="flex items-center">
+              {crumb.href ? (
+                <Link href={crumb.href} className="hover:text-black transition-colors">
+                  {crumb.label}
+                </Link>
+              ) : (
+                <span className="text-black">{crumb.label}</span>
+              )}
+              {index < breadcrumbs.length - 1 && (
+                <span className="mx-2 text-gray-400">/</span>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
 
-          <div className="mb-2 w-full md:w-[400px] lg:w-[750px] h-auto overflow-hidden px-2 hidden md:block">
-            {/* Show carousel only for mobile */}
-
-            <Image
-              src={selectedImage}
-              alt={product.productName}
-              width={750}
-              height={750}
-              className="object-cover rounded-sm"
-            />
+      <div className="flex flex-col md:flex-row gap-6 p-3 md:px-12 lg:px-18 xl:px-24 2xl:px-36">
+        {/* Images Section - Left Side */}
+        <div className="w-full md:w-1/2 lg:w-2/5">
+          {/* Mobile Image Carousel */}
+          <div className="block md:hidden mb-4">
+            <MobileImageCarousel images={product.images} />
           </div>
-          <div className="flex-row md:flex-col gap-2 overflow-auto hidden md:flex">
-            {product.images.map((img, index) => (
-              <Image
-                loading='lazy'
-                key={index}
-                src={img}
-                alt={`Thumbnail ${index + 1}`}
-                width={120}
-                height={120}
-                className={`object-cover cursor-pointer rounded-sm border-2 ${img === selectedImage ? 'border-black' : ''}`}
-                onClick={() => setSelectedImage(img)}
-              />
-            ))}
+
+          {/* Desktop Images */}
+          <div className="hidden md:flex gap-4">
+            {/* Thumbnail Images - Left Side */}
+            {product.images.length > 1 && (
+              <div className="flex flex-col gap-2">
+                {product.images.map((img, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`w-20 h-20 overflow-hidden rounded-sm cursor-pointer border-2 transition-colors ${
+                      selectedImageIndex === index 
+                        ? 'border-black' 
+                        : 'border-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    <Image
+                      loading='lazy'
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={80}
+                      height={80}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Main Image with Navigation */}
+            <div className="flex-1 relative group">
+              <div className="w-full aspect-square overflow-hidden rounded-sm">
+                <Image
+                  src={product.images[selectedImageIndex] || product.images[0]}
+                  alt={product.productName}
+                  width={600}
+                  height={600}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              
+              {/* Navigation Buttons */}
+              {product.images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePreviousImage}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 p-2 opacity-0 group-hover:opacity-100 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-sm transition-opacity duration-300"
+                  >
+                    <ChevronLeftIcon className="h-5 w-5 text-white" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 opacity-0 group-hover:opacity-100 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-sm transition-opacity duration-300"
+                  >
+                    <ChevronRightIcon className="h-5 w-5 text-white" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Product Details Section */}
-        <div className="flex-1 w-full flex-grow md:max-w-none bg-gray-100 px-5 pt-5 rounded-sm relative">
-          <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2 "> 
+        {/* Product Details Card - Right Side */}
+        <div className="w-full md:w-1/2 lg:w-3/5 bg-white px-5 pt-5 rounded-sm">
+          <h1 className="text-2xl md:text-4xl font-light"> 
             {product.productName}
-            {product.isFeatured && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>}
           </h1>
-          <p className="text-gray-600">
-            {product.category}
-            {product.subCategory && ` - ${product.subCategory}`}
-          </p>
 
           {/* Pricing Display */}
-          {product.category === "Déco" && <div className="my-1 mb-2">
-            {product.onSale ? (
-              <p className="text-black font-base text-lg">
-                {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
-                <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
-              </p>
-            ) : (
-              <p className="font-base text-lg">{product.price.toFixed(0)} DT</p>
-            )}
-          </div>}
-          {/* reference 
-          <div className="border-t border-gray-300 p-3">
-          <p>Référence : {product.reference} </p>
-          </div>*/}
-
-          {/* Collapsible Description */}
-          <div className="border-t border-gray-300 p-3">
-            <div
-              className="flex items-center cursor-pointer justify-between"
-              onClick={() => setShowDescription(!showDescription)}
-            >
-              <span className="mr-2">Description</span>
-              {//showDescription ? <AiOutlineUp /> : <AiOutlineDown />
-              }
+          {isProductPurchasable && (
+            <div className="mb-4">
+              {product.onSale ? (
+                <p className="text-black font-medium text-xl">
+                  {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} TND
+                  <span className="line-through text-gray-500 ml-2 text-base">{product.price.toFixed(0)} TND</span>
+                </p>
+              ) : (
+                <p className="text-black font-medium text-xl">{product.price.toFixed(0)} TND</p>
+              )}
             </div>
-            {//showDescription && (
-              <p className="mt-2 text-gray-700 text-sm">{product.description}</p>
-            //)
-            }
-          </div>
+          )}
+
+          {/* Short Description */}
+          {product.shortDescription ? (
+            <p className="text-gray-700 mb-4">{product.shortDescription}</p>
+          ) : (
+            <p className="text-gray-700 mb-4">
+              {product.description.includes('.') ? product.description.split('.')[0] + '.' : product.description.substring(0, 150) + '...'}
+            </p>
+          )}
+
+          {/* Color Selection */}
+          {product.availableColors && isProductPurchasable && (
+            <div className="mb-6">
+              <span className="block text-gray-700 mb-2">Sélectionnez une couleur</span>
+              <div className="flex gap-2 flex-wrap">
+                {product.availableColors.map((color, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedColor(color.name)}
+                    title={color.name}
+                    className={`w-8 h-8 rounded-sm cursor-pointer border-2 relative transition-transform hover:scale-110 ${
+                      selectedColor === color.name ? 'border-black' : 'border-gray-300'
+                    }`}
+                    style={{ backgroundColor: color.hex }}
+                  >
+                    {selectedColor === color.name && (
+                      <div className={`absolute inset-0 flex items-center justify-center ${
+                        color.hex === '#000000' || color.hex === '#333333' ? 'text-white' : 'text-black'
+                      } text-xs`}>
+                        ✔
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.availableColors && product.category === "Meubles" && !product.isPurchasable && (
+            <div className="mb-6">
+              <span className="block text-gray-700 mb-2">Couleurs disponibles</span>
+              <div className="flex gap-2 flex-wrap">
+                {product.availableColors.map((color, index) => (
+                  <div
+                    key={index}
+                    title={color.name}
+                    className="w-8 h-8 rounded-sm border border-gray-300"
+                    style={{ backgroundColor: color.hex }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quantity Selector and Add to Cart Button */}
+          {isProductPurchasable && (
+            <div className="flex items-center gap-3 mb-4">
+              
+              <button
+                onClick={handleAddToCart}
+                className="flex-1 px-6 py-3 bg-[#F6DB8D] hover:bg-[#b89f53] text-black uppercase font-medium rounded-sm transition-colors"
+              >
+                Ajouter au panier
+              </button>
+            </div>
+          )}
+
+          {/* Shipping Policy */}
+          {isProductPurchasable && (
+            <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
+              <p className="flex items-center gap-2 text-sm text-gray-700">
+                <FaCircleInfo className="h-5 w-5 text-gray-800" />
+                Livraison Gratuite à partir de 300DT d'Achat!
+              </p>
+            </div>
+          )}
 
           {/* Dimensions */}
-          { product.dimensions.length!=0 && product.dimensions.width!=0 && product.dimensions.height!=0 &&
-          <div className="border-t border-gray-300 p-3">
-            <p>Dimensions (L x W x H): {`${product.dimensions.length} x ${product.dimensions.width} x ${product.dimensions.height}`} {product.dimensions.unit}</p>
-          </div>}
-
-          {/* Client Reviews */}
-          {product.category === "Déco" && <div className="border-t border-gray-300 p-3 flex items-center justify-between">
-            <span>Popularité</span>
-            <div className="flex items-center gap-1">
-            {[1, 3, 5, 10, 20].map((threshold, i) => (
-              <BsFillStarFill
-                  key={i}
-                  className={`h-4 w-4 ${product.unitsSold > threshold ? 'text-yellow-500' : 'text-gray-300'}`}
-              />
-            ))}
-
-              {/*<span className="text-sm text-gray-600">({product.unitsSold})</span>*/}
+          {product.dimensions.length !== 0 && product.dimensions.width !== 0 && product.dimensions.height !== 0 && (
+            <div className="border-t border-gray-300 py-3 mt-4">
+              <p className="text-gray-700">
+                Dimensions (L x W x H): {`${product.dimensions.length} x ${product.dimensions.width} x ${product.dimensions.height}`} {product.dimensions.unit}
+              </p>
             </div>
-          </div>}
-          {/* Color Selection */}
-          {product.availableColors && product.category === "Déco" && <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
-            <span>Sélectionnez une couleur</span>
-            <div className="flex gap-2">
-              {product.availableColors.map((color, index) => {
-                return (
-                  <div  key={index}
-                  onClick={() => setSelectedColor(color.name)} title={color.name} className={`w-6 h-6 rounded-sm cursor-pointer border border-gray-600 relative`} style={{ backgroundColor: color.hex }}>
-                  {selectedColor === color.name && (
-                    <div className={`absolute inset-0 flex items-center justify-center ${color.hex === '#000000' ? 'text-white' : 'text-black'} text-xs`}>
-                    ✔
-                  </div>
-                  
-                  )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>}
+          )}
 
-          {product.availableColors && product.category === "Meubles" && <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
-            <span>Couleurs disponibles</span>
-            <div className="flex gap-2">
-              {product.availableColors.map((color, index) => {
-                return (
-                  <div  key={index}
-                   title={color.name} className={`w-6 h-6 border border-gray-600`} style={{ backgroundColor: color.hex }}>
-                  
-                  </div>
-                );
-              })}
+          {/* Popularity 
+          {product.category === "Déco" && (
+            <div className="border-t border-gray-300 py-3 flex items-center justify-between">
+              <span className="text-gray-700">Popularité</span>
+              <div className="flex items-center gap-1">
+                {[1, 3, 5, 10, 20].map((threshold, i) => (
+                  <BsFillStarFill
+                    key={i}
+                    className={`h-4 w-4 ${product.unitsSold > threshold ? 'text-yellow-500' : 'text-gray-300'}`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>}
-          
+          )}*/}
+        </div>
+      </div>
 
-          {/* Add to Cart Button */}
-          {product.category === "Déco" && <button
-            onClick={handleAddToCart}
-            className="px-4 py-2 bg-[#F6DB8D] hover:bg-[#b89f53] text-black rounded-sm w-full mt-4 mb-4"
-          >
-            Ajouter au panier
-          </button>}
-          {/* Shipping Policy */}
-          {product.category === "Déco" && <div className="border-t border-gray-300 py-3 flex justify-center items-center gap-2">
-          <p className='flex items-center gap-2'><FaCircleInfo   className='h-6 text-gray-800'/>
-          Livraison Gratuite à partir de 300DT d'Achat!</p>
-          </div>}
+      {/* Description Section - Below Images and Card */}
+      <div className="px-3 md:px-12 lg:px-18 xl:px-24 2xl:px-36 mt-8 mb-8">
+        <div className="relative">
+          <div className="absolute left-0 right-0 top-1/2 h-px bg-gray-300"></div>
+          <div className="relative inline-block bg-white pr-2">
+            <h2 className="text-xl font-medium text-gray-800 uppercase">Description</h2>
+          </div>
+        </div>
+        <div className="mt-6">
+          <p className="text-gray-700 leading-relaxed">{product.description}</p>
         </div>
       </div>
 
