@@ -1,5 +1,5 @@
 "use client";
-import { useCart } from '../contexts/CartContext';
+import { useCart } from '../../contexts/CartContext';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -28,22 +28,27 @@ type Props = {
 
 type Product = {
   productName: string;
-  category: string;
-  subCategory: string;
+  category: 'Meubles' | 'Déco';
+  subCategory?: string;
   images: string[];
   onSale: boolean;
   salePercentage: number;
   price: number;
   description: string;
-  availableColors: string[];
+  availableColors: Array<{
+    name: string;
+    hex: string;
+    image?: string;
+  }>;
   dimensions: {
     length: number;
     width: number;
     height: number;
+    unit: string;
   };
-  isRecommended: boolean;
-  unitsSold:number,
-  reference:string,
+  isFeatured: boolean;
+  unitsSold: number;
+  reference: string;
 };
 
 const colorMapping: { [key: string]: string } = {
@@ -120,7 +125,7 @@ const ProductDetails = ({ productId }: Props) => {
       try {
         const response = await axios.get(`/api/products/${productId}`);
         setProduct(response.data);
-        setSelectedColor(response.data.availableColors[0]);
+        setSelectedColor(response.data.availableColors[0]?.name || '');
         setSelectedImage(response.data.images[response.data.mainImageNumber] || response.data.images[0]);
       } catch (error) {
         console.error('Failed to fetch product details:', error);
@@ -175,7 +180,7 @@ const ProductDetails = ({ productId }: Props) => {
               className="object-cover rounded-sm"
             />
           </div>
-          <div className="flex flex-row md:flex-col gap-2 overflow-auto hidden md:block">
+          <div className="flex-row md:flex-col gap-2 overflow-auto hidden md:flex">
             {product.images.map((img, index) => (
               <Image
                 loading='lazy'
@@ -195,9 +200,12 @@ const ProductDetails = ({ productId }: Props) => {
         <div className="flex-1 w-full flex-grow md:max-w-none bg-gray-100 px-5 pt-5 rounded-sm relative">
           <h1 className="text-2xl md:text-4xl font-light flex items-center gap-2 "> 
             {product.productName}
-            {/*product.isRecommended && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>*/}
+            {product.isFeatured && <PiShootingStarDuotone className="text-yellow-500 h-8 absolute top-4 right-4"/>}
           </h1>
-          <p className="text-gray-600">{product.category} - {product.subCategory}</p>
+          <p className="text-gray-600">
+            {product.category}
+            {product.subCategory && ` - ${product.subCategory}`}
+          </p>
 
           {/* Pricing Display */}
           {product.category === "Déco" && <div className="my-1 mb-2">
@@ -234,7 +242,7 @@ const ProductDetails = ({ productId }: Props) => {
           {/* Dimensions */}
           { product.dimensions.length!=0 && product.dimensions.width!=0 && product.dimensions.height!=0 &&
           <div className="border-t border-gray-300 p-3">
-            <p>Dimensions (L x W x H): {`${product.dimensions.length} x ${product.dimensions.width} x ${product.dimensions.height}`} cm</p>
+            <p>Dimensions (L x W x H): {`${product.dimensions.length} x ${product.dimensions.width} x ${product.dimensions.height}`} {product.dimensions.unit}</p>
           </div>}
 
           {/* Client Reviews */}
@@ -256,12 +264,11 @@ const ProductDetails = ({ productId }: Props) => {
             <span>Sélectionnez une couleur</span>
             <div className="flex gap-2">
               {product.availableColors.map((color, index) => {
-                const mappedColor = colorMapping[color.toLowerCase()] || color;
                 return (
                   <div  key={index}
-                  onClick={() => setSelectedColor(color)} title={color} className={`w-6 h-6 rounded-sm cursor-pointer border border-gray-600 relative`} style={{ backgroundColor: mappedColor }}>
-                  {selectedColor === color && (
-                    <div className={`absolute inset-0 flex items-center justify-center ${color == 'Noir' ? 'text-white' : 'text-black'} text-xs`}>
+                  onClick={() => setSelectedColor(color.name)} title={color.name} className={`w-6 h-6 rounded-sm cursor-pointer border border-gray-600 relative`} style={{ backgroundColor: color.hex }}>
+                  {selectedColor === color.name && (
+                    <div className={`absolute inset-0 flex items-center justify-center ${color.hex === '#000000' ? 'text-white' : 'text-black'} text-xs`}>
                     ✔
                   </div>
                   
@@ -273,13 +280,12 @@ const ProductDetails = ({ productId }: Props) => {
           </div>}
 
           {product.availableColors && product.category === "Meubles" && <div className="flex items-center justify-between gap-1 border-t border-gray-300 p-3">
-            <span>Couleur disponibles</span>
+            <span>Couleurs disponibles</span>
             <div className="flex gap-2">
               {product.availableColors.map((color, index) => {
-                const mappedColor = colorMapping[color.toLowerCase()] || color;
                 return (
                   <div  key={index}
-                   title={color} className={`w-6 h-6 border border-gray-600`} style={{ backgroundColor: mappedColor }}>
+                   title={color.name} className={`w-6 h-6 border border-gray-600`} style={{ backgroundColor: color.hex }}>
                   
                   </div>
                 );

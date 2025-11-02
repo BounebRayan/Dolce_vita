@@ -12,7 +12,7 @@ export default function AdminHeader() {
     return (
         <header>
 
-            <div className="bg-white text-black flex flex-col md:flex-row justify-between items-center px-8 md:px-10 pt-4 pb-1 space-y-4 md:space-y-0">
+            <div className="bg-white text-black flex flex-col md:flex-row justify-between items-center px-8  sm:px-10 pt-4 pb-1 space-y-4 md:space-y-0 mx-2">
 
                 <div className="text-center lg:text-left">
                     <Link href="/" className={`${playfair_Display.className} text-3xl md:text-4xl font-medium`}>

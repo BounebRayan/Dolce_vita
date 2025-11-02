@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import localFont from 'next/font/local';
+import { useEffect, useState } from 'react';
 
 const Zodiak = localFont({
   src: [
@@ -23,13 +24,38 @@ const Sora = localFont({
 
 
 export default function Banner() {
-  return (
-    <div className="flex items-center justify-center sm:mx-3 ">
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden sm:rounded-lg">
+  const [bannerImage, setBannerImage] = useState('https://placehold.co/1280x720/F5F5F1/F5F5F1');
+  const [bannerOpacity, setBannerOpacity] = useState(30);
 
-        <Image src="/images/banner2.jpg" alt="Banner Image" className="object-cover" loading='lazy' fill/>
+  useEffect(() => {
+    const fetchBannerImage = async () => {
+      try {
+        const response = await fetch('/api/homepage-images');
+        const data = await response.json();
+        if (data.images?.banner) {
+          setBannerImage(data.images.banner);
+        }
+        if (data.images?.bannerOpacity !== undefined) {
+          setBannerOpacity(data.images.bannerOpacity);
+        }
+      } catch (error) {
+        console.error('Error fetching banner image:', error);
+      }
+    };
+
+    fetchBannerImage();
+  }, []);
+
+  return (
+    <div className="flex items-center justify-center">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden">
+
+        <Image src={bannerImage} alt="Banner Image" className="object-cover bg-[#C8C8C8]" loading='eager' fill style={{ opacity: bannerOpacity / 100 }}/>
         
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#C8C8C8]/30 text-center">
+        <div 
+          className="absolute inset-0 flex flex-col items-center justify-center text-center"
+
+        >
         <img src="/images/logo.png" alt="Logo" className="md:h-36 h-24 mt-5 md:mt-0"/>
           {/*<p className={`text-md sm:text-lg md:text-[16px] font-semibold mb-1 uppercase`}>
             Élégance et confort

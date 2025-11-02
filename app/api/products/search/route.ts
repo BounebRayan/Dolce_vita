@@ -6,6 +6,8 @@ export async function GET(req: Request) {
   await connectToDB();
   const { searchParams } = new URL(req.url);
   const searchQuery = searchParams.get('query') || '';
+  const category = searchParams.get('category') || '';
+  const subCategory = searchParams.get('subCategory') || '';
   const priceMin = parseFloat(searchParams.get('priceMin') || '0');
   const priceMax = parseFloat(searchParams.get('priceMax') || '20000');
   const onSale = searchParams.get('onSale') === 'true';
@@ -17,11 +19,33 @@ export async function GET(req: Request) {
   }
 
   try {
-    const products = await Product.find({
-      productName: { $regex: searchQuery, $options: 'i' },
-      price: { $gte: priceMin, $lte: priceMax },
+    const searchCriteria: any = {
+      $and: [
+        {
+          $or: [
+            { isAvailable: true },
+            { isAvailable: { $exists: false } }
+          ]
+        },
+        {
+          $or: [
+            { productName: { $regex: searchQuery, $options: 'i' } },
+            { description: { $regex: searchQuery, $options: 'i' } }
+          ]
+        },
+        { price: { $gte: priceMin, $lte: priceMax } }
+      ],
       ...(onSale && { onSale: true }),
-    })
+    };
+
+    if (category) {
+      searchCriteria.$and.push({ category: category });
+    }
+    if (subCategory) {
+      searchCriteria.$and.push({ subCategory: subCategory });
+    }
+
+    const products = await Product.find(searchCriteria)
       .sort({ [sort]: order });
 
     return NextResponse.json(products, { status: 200 });

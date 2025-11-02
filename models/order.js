@@ -34,11 +34,7 @@ const orderSchema = new mongoose.Schema({
       color: {
         type: String,
         required: true,
-      },
-      image: {
-        type: String,
-        required: true,
-      },
+      }
     },
   ],
   notes: {
@@ -49,6 +45,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0,
+  },
+  appliedPromoCode: {
+    type: String,
+    required: false,
   },
   status: {
     type: String,

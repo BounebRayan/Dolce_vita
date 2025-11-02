@@ -3,6 +3,7 @@
 import { useState, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function SearchBar() {
   const [searchValue, setSearchValue] = useState('');
@@ -35,11 +36,27 @@ export default function SearchBar() {
         <button type="submit" className="ml-2" aria-label="Search">
           <MagnifyingGlassIcon className="h-5 w-5 transform transition duration-300 hover:scale-105" />
         </button>
-        {searchValue && (
-          <button type="button" onClick={(e)=> setSearchValue('')} className="ml-2" aria-label="Clear">
-            <XMarkIcon className="h-[23px] w-[23px] transform transition duration-300 hover:scale-105" />
-          </button>
-        )}
+        <AnimatePresence>
+          {searchValue && (
+            <motion.button 
+              type="button" 
+              onClick={(e)=> setSearchValue('')} 
+              className="ml-2" 
+              aria-label="Clear"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ 
+                duration: 0.2, 
+                ease: "easeInOut" 
+              }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <XMarkIcon className="h-[23px] w-[23px]" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
     </form>

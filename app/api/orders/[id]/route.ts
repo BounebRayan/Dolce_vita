@@ -4,6 +4,8 @@ import connectToDB from '@/config/database';
 import Product from '@/models/product';
 import { verifyToken } from '@/lib/verify';
 
+export const dynamic = 'force-dynamic';
+
 // Get a single order by ID
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {

@@ -4,17 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { categories as categoriesConfig } from '@/config/categories';
 
 type Props = {
   productId: string;
-};
-
-const categories = { 
-  deco: [
-    'Accessoires déco', 'Vases', 'Cadres photo', 'Luminaires', 'Miroirs',
-    'Déco murale', "Bougies & parfums d'intérieur", "linges de maison"
-  ],
-  meuble: ['Salons', 'Chambres', 'Salles À Manger'],
 };
 
 const colors = { 
@@ -78,20 +71,25 @@ const colors = {
 type Product = {
   reference: string | number | readonly string[] | undefined;
   productName: string;
-  category: string;
-  subCategory: string;
+  category: 'Meubles' | 'Déco';
+  subCategory?: string;
   images: string[];
   onSale: boolean;
   salePercentage: number;
   price: number;
   description: string;
-  availableColors: string[];
+  availableColors: Array<{
+    name: string;
+    hex: string;
+    image?: string;
+  }>;
   dimensions: {
     length: number | null;
-    width: number | null  ;
+    width: number | null;
     height: number | null;
+    unit: string;
   };
-  isRecommended: boolean;
+  isFeatured: boolean;
   unitsSold: number;
 };
 
@@ -103,9 +101,9 @@ const AdminProductDetails = ({ productId }: Props) => {
     const [selectedColor, setSelectedColor] = useState<string>("");
   
     const subcategories = product?.category === 'Déco' 
-      ? categories.deco 
+      ? categoriesConfig.deco
       : product?.category === 'Meubles' 
-        ? categories.meuble 
+        ? categoriesConfig.meuble
         : [];
 
   useEffect(() => {
@@ -133,21 +131,22 @@ const AdminProductDetails = ({ productId }: Props) => {
     if (productId) fetchProductDetails();
   }, [productId]);
 
-  const handleAddColor = (color: string) => {
-    if (product && color && !product.availableColors.includes(color)) {
+  const handleAddColor = (colorName: string) => {
+    if (product && colorName && !product.availableColors.some(c => c.name === colorName)) {
+      const colorHex = colors[colorName as keyof typeof colors];
       setSelectedColor('');
       setProduct({
         ...product,
-        availableColors: [...product.availableColors, color],
+        availableColors: [...product.availableColors, { name: colorName, hex: colorHex }],
       });
     }
   };
 
-  const handleDeleteColor = (color: string) => {
+  const handleDeleteColor = (colorName: string) => {
     if (product) {
       const updatedProduct = {
         ...product,
-        availableColors: product.availableColors.filter(c => c !== color)
+        availableColors: product.availableColors.filter(c => c.name !== colorName)
       };
       setProduct(updatedProduct);
     }
@@ -230,7 +229,7 @@ if (!token) {
     }
   };
 
-  const API_URL = process.env.API_URL || "/api/upload-image/";
+  const API_URL = "/api/upload-cloudinary/";
 
 const handleLocalImageUpload = async () => {
   const token = localStorage.getItem('admin_password');
@@ -241,9 +240,8 @@ if (!token) {
 
   if (!localImage || !product) return;
 
-  const uniqueFileName = `${Date.now()}_${localImage.name}`;
   const formData = new FormData();
-  formData.append("file", new File([localImage], uniqueFileName));
+  formData.append("file", localImage);
 
   try {
     const response = await axios.post(API_URL, formData,
@@ -278,13 +276,9 @@ const handleDeleteImage = async (index: number) => {
   // Get the image URL to delete
   const imageUrl = product.images[index];
 
-  // Extract the image name from the URL
-  const imageName = imageUrl.split('/').pop(); // Assumes URL ends with the image name
-  if (!imageName) {
-    alert("Failed to determine the image name.");
-    return;
-  }
-
+  // Check if it's a Cloudinary URL
+  const isCloudinary = imageUrl.includes('cloudinary.com');
+  
   // Update the product images array
   const updatedImages = product.images.filter((_, idx) => idx !== index);
   const updatedProduct = { ...product, images: updatedImages };
@@ -305,13 +299,31 @@ if (!token) {
       });
     setProduct(updatedProduct);
 
-    // Delete the image from the server
-    await fetch(`${API_URL}?fileName=${encodeURIComponent(imageName)}`, {
-      method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`, // Add token for authentication
-    },
-    });
+    // Delete the image from Cloudinary if it's a Cloudinary URL
+    if (isCloudinary) {
+      // Extract public_id from Cloudinary URL
+      const urlParts = imageUrl.split('/');
+      const publicIdWithExtension = urlParts[urlParts.length - 1];
+      const publicId = publicIdWithExtension.split('.')[0];
+      
+      await fetch(`${API_URL}?publicId=${encodeURIComponent(publicId)}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
+      });
+    } else {
+      // Fallback for old filesystem images - extract filename
+      const imageName = imageUrl.split('/').pop();
+      if (imageName) {
+        await fetch(`/api/upload-image?fileName=${encodeURIComponent(imageName)}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+    }
 
     alert("Image deleted successfully!");
   } catch (error) {
@@ -403,7 +415,7 @@ if (!token) {
           placeholder="Description du produit"
         ></textarea>
          </div>
-         <div>
+        <div>
   <label className="block font-medium">Catégorie</label>
   <div className="mt-2 flex flex-row items-start gap-1">
     <label className="mr-4">
@@ -412,7 +424,7 @@ if (!token) {
         name="category"
         value="Meubles"
         checked={product.category === "Meubles"}
-        onChange={(e) => setProduct({ ...product, category: e.target.value })}
+        onChange={(e) => setProduct({ ...product, category: e.target.value as 'Meubles' | 'Déco' })}
         className="mr-2"
         required
       />
@@ -424,35 +436,33 @@ if (!token) {
         name="category"
         value="Déco"
         checked={product.category === "Déco"}
-        onChange={(e) => setProduct({ ...product, category: e.target.value })}
+        onChange={(e) => setProduct({ ...product, category: e.target.value as 'Meubles' | 'Déco' })}
         className="mr-2"
       />
-      Déco
+      Décorations
     </label>
   </div>
 </div>
 
-        {/* Subcategory */}
-        <div className="mt-4">
-        <label className="block font-medium">Sous-catégorie</label>
-        <select
-          value={product.subCategory}
-          onChange={(e) => setProduct({ ...product, subCategory: e.target.value })}
-          className="mt-1 p-2 border rounded-sm w-full outline-none"
-          disabled={!product.category}
-          required
-        >
-          <option value="" disabled>
-            {product.category ? 'Sélectionnez une sous-catégorie' : 'Sélectionnez d’abord une catégorie'}
-          </option>
-          {subcategories.map((sub, index) => (
-            <option key={index} value={sub}>
-              {sub}
+        <div>
+          <label className="block font-medium">Sous-Catégorie</label>
+          <select
+            value={product.subCategory || ''}
+            onChange={(e) => setProduct({ ...product, subCategory: e.target.value || undefined })}
+            className="mt-1 p-2 border rounded-sm w-full outline-none"
+            disabled={!product.category}
+            required
+          >
+            <option value="" disabled>
+              {product.category ? 'Sélectionnez une sous-catégorie' : 'Sélectionnez d\'abord une catégorie'}
             </option>
-          ))}
-        </select>
-      </div>
-
+            {subcategories.map((cat) => (
+              <option key={cat.type} value={cat.type}>
+                {cat.text}
+              </option>
+            ))}
+          </select>
+        </div>
 
                 {/* Dimensions Section */}
                 <div>
@@ -533,15 +543,18 @@ if (!token) {
         </select>
           <div className="my-2 flex flex-wrap gap-2">
             {product.availableColors.map((color) => (
-              <div key={color} className="flex items-center gap-2 relative">
+              <div key={color.name} className="flex items-center gap-2 relative">
               <span
-                key={color}
-                className="px-3 py-1 bg-gray-200 rounded-full text-sm"
+                className="px-3 py-1 bg-gray-200 rounded-full text-sm flex items-center gap-2"
               >
-                {color}
+                <div 
+                  className="w-4 h-4 rounded-full border border-gray-400" 
+                  style={{ backgroundColor: color.hex }}
+                ></div>
+                {color.name}
               </span>
               <button
-              onClick={() => handleDeleteColor(color)}
+              onClick={() => handleDeleteColor(color.name)}
               className="absolute -right-1 -top-1 bg-white/50 rounded-full border "
             >
               <XMarkIcon className="h-4 w-4 text-black transform transition duration-300 hover:scale-105"/>
@@ -558,8 +571,8 @@ if (!token) {
           <label className="block font-medium">Recommandé ?</label>
           <input
             type="checkbox"
-            checked={product.isRecommended}
-            onChange={(e) => setProduct({ ...product, isRecommended: e.target.checked })}
+            checked={product.isFeatured}
+            onChange={(e) => setProduct({ ...product, isFeatured: e.target.checked })}
             className="mt-1"
           />
         </div>

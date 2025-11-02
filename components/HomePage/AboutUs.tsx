@@ -1,19 +1,38 @@
 'use client';
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const AboutUsSection = () => {
+  const [aboutUsImage, setAboutUsImage] = useState('https://placehold.co/1280x720/F5F5F1/F5F5F1');
+
+  useEffect(() => {
+    const fetchAboutUsImage = async () => {
+      try {
+        const response = await fetch('/api/homepage-images');
+        const data = await response.json();
+        if (data.images?.aboutUs) {
+          setAboutUsImage(data.images.aboutUs);
+        }
+      } catch (error) {
+        console.error('Error fetching about us image:', error);
+      }
+    };
+
+    fetchAboutUsImage();
+  }, []);
+
   return (
-    <section className=" mb-6 sm:mx-3 md:mx-3 mt-6 bg-[#F5F5F1] flex flex-col lg:flex-row items-center lg:items-start sm:rounded-lg">
+    <section className=" mb-6 sm:mx-3 md:mx-9 mt-6 flex flex-col lg:flex-row items-center lg:items-start sm:rounded-sm bg-[#F5F5F1]">
 
       {/* Left Side: Image */}
-      <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] bg-black sm:rounded-lg">
+      <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] sm:rounded-sm ">
         <img
-          src="/images/aboutus.jpg"
+          src={aboutUsImage}
           alt="About Us"
-          className="w-full h-full object-cover sm:rounded-lg"
+          className="w-full h-full object-cover sm:rounded-sm"
+          loading="lazy"
         />
       </div>
 
@@ -24,9 +43,6 @@ const AboutUsSection = () => {
   <h1 className="text-xl font-medium text-gray-900">
     Dolce Vita Home Collection : Référence en Ameublement et Décoration en Tunisie
   </h1>
-  <p className="mt-3 text-lg text-gray-700 max-w-2xl mx-auto hidden lg:block">
-    Explorez notre collection exclusive de meubles et accessoires où design et qualité se rencontrent. Trouvez le canapé, la table ou l’objet déco idéal pour sublimer votre intérieur.
-  </p>
   <p className="mt-2 text-lg text-gray-700">
     Plongez dans l’univers Dolce Vita en visitant nos <span className="font-semibold text-gray-900">showrooms à Tunis La Soukra et Sousse Sahloul</span>, et laissez-vous inspirer par l’élégance et le savoir-faire.
   </p>

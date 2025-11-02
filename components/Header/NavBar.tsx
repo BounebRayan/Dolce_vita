@@ -1,63 +1,127 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'motion/react';
+import { categories } from '../../config/categories';
 
 export default function Navbar() {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const categories = {
-    deco: [
-      'Accessoires Déco',  'Art de la Table', 'Vases', 'Luminaires', 'Miroirs',
-      'Statues', "Bougies & Parfums d’Intérieur", 'Porte-Bougies', 'Linge de Maison', 'Cadres Photo',
-      'Décorations Murales', 'Plantes'
-    ],
-    meuble: [
-      'Salons', 'Chambres', 'Salles à Manger', 
-      'Canapés & Fauteuils', 'Tables basses & Tables de coin', 'Meubles TV', 
-      "Consoles & Meubles d’Entrée"
-    ],
-  };
-
-  const handleMouseLeave = useCallback(() => {
-    setHoveredItem(null);
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
+  const handleMouseLeave = useCallback(() => {
+    setActiveItem(null);
+  }, []);
+
+  const handleItemClick = useCallback((item: string) => {
+    setActiveItem(activeItem === item ? null : item);
+  }, [activeItem]);
+
   return (
-    <nav className="pb-1.5 relative lg:px-10 px-6 z-50 mb-0.5 md:w-fit" onMouseLeave={handleMouseLeave}>
+    <nav className="pb-1.5 relative lg:px-10 px-6 z-50 mb-1 md:w-fit" onMouseLeave={!isTouchDevice ? handleMouseLeave : undefined}>
 
       {/* nav bar elements */}
       <ul className="flex md:justify-start justify-center space-x-5 pt-2 md:pt-0">
         <Link href="/" aria-label="Accueil">
-          <NavItem onHover={() => setHoveredItem(null)}>ACCUEIL</NavItem>
+          <NavItem onHover={() => !isTouchDevice && setActiveItem(null)} onClick={() => setActiveItem(null)}>ACCUEIL</NavItem>
         </Link>
-        <NavItem onHover={() => setHoveredItem('meuble')}>MEUBLES</NavItem>
-        <NavItem onHover={() => setHoveredItem('deco')}>DÉCORATIONS</NavItem>
+        <NavItem onHover={() => !isTouchDevice && setActiveItem('meuble')} onClick={() => handleItemClick('meuble')}>MEUBLES</NavItem>
+        <NavItem onHover={() => !isTouchDevice && setActiveItem('deco')} onClick={() => handleItemClick('deco')}>DÉCORATIONS</NavItem>
       </ul>
       
       {/* dropdown */}
-      {hoveredItem && (
-        <div
-          className="absolute z-50 px-10 py-4 rounded-sm h-max bg-white border-b md:border-r shadow-lg md:w-[350px] w-full"
-          style={{ top: '100%', left: 0 }}
-          onMouseEnter={() => setHoveredItem(hoveredItem)}
-          onMouseLeave={handleMouseLeave}
-        >
-          <ul className="flex flex-col space-y-2.5">
-            {categories[hoveredItem as keyof typeof categories].map((category) => (
-              <li key={category}>
-                <Link
-                  href={`/categories/${category.toLowerCase()}`}
-                  onClick={() => setHoveredItem(null)}
-                  className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
+      <AnimatePresence>
+        {activeItem === 'meuble' && (
+          <motion.div
+            className="absolute z-50 px-10 py-4 rounded-b-md md:rounded-l-none h-max bg-white border-b md:border-r border-white/20 shadow-lg md:w-[350px] w-full"
+            style={{ top: '110%', left: 0 }}
+            onMouseEnter={() => !isTouchDevice && setActiveItem('meuble')}
+            onMouseLeave={!isTouchDevice ? handleMouseLeave : undefined}
+            initial={{ opacity: 0, y: -5, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -5, scale: 0.98 }}
+            transition={{ 
+              duration: 0.15, 
+              ease: "easeOut" 
+            }}
+          >
+            <motion.ul 
+              className="flex flex-col space-y-2.5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.05, duration: 0.15 }}
+            >
+              {categories.meuble.map((category, index) => (
+                <motion.li 
+                  key={category.type}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ 
+                    delay: 0.05 + (index * 0.02), 
+                    duration: 0.15,
+                    ease: "easeOut"
+                  }}
                 >
-                  {category}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  <Link
+                    href={`/categories/${category.type}`}
+                    onClick={() => setActiveItem(null)}
+                    className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
+                  >
+                    {category.text}
+                  </Link>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        )}
+        {activeItem === 'deco' && (
+          <motion.div
+            className="absolute z-50 px-10 py-4 rounded-b-md md:rounded-l-none h-max bg-white border-b md:border-r border-white/20 shadow-lg md:w-[350px] w-full"
+            style={{ top: '110%', left: 0 }}
+            onMouseEnter={() => !isTouchDevice && setActiveItem('deco')}
+            onMouseLeave={!isTouchDevice ? handleMouseLeave : undefined}
+            initial={{ opacity: 0, y: -5, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -5, scale: 0.98 }}
+            transition={{ 
+              duration: 0.15, 
+              ease: "easeOut" 
+            }}
+          >
+            <motion.ul 
+              className="flex flex-col space-y-2.5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.05, duration: 0.15 }}
+            >
+              {categories.deco.map((category, index) => (
+                <motion.li 
+                  key={category.type}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ 
+                    delay: 0.05 + (index * 0.02), 
+                    duration: 0.15,
+                    ease: "easeOut"
+                  }}
+                >
+                  <Link
+                    href={`/categories/${category.type}`}
+                    onClick={() => setActiveItem(null)}
+                    className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
+                  >
+                    {category.text}
+                  </Link>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </nav>
   );
@@ -66,15 +130,15 @@ export default function Navbar() {
 interface NavItemProps {
   children: React.ReactNode;
   onHover: () => void;
+  onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ children, onHover }) => (
+const NavItem: React.FC<NavItemProps> = ({ children, onHover, onClick }) => (
   <li
     onMouseEnter={onHover}
-    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 pb-1"
+    onClick={onClick}
+    className="tracking-[0.25px] font-normal relative text-black cursor-pointer after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0"
   >
     {children}
   </li>
 );
-
-// Done

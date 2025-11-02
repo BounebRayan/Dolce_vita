@@ -3,17 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { isAuthenticated } from "@/lib/auth";
-
-const categories = { 
-  deco: [
-    'Accessoires Déco',  'Art de la Table', 'Vases', 'Luminaires', 'Miroirs',
-      'Statues', "Bougies & Parfums d’Intérieur", 'Porte-Bougies', 'Linge de Maison', 'Cadres Photo',
-      'Décorations Murales', 'Plantes'
-  ],
-  meuble: ['Salons', 'Chambres', 'Salles à Manger', 
-      'Canapés & Fauteuils', 'Tables basses & Tables de coin', 'Meubles TV', 
-      "Consoles & Meubles d’Entrée"],
-};
+import { categories } from "@/config/categories";
 
 const colors = { 
   rouge: "#f56565",
@@ -77,18 +67,18 @@ const colors = {
 export default function AddProductPage() {
   // State hooks
   const [productName, setProductName] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState<"Meubles" | "Déco">("Meubles");
+  const [subCategory, setSubCategory] = useState("");
   const [reference, setReference] = useState("");
   const [width, setWidth] = useState<number | string>(0);
   const [height, setheight] = useState<number | string>(0);
   const [length, setLength] = useState<number | string>(0);
-  const [subCategory, setSubCategory] = useState("");
   const [price, setPrice] = useState<number | string>("");
   const [description, setDescription] = useState("");
   const [onSale, setOnSale] = useState(false);
   const [salePercentage, setSalePercentage] = useState<number | string>(0);
   const [recommended, setRecommended] = useState(false);
-  const [availableColors, setAvailableColors] = useState<string[]>([]);
+  const [availableColors, setAvailableColors] = useState<Array<{name: string, hex: string, image?: string}>>([]);
   const [images, setImages] = useState<string[]>([]);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const colorKeys = Object.keys(colors);
@@ -100,41 +90,52 @@ export default function AddProductPage() {
       }
     }, []);
 
-  const subcategories = category === 'Déco' 
-    ? categories.deco 
-    : category === 'Meubles' 
-      ? categories.meuble 
-      : [];
-
-  // Add a color to available colors
-  const handleAddColor = (color: string) => {
-    if (color && !availableColors.includes(color)) {
-      setSelectedColor("");
-      setAvailableColors([...availableColors, color]);
+  // Get categories based on category selection
+  const getSubcategories = () => {
+    if (!category) return [];
+    if (category === 'Déco') {
+      return categories.deco;
+    } else {
+      return categories.meuble;
     }
   };
 
-  const handleDeleteColor = (color: string) => {
-    setAvailableColors(availableColors.filter(c => c !== color));
+  // Add a color to available colors
+  const handleAddColor = (colorName: string) => {
+    if (colorName && !availableColors.some(c => c.name === colorName)) {
+      const colorHex = colors[colorName as keyof typeof colors];
+      setSelectedColor("");
+      setAvailableColors([...availableColors, { name: colorName, hex: colorHex }]);
+    }
   };
-  const API_URL = "/api/upload-image/";
-  const handleDeleteImage = async (imageName:string) => {
+
+  const handleDeleteColor = (colorName: string) => {
+    setAvailableColors(availableColors.filter(c => c.name !== colorName));
+  };
+  const API_URL = "/api/upload-cloudinary/";
+  const handleDeleteImage = async (imageUrl: string) => {
     try {
       const token = localStorage.getItem('admin_password');
 
-if (!token) {
-  return;
-}
-      const response = await fetch(`${API_URL}?fileName=${encodeURIComponent(imageName)}`, {
+      if (!token) {
+        return;
+      }
+      
+      // Extract public_id from Cloudinary URL
+      const urlParts = imageUrl.split('/');
+      const publicIdWithExtension = urlParts[urlParts.length - 1];
+      const publicId = publicIdWithExtension.split('.')[0];
+      
+      const response = await fetch(`${API_URL}?publicId=${encodeURIComponent(publicId)}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`, // Add token for authentication
+          Authorization: `Bearer ${token}`,
         },
       });
   
       if (response.ok) {
         // Update the state on successful deletion
-        setImages(images.filter((img) => img !== imageName));
+        setImages(images.filter((img) => img !== imageUrl));
       } else {
         console.error('Failed to delete image:', await response.json());
       }
@@ -146,15 +147,14 @@ if (!token) {
   const handleImageUpload = async () => {
     if (!imageUpload) return;
 
-    const uniqueFileName = `${Date.now()}_${imageUpload.name}`;
     const formData = new FormData();
-    formData.append("file", new File([imageUpload], uniqueFileName));
+    formData.append("file", imageUpload);
 
     const token = localStorage.getItem('admin_password');
 
-if (!token) {
-  return;
-}
+    if (!token) {
+      return;
+    }
 
     const response = await fetch(API_URL, {
       method: "POST",
@@ -167,7 +167,7 @@ if (!token) {
     const result = await response.json();
     if (response.ok) {
       setImages([...images, result.imageUrl]);
-      //setImageUpload(null);
+      setImageUpload(null); // Clear the file input after successful upload
     } else {
       console.error("Image upload failed:", result.error);
     }
@@ -177,18 +177,23 @@ if (!token) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const dimensions = {length, height, width}
+    const dimensions = {
+      length: parseFloat(length as string) || 0,
+      width: parseFloat(width as string) || 0,
+      height: parseFloat(height as string) || 0,
+      unit: 'cm'
+    }
 
     const newProduct = {
       productName,
       category,
+      subCategory: subCategory || undefined,
       reference,
-      subCategory,
       price: parseFloat(price as string),
       description,
       onSale,
       salePercentage: onSale ? parseFloat(salePercentage as string) : 0,
-      recommended,
+      isFeatured: recommended,
       dimensions,
       availableColors,
       images,
@@ -213,7 +218,7 @@ if (!token) {
       alert("Product added successfully!");
       // Reset form
       setProductName("");
-      setCategory("");
+      setCategory("Meubles");
       setSubCategory("");
       setPrice("");
       setDescription("");
@@ -280,56 +285,62 @@ if (!token) {
 
         {/* Category */}
         <div>
-  <label className="block font-medium">Catégorie</label>
-  <div className="mt-2 flex flex-col items-start gap-1">
-    <label className="mr-4">
-      <input
-        type="radio"
-        name="category"
-        value="Meubles"
-        checked={category === "Meubles"}
-        onChange={(e) => setCategory(e.target.value)}
-        className="mr-2"
-        required
-      />
-      Meubles
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="category"
-        value="Déco"
-        checked={category === "Déco"}
-        onChange={(e) => setCategory(e.target.value)}
-        className="mr-2"
-      />
-      Déco
-    </label>
-  </div>
-</div>
+          <label className="block font-medium">Catégorie</label>
+          <div className="mt-2 flex flex-col items-start gap-1">
+            <label className="mr-4">
+              <input
+                type="radio"
+                name="category"
+                value="Meubles"
+                checked={category === "Meubles"}
+                onChange={(e) => {
+                  setCategory(e.target.value as "Meubles" | "Déco");
+                  setSubCategory("");
+                }}
+                className="mr-2"
+                required
+              />
+              Meubles
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="category"
+                value="Déco"
+                checked={category === "Déco"}
+                onChange={(e) => {
+                  setCategory(e.target.value as "Meubles" | "Déco");
+                  setSubCategory("");
+                }}
+                className="mr-2"
+              />
+              Décorations
+            </label>
+          </div>
+        </div>
 
-
-        {/* Subcategory */}
-        <div className="mt-4">
-        <label className="block font-medium">Sous-catégorie</label>
-        <select
-          value={subCategory}
-          onChange={(e) => setSubCategory(e.target.value)}
-          className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
-          disabled={!category}
-          required
-        >
-          <option value="" disabled>
-            {category ? 'Sélectionnez une sous-catégorie' : 'Sélectionnez d’abord une catégorie'}
-          </option>
-          {subcategories.map((sub, index) => (
-            <option key={index} value={sub}>
-              {sub}
+        {/* SubCategory */}
+        <div>
+          <label className="block font-medium">Sous-Catégorie</label>
+          <select
+            value={subCategory}
+            onChange={(e) => {
+              setSubCategory(e.target.value);
+            }}
+            className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
+            disabled={!category}
+            required
+          >
+            <option value="" disabled>
+              {category ? 'Sélectionnez une sous-catégorie' : 'Sélectionnez d\'abord une catégorie'}
             </option>
-          ))}
-        </select>
-      </div>
-
+            {getSubcategories().map((cat) => (
+              <option key={cat.type} value={cat.type}>
+                {cat.text}
+              </option>
+            ))}
+          </select>
+        </div>
       {/* Dimensions Input */}
       <div>
           <label className="block font-medium">Dimensions L x W x H</label>
@@ -383,15 +394,18 @@ if (!token) {
         </select>
           <div className="mt-2 flex flex-wrap gap-2">
             {availableColors.map((color) => (
-              <div key={color} className="flex items-center gap-2 relative">
+              <div key={color.name} className="flex items-center gap-2 relative">
               <span
-                key={color}
-                className="px-3 py-1 bg-gray-200 rounded-full text-sm"
+                className="px-3 py-1 bg-gray-200 rounded-full text-sm flex items-center gap-2"
               >
-                {color}
+                <div 
+                  className="w-4 h-4 rounded-full border border-gray-400" 
+                  style={{ backgroundColor: color.hex }}
+                ></div>
+                {color.name}
               </span>
               <button
-              onClick={() => handleDeleteColor(color)}
+              onClick={() => handleDeleteColor(color.name)}
               className="absolute -right-1 -top-1 bg-white/50 rounded-full border "
             >
               <XMarkIcon className="h-4 w-4 text-black transform transition duration-300 hover:scale-105"/>

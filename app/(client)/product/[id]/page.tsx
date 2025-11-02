@@ -1,6 +1,6 @@
 'use client';
 
-import ProductDetails from '@/components/ProductDetails';
+import ProductDetails from '@/components/ProductPage/ProductDetails';
 
 type Param = {
   id: string; // Use lowercase 'string' instead of 'String'
