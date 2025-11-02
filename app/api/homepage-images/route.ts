@@ -3,8 +3,8 @@ import { verifyToken } from '@/lib/verify';
 import connectToDB from '@/config/database';
 import HomepageImages from '@/models/homepageImages';
 
-// Allow caching with revalidation every 60 seconds
-export const revalidate = 60;
+// Force dynamic rendering for all requests (required for PUT)
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
