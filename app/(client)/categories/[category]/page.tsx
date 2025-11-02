@@ -75,11 +75,10 @@ const SubcategoryPage = () => {
   const aspect = products[0]?.category === 'Meubles' ? 'aspect-[6/4]' : 'aspect-[4/5]';
 
   return (
-    <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-12 mt-1 md:mt-2">
+    <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-[60px] mt-2 md:mt-3 mb-8">
       <main className="w-full pl-0 lg:pl-4">
-        <h1 className="text-[28px] font-light mb-2 capitalize">{decodedCategory}</h1>
-        <InsideCategories type={products[0]?.category}/>
-      <div className='border-t mt-6 pt-3'></div>
+      <InsideCategories type={products[0]?.category}/>
+      <div className='border-t mt-5 pt-5'></div>
         {products[0] && products[0].category === "Déco" && <div>
        {/*<label className="flex items-center">
             <div
@@ -152,7 +151,7 @@ const SubcategoryPage = () => {
         {/* Product Grid with Conditional Loading Spinner */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridCols} gap-4`}>
           {loading ? (
-            <div className="col-span-full text-center">Loading products...</div>
+            <div className="col-span-full text-center">Un instant, nous récupérons les articles...</div>
           ) : products.length > 0 ? (
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
@@ -169,7 +168,7 @@ const SubcategoryPage = () => {
               </Link>
             ))
           ) : (
-            <p className='ml-2'>Aucun produit n’a été trouvé</p>
+            <p className='text-center col-span-full'>Rien ici pour le moment... mais de belles pièces arrivent bientôt.</p>
           )}
         </div>
       </main>

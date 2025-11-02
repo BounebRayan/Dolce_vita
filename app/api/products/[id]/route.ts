@@ -3,6 +3,8 @@ import Product from '@/models/product';
 import connectToDB from '@/config/database';
 import { verifyToken } from '@/lib/verify';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   await connectToDB();
   try {

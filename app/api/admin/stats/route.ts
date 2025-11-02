@@ -4,6 +4,8 @@ import Product from '@/models/product';
 import connectToDB from '@/config/database';
 import { verifyToken } from '@/lib/verify';
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to get date ranges
 const getDateRange = (period: string) => {
   const now = new Date();

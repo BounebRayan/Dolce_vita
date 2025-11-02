@@ -20,17 +20,30 @@ export async function GET(req: Request) {
 
   try {
     const searchCriteria: any = {
-      isAvailable: true,
-      $or: [
-        { productName: { $regex: searchQuery, $options: 'i' } },
-        { description: { $regex: searchQuery, $options: 'i' } }
+      $and: [
+        {
+          $or: [
+            { isAvailable: true },
+            { isAvailable: { $exists: false } }
+          ]
+        },
+        {
+          $or: [
+            { productName: { $regex: searchQuery, $options: 'i' } },
+            { description: { $regex: searchQuery, $options: 'i' } }
+          ]
+        },
+        { price: { $gte: priceMin, $lte: priceMax } }
       ],
-      price: { $gte: priceMin, $lte: priceMax },
       ...(onSale && { onSale: true }),
     };
 
-    if (category) searchCriteria.category = category;
-    if (subCategory) searchCriteria.subCategory = subCategory;
+    if (category) {
+      searchCriteria.$and.push({ category: category });
+    }
+    if (subCategory) {
+      searchCriteria.$and.push({ subCategory: subCategory });
+    }
 
     const products = await Product.find(searchCriteria)
       .sort({ [sort]: order });

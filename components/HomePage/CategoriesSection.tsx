@@ -119,35 +119,35 @@ const CategoriesSection: React.FC = () => {
     }).length : 6; // Default to 6 if data not loaded yet
   
   return (
-    <section className="lg:px-1 pt-2 mt-3 mx-0 sm:mx-2 lg:mx-3 mb-2">
+    <section className="lg:px-1 pt-2 mt-3 mx-0 sm:mx-2 md:mx-4 mb-2">
 
       {/* Categories Title */}
-      <div className="flex justify-between items-center mb-1 px-4">
+      <div className="flex justify-between items-center mb-1 px-1 sm:px-2 lg:px-4">
         <h2 className={`${myFont.className} text-2xl font-light`}>Découvrez nos catégories</h2>
       </div>
   
       {/* Categories Content */}
-      <div className="relative mx-2 sm:mr-6 md:mr-6 group">
+      <div className="relative mx-0 sm:mx-2 lg:mx-2.5 group">
 
         {/* Scroll Left Button */}
         <button
-          className={`hidden z-40 lg:block absolute -left-6 shadow-lg disabled:bg-white shadow-slate-500 border border-black cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 disabled:hover:bg-white hover:bg-gray-200 bg-white opacity-0  transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
+          className={`hidden z-40 lg:block absolute -left-0 h-[45%] cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 opacity-0 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-l-sm transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
           onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
           disabled={isLeftButtonDisabled}
         >
-          <ChevronLeftIcon className="h-6 w-6 text-black"/>
+          <ChevronLeftIcon className="h-4 w-4 text-black"/>
         </button>
   
         {/* Categories Grid */}
         <div ref={containerRef} className="flex space-x-2 overflow-x-auto lg:overflow-hidden scroll-smooth scrollbar-hide p-2">
           {!dataLoaded ? (
             // Show loading placeholders for visible categories only
-            Array.from({ length: 6 }).map((_, index) => (
+            Array.from({ length: 12 }).map((_, index) => (
               <div key={`loading-${index}`} className="flex-none w-[180px] sm:w-[210px] h-full pb-1">
-                <div className="w-full h-64 sm:h-64 md:h-64 lg:h-64 bg-gray-200 rounded-md flex items-center justify-center">
+                <div className="w-full h-64 sm:h-64 md:h-64 lg:h-64 bg-gray-200 rounded-sm flex items-center justify-center">
                   <div className="text-gray-400 text-sm">Loading...</div>
                 </div>
-                <div className="h-4 bg-gray-200 rounded mt-2"></div>
+                <div className="h-4 bg-gray-200 rounded-sm mt-0.5"></div>
               </div>
             ))
           ) : (
@@ -177,7 +177,7 @@ const CategoriesSection: React.FC = () => {
                 <div className="flex-none w-[180px] sm:w-[210px] cursor-pointer transform transition-transform hover:scale-[1.02] duration-300 h-full pb-1">
                   <div className="relative">
                     {/* Gray background - always visible */}
-                    <div className="w-full h-64 sm:h-64 md:h-64 lg:h-64 bg-gray-200 rounded-md flex items-center justify-center">
+                    <div className="w-full h-64 sm:h-64 md:h-64 lg:h-64 bg-gray-200 rounded-sm flex items-center justify-center">
                       <div className="text-gray-400 text-sm">Loading...</div>
                     </div>
                     
@@ -186,7 +186,7 @@ const CategoriesSection: React.FC = () => {
                       <img
                         src={dynamicImage}
                         alt={category.name}
-                        className={`absolute inset-0 w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover rounded-md transition-opacity duration-700 ${
+                        className={`absolute inset-0 w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover rounded-sm transition-opacity duration-700 ${
                           isImageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                         loading="lazy"
@@ -205,11 +205,11 @@ const CategoriesSection: React.FC = () => {
   
         {/* Scroll Right Button */}
         <button
-          className={`hidden z-40 shadow-lg shadow-slate-500 lg:block disabled:bg-white absolute -right-6 cursor-pointer disabled:cursor-default border border-black top-[47%] transform -translate-y-1/2 p-2 hover:bg-gray-200 bg-white opacity-0 transition-opacity duration-300 ${isRightButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
+          className={`hidden z-40 lg:block disabled:bg-white absolute -right-0 h-[45%] cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 opacity-0 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-r-sm transition-opacity duration-300 ${isRightButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
           onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
           disabled={!!isRightButtonDisabled}
         >
-          <ChevronRightIcon className="h-6 w-6 text-black"/>
+          <ChevronRightIcon className="h-4 w-4 text-black"/>
         </button>
 
       </div>

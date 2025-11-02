@@ -24,14 +24,14 @@ const AboutUsSection = () => {
   }, []);
 
   return (
-    <section className=" mb-6 sm:mx-3 md:mx-7 mt-6 flex flex-col lg:flex-row items-center lg:items-start sm:rounded-lg bg-[#F5F5F1]">
+    <section className=" mb-6 sm:mx-3 md:mx-9 mt-6 flex flex-col lg:flex-row items-center lg:items-start sm:rounded-sm bg-[#F5F5F1]">
 
       {/* Left Side: Image */}
-      <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] sm:rounded-lg ">
+      <div className="w-full lg:w-1/2 h-[250px] sm:h-[400px] lg:h-[700px] sm:rounded-sm ">
         <img
           src={aboutUsImage}
           alt="About Us"
-          className="w-full h-full object-cover sm:rounded-lg"
+          className="w-full h-full object-cover sm:rounded-sm"
           loading="lazy"
         />
       </div>

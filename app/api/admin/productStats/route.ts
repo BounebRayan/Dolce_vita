@@ -3,6 +3,9 @@ import { NextRequest,NextResponse } from "next/server";
 import Product from '@/models/product';
 import connectToDB from '@/config/database';
 import { verifyToken } from "@/lib/verify";
+
+export const dynamic = 'force-dynamic';
+
 // Helper function to calculate date range
 const getDateRange = (months: number) => {
   const now = new Date();

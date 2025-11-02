@@ -74,19 +74,19 @@ export default function ProductsSection(prop: SectionProp) {
   
 
   return (
-    <section className="md:px-1 mb-1 group">
+    <section className="lg:px-1 pt-2 mt-2 mx-0 sm:mx-2 lg:mx-4 mb-1 group">
       {/* Section Name and Voir Tout */}
-      <div className="flex flex-col items-start mb-0.5 mx-3 sm:mx-6 md:mx-6">
+      <div className="flex flex-col items-start mb-0.5 mx-2 sm:mx-2 lg:mx-4">
         <h2 className={` ${myFont.className} text-2xl font-light`}>{prop.name}</h2>
-        <Link href="/new" className="text-black text-sm underline mt-0.5">
+        <Link href="/new" className="text-black text-sm underline ">
           Tout Voir
         </Link>
       </div>
 
       {/* Loading Indicator */}
       {loading ? (
-  <div className="relative sm:mx-6 md:mx-4 mx-1 flex space-x-2 overflow-x-auto scrollbar-hide scroll-smooth pt-3 pl-2">
-    {[...Array(5)].map((_, index) => (
+  <div className="relative sm:mx-2 md:mx-4 mx-1 flex space-x-2.5 overflow-x-auto scrollbar-hide scroll-smooth pt-3">
+    {[...Array(7)].map((_, index) => (
       <div 
         key={index} 
         className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] cursor-pointer transform transition duration-300 pb-3"
@@ -110,10 +110,10 @@ export default function ProductsSection(prop: SectionProp) {
     ))}
   </div>
 ) :(
-        <div className="relative sm:mx-6 md:mx-4 mx-1">
+        <div className="relative sm:mx-2 md:mx-4 mx-1">
           {/* Left Button - Only visible on desktop screens */}
           <button
-            className={`hidden lg:block absolute -left-4 border border-black top-[45%] disabled:hover:bg-white transform -translate-y-1/2 p-2 hover:bg-gray-200 bg-white z-40 shadow-lg shadow-slate-500 opacity-0 transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
+            className={`hidden z-40 lg:block absolute -left-0 h-[45%] cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 opacity-0 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-l-sm transition-opacity duration-300 ${isLeftButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
             onClick={() => { if (!isLeftButtonDisabled) handleScroll(-2*Item_width); }}
             disabled={isLeftButtonDisabled}
           >
@@ -122,7 +122,7 @@ export default function ProductsSection(prop: SectionProp) {
 
           {/* Products Grid - Scrollable on mobile, paginated on desktop */}
           <div
-            className="flex space-x-2 overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth pt-3 pl-2"
+            className="flex space-x-2.5 overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth pt-3 mx-1 lg:mx-0"
             style={{ maxHeight: '500px' }}
             ref={containerRef}
           >
@@ -133,7 +133,7 @@ export default function ProductsSection(prop: SectionProp) {
                     <img
                       src={product.images[0] || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
                       alt={product.productName}
-                      className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] object-cover rounded-md"
+                      className="w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] object-cover rounded-sm"
                       loading="lazy"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
@@ -146,8 +146,8 @@ export default function ProductsSection(prop: SectionProp) {
 
           {/* Right Button - Only visible on desktop screens */}
           <button
-            className={`hidden lg:block absolute -right-4 border border-black p-2 top-[45%] hover:bg-gray-200 disabled:hover:bg-white transform -translate-y-1/2 bg-white z-40 shadow-md shadow-slate-500 opacity-0 transition-opacity duration-300 ${isRightButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
-            onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
+          className={`hidden z-40 lg:block disabled:bg-white absolute -right-0 h-[45%] cursor-pointer disabled:cursor-default top-[47%] transform -translate-y-1/2 p-2 opacity-0 backdrop-blur-sm bg-black/25 hover:bg-black/40 rounded-r-sm transition-opacity duration-300 ${isRightButtonDisabled ? 'opacity-0' : 'group-hover:opacity-100'}`}
+          onClick={() => { if (!isRightButtonDisabled) handleScroll(2*Item_width); }}
             disabled={!!isRightButtonDisabled}
           >
             <ChevronRightIcon className="h-6 w-6 text-black" />

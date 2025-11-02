@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/verify';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     console.log('Upload request received');
