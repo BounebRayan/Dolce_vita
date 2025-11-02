@@ -29,8 +29,8 @@ export default function Navbar() {
         <Link href="/" aria-label="Accueil">
           <NavItem onHover={() => !isTouchDevice && setActiveItem(null)} onClick={() => setActiveItem(null)}>ACCUEIL</NavItem>
         </Link>
-        <NavItem onHover={() => !isTouchDevice && setActiveItem('meuble')} onClick={() => handleItemClick('meuble')}>MEUBLES</NavItem>
         <NavItem onHover={() => !isTouchDevice && setActiveItem('deco')} onClick={() => handleItemClick('deco')}>DÉCORATIONS</NavItem>
+        <NavItem onHover={() => !isTouchDevice && setActiveItem('meuble')} onClick={() => handleItemClick('meuble')}>MEUBLES</NavItem>
       </ul>
       
       {/* dropdown */}

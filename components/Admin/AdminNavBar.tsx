@@ -23,8 +23,8 @@ const AdminNavbar: React.FC = () => {
       <Link href="/admin">
           <NavItem onHover={() => setHoveredItem(null)}>Accueil</NavItem>
         </Link>
+        <NavItem onHover={() => setHoveredItem('deco')}>Décorations</NavItem>
         <NavItem onHover={() => setHoveredItem('meuble')}>Meubles</NavItem>
-        <NavItem onHover={() => setHoveredItem('deco')}>Déco</NavItem>
         <Link href="/admin/orders">
           <NavItem onHover={() => setHoveredItem(null)}>Commandes</NavItem>
         </Link>

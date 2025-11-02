@@ -26,10 +26,9 @@ export default function Footer() {
         <div>
           <h3 className="font-bold uppercase text-sm border-b border-black pb-1">DÉCOUVREZ NOS nouveautés</h3>
           <ul className="mt-2 space-y-1">
-            <li><Link href="/categories/salons">Salons</Link></li>
             <li><Link href="/categories/chambres">Chambres à coucher</Link></li>
             <li><Link href="/categories/salles à manger">Salles à manger</Link></li>
-            <li><Link href="/categories/Consoles & meubles d’entrée">Consoles & Meubles d’entrée</Link></li>
+            <li><Link href="/categories/Consoles & meubles d'entrée">Consoles & Meubles d'entrée</Link></li>
           </ul>
         </div>
 
@@ -39,7 +38,6 @@ export default function Footer() {
           <ul className="mt-2 space-y-1">
             <li><Link href="/categories/canapés & fauteuils" >Canapés & Fauteuils</Link></li>
             <li><Link href="/categories/tables basses & tables de coin" >Tables basses & Tables de coin</Link></li>
-            <li><Link href="/categories/meubles tv">Meubles TV</Link></li>
           </ul>
         </div>
 

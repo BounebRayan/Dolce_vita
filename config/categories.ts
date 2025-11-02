@@ -32,11 +32,9 @@ export const categories: CategoriesConfig = {
     { text: 'Plantes & Fleurs', type: 'plantes' }
   ],
   meuble: [
-    { text: 'Salons', type: 'salons' },
     { text: 'Chambres', type: 'chambres' },
     { text: 'Salles à Manger', type: 'salles-a-manger' },
     { text: 'Canapés & Fauteuils', type: 'canapes-fauteuils' },
-    { text: 'Meubles TV', type: 'meubles-tv' },
     { text: 'Tables Basses & de Coin', type: 'tables-basses-coin' },
     { text: "Consoles & Meubles d'Entrée", type: 'consoles-meubles-entree' }
   ]
@@ -67,11 +65,6 @@ export const homepageCategories: HomepageCategory[] = [
   { id: 2, link: "/decorations", name: 'Décorations', image: '/images/categories/collections.jpg', showInHomepage: true, order: 2 },
   { id: 3, link: "/promos", name: 'Promotions', image: '/images/categories/promos.jpg', showInHomepage: true, order: 3  },
   { id: 4, link: "/meubles", name: 'Meubles', image: '/images/categories/meubles.jpg', showInHomepage: true, order: 4 },
-  { id: 5, link: "/categories/canapes-fauteuils", name: 'Canapés & Fauteuils', image: '/images/categories/canapes-fauteuils.jpg', showInHomepage: true, order: 5 },
-  { id: 6, link: "/categories/meubles-tv", name: 'Meubles TV', image: '/images/categories/meubles-tv.jpg', showInHomepage: true, order: 6 },
-  { id: 7, link: "/categories/salles-a-manger", name: 'Salles à Manger', image: '/images/categories/salles-a-manger.jpg', showInHomepage: true, order: 7 },
-  { id: 8, link: "/categories/consoles-meubles-entree", name: 'Consoles & Meubles d\'Entrée', image: '/images/categories/consoles.jpg', showInHomepage: true, order: 8 },
-  { id: 9, link: "/categories/tables-basses-coin", name: 'Tables Basses & de Coin', image: '/images/categories/meubles-entree.jpg', showInHomepage: true, order: 9 },
   { id: 10, link: "/categories/accessoires-deco", name: 'Accessoires déco', image: '/images/categories/accessoires-deco.jpg', showInHomepage: true, order: 10 },
   { id: 11, link: "/categories/vases", name: 'Vases', image: '/images/categories/vases.jpg', showInHomepage: true, order: 11 },
   { id: 12, link: "/categories/statues-figurines", name: 'Statues & Figurines', image: '/images/categories/statues.jpg', showInHomepage: true, order: 12 },

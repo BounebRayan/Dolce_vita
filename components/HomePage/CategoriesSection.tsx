@@ -26,8 +26,6 @@ const getCategoryKey = (link: string): string => {
     '/collections': 'collections',
     '/promos': 'promos',
     '/meubles': 'meubles',
-    '/meubles/salons/canapes-fauteuils': 'canapes-fauteuils',
-    '/meubles/salons/meubles-tv': 'meubles-tv',
     '/meubles/salles-a-manger': 'salles-a-manger',
     '/meubles/canapes-fauteuils': 'canapes-fauteuils',
     '/meubles/consoles-meubles-entree/consoles': 'consoles',
