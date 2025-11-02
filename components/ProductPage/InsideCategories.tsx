@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import localFont from 'next/font/local';
-import { categories } from '@/config/categories';
+import { categories, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
 
 const myFont = localFont({
   src: [
@@ -22,15 +22,36 @@ interface InsideCategoriesProps {
 
 const InsideCategories: React.FC<InsideCategoriesProps> = ({ type }) => {
   const params = useParams();
-  const { category: currentCategoryParam } = params;
+  const { category: currentCategoryParam, subsubcategory: currentSubsubcategoryParam } = params;
   const currentCategoryType = Array.isArray(currentCategoryParam) 
     ? decodeURIComponent(currentCategoryParam[0]) 
     : decodeURIComponent(currentCategoryParam || '');
+  const currentSubsubcategoryType = currentSubsubcategoryParam
+    ? (Array.isArray(currentSubsubcategoryParam) 
+        ? decodeURIComponent(currentSubsubcategoryParam[0]) 
+        : decodeURIComponent(currentSubsubcategoryParam))
+    : null;
   
   const [scrollPosition, setScrollPosition] = useState(0);
   
   // Get categories based on type (Meubles or Déco) - keep all categories in order and highlight current one
+  // If current category has subsubcategories, show those instead of other categories
   const categoriesList = useMemo(() => {
+    // Check if current category has subsubcategories
+    if (currentCategoryType && hasSubsubcategories(currentCategoryType)) {
+      const subsubcategories = getSubsubcategoriesByType(currentCategoryType);
+      if (subsubcategories && subsubcategories.length > 0) {
+        // Show subsubcategories instead of other categories
+        return subsubcategories.map((subsub, index) => ({
+          id: index + 1,
+          link: `/categories/${currentCategoryType}/${subsub.type}`,
+          name: subsub.text,
+          type: subsub.type,
+          isActive: subsub.type === currentSubsubcategoryType
+        }));
+      }
+    }
+    
     // Auto-detect section by checking if current category is in meuble or deco
     // Fallback to the type prop if current category is not found
     let section: 'meuble' | 'deco';
@@ -62,7 +83,7 @@ const InsideCategories: React.FC<InsideCategoriesProps> = ({ type }) => {
       type: cat.type,
       isActive: cat.type === currentCategoryType
     }));
-  }, [type, currentCategoryType]);
+  }, [type, currentCategoryType, currentSubsubcategoryType]);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const Item_width=240;

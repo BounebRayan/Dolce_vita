@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { categories as categoriesConfig } from '@/config/categories';
+import { categories as categoriesConfig, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
 
 type Props = {
   productId: string;
@@ -73,6 +73,7 @@ type Product = {
   productName: string;
   category: 'Meubles' | 'Déco';
   subCategory?: string;
+  subSubCategory?: string;
   images: string[];
   onSale: boolean;
   salePercentage: number;
@@ -448,7 +449,13 @@ if (!token) {
           <label className="block font-medium">Sous-Catégorie</label>
           <select
             value={product.subCategory || ''}
-            onChange={(e) => setProduct({ ...product, subCategory: e.target.value || undefined })}
+            onChange={(e) => {
+              setProduct({ 
+                ...product, 
+                subCategory: e.target.value || undefined,
+                subSubCategory: undefined // Reset subsubcategory when subcategory changes
+              });
+            }}
             className="mt-1 p-2 border rounded-sm w-full outline-none"
             disabled={!product.category}
             required
@@ -463,6 +470,28 @@ if (!token) {
             ))}
           </select>
         </div>
+
+        {/* SubSubCategory - Only show if subcategory has subsubcategories */}
+        {product.subCategory && hasSubsubcategories(product.subCategory) && (
+          <div>
+            <label className="block font-medium">Sous-Sous-Catégorie</label>
+            <select
+              value={product.subSubCategory || ''}
+              onChange={(e) => setProduct({ ...product, subSubCategory: e.target.value || undefined })}
+              className="mt-1 p-2 border rounded-sm w-full outline-none"
+              disabled={!product.subCategory}
+            >
+              <option value="">
+                Aucune (optionnel)
+              </option>
+              {getSubsubcategoriesByType(product.subCategory)?.map((subsub) => (
+                <option key={subsub.type} value={subsub.type}>
+                  {subsub.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
                 {/* Dimensions Section */}
                 <div>

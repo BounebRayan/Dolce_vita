@@ -32,6 +32,11 @@ const productSchema = new mongoose.Schema({
     trim: true,
     index: true
   },
+  subSubCategory: {
+    type: String,
+    trim: true,
+    index: true
+  },
   
   // Content
   description: {
@@ -313,7 +318,7 @@ productSchema.statics.searchProducts = function(query, filters = {}) {
 
 // Indexes for better performance
 productSchema.index({ productName: 'text', description: 'text' });
-productSchema.index({ category: 1, subCategory: 1 });
+productSchema.index({ category: 1, subCategory: 1, subSubCategory: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ onSale: 1, salePercentage: -1 });
 productSchema.index({ isFeatured: 1, isHot: 1, isBestSeller: 1 });

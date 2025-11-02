@@ -3,10 +3,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { categories } from '../../config/categories';
+import { categories, hasSubsubcategories, getSubsubcategoriesByType } from '../../config/categories';
 
 export default function Navbar() {
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function Navbar() {
 
   const handleMouseLeave = useCallback(() => {
     setActiveItem(null);
+    setHoveredCategory(null);
   }, []);
 
   const handleItemClick = useCallback((item: string) => {
@@ -58,6 +60,7 @@ export default function Navbar() {
               {categories.meuble.map((category, index) => (
                 <motion.li 
                   key={category.type}
+                  className="relative"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ 
@@ -65,6 +68,8 @@ export default function Navbar() {
                     duration: 0.15,
                     ease: "easeOut"
                   }}
+                  onMouseEnter={() => !isTouchDevice && hasSubsubcategories(category.type) && setHoveredCategory(category.type)}
+                  onMouseLeave={() => !isTouchDevice && setHoveredCategory(null)}
                 >
                   <Link
                     href={`/categories/${category.type}`}
@@ -73,6 +78,39 @@ export default function Navbar() {
                   >
                     {category.text}
                   </Link>
+                  <AnimatePresence>
+                    {hoveredCategory === category.type && category.subsubcategories && (
+                      <motion.ul
+                        className="flex flex-col space-y-2 mt-2 ml-6"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.15 }}
+                        onMouseEnter={() => !isTouchDevice && setHoveredCategory(category.type)}
+                        onMouseLeave={() => !isTouchDevice && setHoveredCategory(null)}
+                      >
+                        {category.subsubcategories.map((subsub) => (
+                          <motion.li 
+                            key={subsub.type}
+                            initial={{ opacity: 0, x: -5 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <Link
+                              href={`/categories/${category.type}/${subsub.type}`}
+                              onClick={() => {
+                                setActiveItem(null);
+                                setHoveredCategory(null);
+                              }}
+                              className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 text-sm"
+                            >
+                              {subsub.text}
+                            </Link>
+                          </motion.li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
                 </motion.li>
               ))}
             </motion.ul>
@@ -101,6 +139,7 @@ export default function Navbar() {
               {categories.deco.map((category, index) => (
                 <motion.li 
                   key={category.type}
+                  className="relative"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ 
@@ -108,6 +147,8 @@ export default function Navbar() {
                     duration: 0.15,
                     ease: "easeOut"
                   }}
+                  onMouseEnter={() => !isTouchDevice && hasSubsubcategories(category.type) && setHoveredCategory(category.type)}
+                  onMouseLeave={() => !isTouchDevice && setHoveredCategory(null)}
                 >
                   <Link
                     href={`/categories/${category.type}`}
@@ -116,6 +157,39 @@ export default function Navbar() {
                   >
                     {category.text}
                   </Link>
+                  <AnimatePresence>
+                    {hoveredCategory === category.type && category.subsubcategories && (
+                      <motion.ul
+                        className="flex flex-col space-y-2 mt-2 ml-6"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.15 }}
+                        onMouseEnter={() => !isTouchDevice && setHoveredCategory(category.type)}
+                        onMouseLeave={() => !isTouchDevice && setHoveredCategory(null)}
+                      >
+                        {category.subsubcategories.map((subsub) => (
+                          <motion.li 
+                            key={subsub.type}
+                            initial={{ opacity: 0, x: -5 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <Link
+                              href={`/categories/${category.type}/${subsub.type}`}
+                              onClick={() => {
+                                setActiveItem(null);
+                                setHoveredCategory(null);
+                              }}
+                              className="relative after:absolute after:w-full after:h-[0.5px] after:bg-[#F6DB8D] after:left-0 after:-bottom-[0.5px] after:transition-transform after:duration-300 hover:after:scale-x-100 after:scale-x-0 text-sm"
+                            >
+                              {subsub.text}
+                            </Link>
+                          </motion.li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
                 </motion.li>
               ))}
             </motion.ul>
