@@ -12,6 +12,8 @@ type Product = {
   price: number;
   images: string[];
   mainImageNumber: number;
+  brand?: string;
+  isPurchasable?: boolean;
 };
 
 const NewPage = () => {
@@ -85,7 +87,10 @@ const NewPage = () => {
                   loading="lazy"
                 />
                 <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                {product.category === "Déco" && (
+                {product.category === "Meubles" && product.brand && (
+                  <p className="text-xs lg:text-[12px] text-gray-500">{product.brand}</p>
+                )}
+                {(product.category === "Déco" || (product.category === "Meubles" && product.isPurchasable)) && (
                   <p className="text-sm text-gray-600">
                     {product?.onSale ? (
                       <div>

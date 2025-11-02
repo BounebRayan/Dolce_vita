@@ -1,6 +1,7 @@
 export interface CategoryItem {
   text: string;
   type: string;
+  subsubcategories?: CategoryItem[];
 }
 
 export interface HomepageCategory {
@@ -19,12 +20,25 @@ export interface CategoriesConfig {
 
 export const categories: CategoriesConfig = {
   deco: [
-    { text: 'Accessoires Déco', type: 'accessoires-deco' },
+    { 
+      text: 'Accessoires Déco', 
+      type: 'accessoires-deco',
+      subsubcategories: [
+        { text: 'Cadres & Photos', type: 'cadres-photos' },
+        { text: 'Statues & Figurines', type: 'statues-figurines' },
+        { text: 'Vases', type: 'vases' },
+        { text: 'Pièces Artistiques', type: 'pieces-artistiques' }
+      ]
+    },
     { text: 'Art de la Table', type: 'art-de-la-table' },
-    { text: 'Luminaires', type: 'luminaires' },
-    { text: 'Vases', type: 'vases' },
-    { text: 'Statues & Figurines', type: 'statues-figurines' },
-    { text: 'Cadres & Photos', type: 'cadres-photos' },
+    { 
+      text: 'Luminaires', 
+      type: 'luminaires',
+      subsubcategories: [
+        { text: 'Lampadaire', type: 'lampadaire' },
+        { text: 'Suspension', type: 'suspension' }
+      ]
+    },
     { text: 'Miroirs', type: 'miroirs' },
     { text: "Bougies & Parfums d'Intérieur", type: 'bougies-parfums-interieur' },
     { text: 'Linge de Maison', type: 'linge-de-maison' },
@@ -57,6 +71,25 @@ export const getAllCategories = (): CategoryItem[] => {
 
 export const getCategoriesBySection = (section: keyof CategoriesConfig): CategoryItem[] => {
   return categories[section];
+};
+
+// Helper function to get subsubcategories for a given subcategory type
+export const getSubsubcategoriesByType = (subcategoryType: string): CategoryItem[] | undefined => {
+  const allCategories = [...categories.deco, ...categories.meuble];
+  const category = allCategories.find(cat => cat.type === subcategoryType);
+  return category?.subsubcategories;
+};
+
+// Helper function to check if a subcategory has subsubcategories
+export const hasSubsubcategories = (subcategoryType: string): boolean => {
+  const subsubcategories = getSubsubcategoriesByType(subcategoryType);
+  return subsubcategories !== undefined && subsubcategories.length > 0;
+};
+
+// Helper function to get subsubcategory by type
+export const getSubsubcategoryByType = (subcategoryType: string, subsubcategoryType: string): CategoryItem | undefined => {
+  const subsubcategories = getSubsubcategoriesByType(subcategoryType);
+  return subsubcategories?.find(subsub => subsub.type === subsubcategoryType);
 };
 
 // Homepage categories with all the values needed for the homepage section

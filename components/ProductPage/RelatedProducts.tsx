@@ -11,6 +11,8 @@ interface Product {
   productName: string;
   price: number;
   images: string[];
+  brand?: string;
+  isPurchasable?: boolean;
 }
 
 interface Props {
@@ -63,7 +65,18 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
                   loading="lazy"
                 />
                 <h3 className="mt-1 text-sm sm:text-md font-medium">{product.productName}</h3>
-                {product.category === "Déco" && <p className="text-sm sm:text-md text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
+                {product.category === "Meubles" && product.brand && (
+                  <p className="text-xs sm:text-sm text-gray-500">{product.brand}</p>
+                )}
+                {(product.category === "Déco" || (product.category === "Meubles" && product.isPurchasable)) && (
+                  <p className="text-sm sm:text-md text-gray-600">
+                    {product?.onSale ? (
+                      <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div>
+                    ) : (
+                      <div>{product?.price.toFixed(0)} DT</div>
+                    )}
+                  </p>
+                )}
               </div>
             </Link>
           ))

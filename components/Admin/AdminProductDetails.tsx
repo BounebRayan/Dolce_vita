@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { categories as categoriesConfig } from '@/config/categories';
+import { categories as categoriesConfig, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
 
 type Props = {
   productId: string;
@@ -73,11 +73,15 @@ type Product = {
   productName: string;
   category: 'Meubles' | 'Déco';
   subCategory?: string;
+  subSubCategory?: string;
   images: string[];
   onSale: boolean;
   salePercentage: number;
   price: number;
   description: string;
+  shortDescription?: string;
+  brand?: string;
+  isPurchasable?: boolean;
   availableColors: Array<{
     name: string;
     hex: string;
@@ -192,7 +196,18 @@ if (!token) {
 
     if (product) {
       try {
-        await axios.put(`/api/products/${productId}`, product,
+        // Prepare update data, ensuring isPurchasable and brand are always included
+        const updateData: any = {
+          ...product,
+          isPurchasable: product.category === 'Meubles' ? (product.isPurchasable || false) : true, // Déco is always purchasable
+        };
+        
+        // Ensure brand is always included (use default if empty)
+        if (!updateData.brand || !updateData.brand.trim()) {
+          updateData.brand = 'Dolce Vita Collection';
+        }
+        
+        await axios.put(`/api/products/${productId}`, updateData,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add token for authentication
@@ -415,6 +430,30 @@ if (!token) {
           placeholder="Description du produit"
         ></textarea>
          </div>
+         <div>
+         <label className="block font-medium mb-1">Description courte (optionnel)</label>
+        <textarea
+          className="border p-2 w-full rounded-sm outline-none"
+          value={product.shortDescription || ''}
+          onChange={(e) =>
+            setProduct({ ...product, shortDescription: e.target.value || undefined })
+          }
+          placeholder="Court texte affiché sous le prix dans la carte produit"
+          maxLength={300}
+        ></textarea>
+         </div>
+         <div>
+         <label className="block font-medium mb-1">Marque (optionnel)</label>
+        <input
+          className="border p-2 w-full rounded-sm outline-none"
+          value={product.brand || ''}
+          onChange={(e) =>
+            setProduct({ ...product, brand: e.target.value || undefined })
+          }
+          placeholder="Dolce Vita Collection (par défaut)"
+          maxLength={100}
+        />
+         </div>
         <div>
   <label className="block font-medium">Catégorie</label>
   <div className="mt-2 flex flex-row items-start gap-1">
@@ -448,7 +487,13 @@ if (!token) {
           <label className="block font-medium">Sous-Catégorie</label>
           <select
             value={product.subCategory || ''}
-            onChange={(e) => setProduct({ ...product, subCategory: e.target.value || undefined })}
+            onChange={(e) => {
+              setProduct({ 
+                ...product, 
+                subCategory: e.target.value || undefined,
+                subSubCategory: undefined // Reset subsubcategory when subcategory changes
+              });
+            }}
             className="mt-1 p-2 border rounded-sm w-full outline-none"
             disabled={!product.category}
             required
@@ -463,6 +508,28 @@ if (!token) {
             ))}
           </select>
         </div>
+
+        {/* SubSubCategory - Only show if subcategory has subsubcategories */}
+        {product.subCategory && hasSubsubcategories(product.subCategory) && (
+          <div>
+            <label className="block font-medium">Sous-Sous-Catégorie</label>
+            <select
+              value={product.subSubCategory || ''}
+              onChange={(e) => setProduct({ ...product, subSubCategory: e.target.value || undefined })}
+              className="mt-1 p-2 border rounded-sm w-full outline-none"
+              disabled={!product.subCategory}
+            >
+              <option value="">
+                Aucune (optionnel)
+              </option>
+              {getSubsubcategoriesByType(product.subCategory)?.map((subsub) => (
+                <option key={subsub.type} value={subsub.type}>
+                  {subsub.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
                 {/* Dimensions Section */}
                 <div>
@@ -585,7 +652,21 @@ if (!token) {
                 setProduct({ ...product, onSale: e.target.checked })
               }
             />
-          </div> </div>
+          </div>
+          {product.category === "Meubles" && (
+            <div className="flex gap-2">
+              <label className="block font-medium">Produit achetable ?</label>
+              <input
+                type="checkbox"
+                checked={product.isPurchasable || false}
+                onChange={(e) =>
+                  setProduct({ ...product, isPurchasable: e.target.checked })
+                }
+                className="mt-1"
+              />
+            </div>
+          )}
+          </div>
           
 
         <div className="grid grid-cols-2 gap-2">

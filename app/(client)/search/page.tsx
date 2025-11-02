@@ -16,6 +16,8 @@ type Product = {
   onSale: boolean;
   unitsSold: number;
   createdAt: string;
+  brand?: string;
+  isPurchasable?: boolean;
 };
 
 const SearchPage = () => {
@@ -209,6 +211,21 @@ const SearchPage = () => {
                           loading="lazy"
                         />
                         <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
+                        {product.brand && (
+                          <p className="text-xs lg:text-[12px] text-gray-500">{product.brand}</p>
+                        )}
+                        {product.isPurchasable && (
+                          <p className="text-sm text-gray-600">
+                            {product?.onSale ? (
+                              <div>
+                                {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
+                                <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
+                              </div>
+                            ) : (
+                              <div>{product?.price.toFixed(0)} DT</div>
+                            )}
+                          </p>
+                        )}
                       </div>
                     </Link>
                   ))}
@@ -233,16 +250,21 @@ const SearchPage = () => {
                           loading="lazy"
                         />
                         <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                        <p className="text-sm text-gray-600">
-                          {product?.onSale ? (
-                            <div>
-                              {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
-                              <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
-                            </div>
-                          ) : (
-                            <div>{product?.price.toFixed(0)} DT</div>
-                          )}
-                        </p>
+                        {product.category === "Meubles" && product.brand && (
+                          <p className="text-xs lg:text-[12px] text-gray-500">{product.brand}</p>
+                        )}
+                        {(product.category === "Déco" || (product.category === "Meubles" && product.isPurchasable)) && (
+                          <p className="text-sm text-gray-600">
+                            {product?.onSale ? (
+                              <div>
+                                {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} DT
+                                <span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span>
+                              </div>
+                            ) : (
+                              <div>{product?.price.toFixed(0)} DT</div>
+                            )}
+                          </p>
+                        )}
                       </div>
                     </Link>
                   ))}

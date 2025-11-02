@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { isAuthenticated } from "@/lib/auth";
-import { categories } from "@/config/categories";
+import { categories, getSubsubcategoriesByType, hasSubsubcategories } from "@/config/categories";
 
 const colors = { 
   rouge: "#f56565",
@@ -69,12 +69,16 @@ export default function AddProductPage() {
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState<"Meubles" | "Déco">("Meubles");
   const [subCategory, setSubCategory] = useState("");
+  const [subSubCategory, setSubSubCategory] = useState("");
   const [reference, setReference] = useState("");
   const [width, setWidth] = useState<number | string>(0);
   const [height, setheight] = useState<number | string>(0);
   const [length, setLength] = useState<number | string>(0);
   const [price, setPrice] = useState<number | string>("");
   const [description, setDescription] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [brand, setBrand] = useState("");
+  const [isPurchasable, setIsPurchasable] = useState(false);
   const [onSale, setOnSale] = useState(false);
   const [salePercentage, setSalePercentage] = useState<number | string>(0);
   const [recommended, setRecommended] = useState(false);
@@ -184,20 +188,29 @@ export default function AddProductPage() {
       unit: 'cm'
     }
 
-    const newProduct = {
+    const newProduct: any = {
       productName,
       category,
       subCategory: subCategory || undefined,
+      subSubCategory: subSubCategory || undefined,
       reference,
       price: parseFloat(price as string),
       description,
       onSale,
       salePercentage: onSale ? parseFloat(salePercentage as string) : 0,
       isFeatured: recommended,
+      isPurchasable: category === 'Meubles' ? isPurchasable : true, // Déco is always purchasable
       dimensions,
       availableColors,
       images,
     };
+    
+    // Include optional fields
+    if (shortDescription && shortDescription.trim()) {
+      newProduct.shortDescription = shortDescription.trim();
+    }
+    // Brand - always include, will use default if empty
+    newProduct.brand = brand && brand.trim() ? brand.trim() : 'Dolce Vita Collection';
 
     const token = localStorage.getItem('admin_password');
 
@@ -220,8 +233,12 @@ export default function AddProductPage() {
       setProductName("");
       setCategory("Meubles");
       setSubCategory("");
+      setSubSubCategory("");
       setPrice("");
       setDescription("");
+      setShortDescription("");
+      setBrand("");
+      setIsPurchasable(false);
       setOnSale(false);
       setSalePercentage(0);
       setRecommended(false);
@@ -283,6 +300,32 @@ export default function AddProductPage() {
           />
         </div>
 
+        {/* Short Description */}
+        <div>
+          <label className="block font-medium">Description courte (optionnel)</label>
+          <textarea
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+            className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
+            rows={2}
+            maxLength={300}
+            placeholder="Court texte affiché sous le prix dans la carte produit"
+          />
+        </div>
+
+        {/* Brand */}
+        <div>
+          <label className="block font-medium">Marque (optionnel)</label>
+          <input
+            type="text"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
+            placeholder="Dolce Vita Collection (par défaut)"
+            maxLength={100}
+          />
+        </div>
+
         {/* Category */}
         <div>
           <label className="block font-medium">Catégorie</label>
@@ -296,6 +339,7 @@ export default function AddProductPage() {
                 onChange={(e) => {
                   setCategory(e.target.value as "Meubles" | "Déco");
                   setSubCategory("");
+                  setSubSubCategory("");
                 }}
                 className="mr-2"
                 required
@@ -311,6 +355,7 @@ export default function AddProductPage() {
                 onChange={(e) => {
                   setCategory(e.target.value as "Meubles" | "Déco");
                   setSubCategory("");
+                  setSubSubCategory("");
                 }}
                 className="mr-2"
               />
@@ -326,6 +371,7 @@ export default function AddProductPage() {
             value={subCategory}
             onChange={(e) => {
               setSubCategory(e.target.value);
+              setSubSubCategory(""); // Reset subsubcategory when subcategory changes
             }}
             className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
             disabled={!category}
@@ -341,6 +387,30 @@ export default function AddProductPage() {
             ))}
           </select>
         </div>
+
+        {/* SubSubCategory - Only show if subcategory has subsubcategories */}
+        {subCategory && hasSubsubcategories(subCategory) && (
+          <div>
+            <label className="block font-medium">Sous-Sous-Catégorie</label>
+            <select
+              value={subSubCategory}
+              onChange={(e) => {
+                setSubSubCategory(e.target.value);
+              }}
+              className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
+              disabled={!subCategory}
+            >
+              <option value="">
+                Aucune (optionnel)
+              </option>
+              {getSubsubcategoriesByType(subCategory)?.map((subsub) => (
+                <option key={subsub.type} value={subsub.type}>
+                  {subsub.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       {/* Dimensions Input */}
       <div>
           <label className="block font-medium">Dimensions L x W x H</label>
@@ -440,6 +510,19 @@ export default function AddProductPage() {
             className="mt-1"
           />
         </div>
+        
+        {/* Is Purchasable Checkbox (only for Meubles) */}
+        {category === "Meubles" && (
+          <div className="flex gap-2">
+            <label className="block font-medium">Produit achetable ?</label>
+            <input
+              type="checkbox"
+              checked={isPurchasable}
+              onChange={(e) => setIsPurchasable(e.target.checked)}
+              className="mt-1"
+            />
+          </div>
+        )}
 
         {/* Sale Percentage (only shown if On Sale) */}
         {onSale && (

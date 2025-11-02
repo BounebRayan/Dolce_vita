@@ -21,15 +21,14 @@ interface Product {
   unitsSold: number;
   createdAt: string;
   salePercentage: number;
-  brand?: string;
-  isPurchasable?: boolean;
 }
 
-const SubcategoryPage = () => {
+const SubsubcategoryPage = () => {
   const params = useParams();
-  const { category } = params;
-  console.log(category);
-  const categoryStr =decodeURIComponent( Array.isArray(category) ? category[0] : category);
+  const { category: categoryParam, subsubcategory: subsubcategoryParam } = params;
+  const categoryStr = Array.isArray(categoryParam) ? categoryParam[0] : categoryParam;
+  const subsubcategoryStr = Array.isArray(subsubcategoryParam) ? subsubcategoryParam[0] : subsubcategoryParam;
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -48,11 +47,11 @@ const SubcategoryPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      console.log(categoryStr);
       try {
         const response = await axios.get('/api/products/subcategory', {
           params: {
-            category: categoryStr,
+            subcategory: decodeURIComponent(categoryStr || ''),
+            subsubcategory: decodeURIComponent(subsubcategoryStr || ''),
             onSale: onSale ? 'true' : 'false',
             sortAttribute,
             sortOrder,
@@ -66,12 +65,10 @@ const SubcategoryPage = () => {
       }
     };
 
-    if (categoryStr) {
+    if (categoryStr && subsubcategoryStr) {
       fetchProducts();
     }
-  }, [categoryStr, onSale, sortAttribute, sortOrder]);
-
-  const decodedCategory = decodeURIComponent(categoryStr || '');
+  }, [categoryStr, subsubcategoryStr, onSale, sortAttribute, sortOrder]);
 
   // Determine grid layout based on the category of the first product
   const gridCols = products[0]?.category === 'Meubles' ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
@@ -80,24 +77,9 @@ const SubcategoryPage = () => {
   return (
     <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-[60px] mt-2 md:mt-3 mb-8">
       <main className="w-full pl-0 lg:pl-4">
-      <InsideCategories type={products[0]?.category}/>
+      <InsideCategories type={products[0]?.category || 'Déco'}/>
       <div className='border-t mt-5 pt-5'></div>
         {products[0] && products[0].category === "Déco" && <div>
-       {/*<label className="flex items-center">
-            <div
-              className={`relative w-8 h-5 flex items-center rounded-full p-1 cursor-pointer ${
-                onSale ? 'bg-[#dcc174]' : 'bg-gray-300'
-              }`}
-              onClick={() => setOnSale(!onSale)}
-            >
-              <div
-                className={`w-3 h-3 bg-white rounded-full shadow-md transform duration-300 ${
-                  onSale ? 'translate-x-3' : ''
-                }`}
-              ></div>
-            </div>
-            <span className="ml-2 text-sm">En solde</span>
-          </label>*/}
           <div className="relative mb-2 flex justify-end items-end">
             <div>
               <button
@@ -166,18 +148,7 @@ const SubcategoryPage = () => {
                     loading="lazy"
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
-                  {product.category === "Meubles" && product.brand && (
-                    <p className="text-xs lg:text-[12px] text-gray-500">{product.brand}</p>
-                  )}
-                  {(product.category === "Déco" || (product.category === "Meubles" && product.isPurchasable)) && (
-                    <p className="text-sm text-gray-600">
-                      {product?.onSale ? (
-                        <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div>
-                      ) : (
-                        <div>{product?.price.toFixed(0)} DT</div>
-                      )}
-                    </p>
-                  )}
+                  {product.category === "Déco" && <p className="text-sm text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}
                 </div>
               </Link>
             ))
@@ -190,4 +161,5 @@ const SubcategoryPage = () => {
   );
 };
 
-export default SubcategoryPage;
+export default SubsubcategoryPage;
+
