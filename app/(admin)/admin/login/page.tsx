@@ -40,7 +40,7 @@ const AdminLogin = () => {
         className="outline-none border border-black w-full px-2 py-1 rounded-sm"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit" className="border border-black w-full px-2 py-1 rounded-sm bg-blue-300">
+      <button type="submit" className="border border-black w-full px-2 py-1 rounded-sm bg-[#F6DB8D]">
         Login
       </button>
     </form>
