@@ -30,9 +30,12 @@ export default function Banner() {
   useEffect(() => {
     const fetchBannerImage = async () => {
       try {
-        // Browser will use HTTP cache based on Cache-Control headers from API
+        // Use no-store to bypass browser cache and always fetch fresh data
         const response = await fetch('/api/homepage-images', {
-          cache: 'default' // Use browser's default caching behavior
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
         });
         const data = await response.json();
         if (data.images?.banner) {

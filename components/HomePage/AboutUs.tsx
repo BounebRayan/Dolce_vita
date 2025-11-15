@@ -10,7 +10,12 @@ const AboutUsSection = () => {
   useEffect(() => {
     const fetchAboutUsImage = async () => {
       try {
-        const response = await fetch('/api/homepage-images');
+        const response = await fetch('/api/homepage-images', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         const data = await response.json();
         if (data.images?.aboutUs) {
           setAboutUsImage(data.images.aboutUs);
@@ -43,7 +48,7 @@ const AboutUsSection = () => {
   <h1 className="text-xl font-medium text-gray-900">
     Dolce Vita Home Collection : Référence en Ameublement et Décoration en Tunisie
   </h1>
-  <p className="mt-2 text-lg text-gray-700">
+  <p className="mt-2 text-lg text-gray-700 hidden md:block">
     Plongez dans l’univers Dolce Vita en visitant nos <span className="font-semibold text-gray-900">showrooms à Tunis La Soukra et Sousse Sahloul</span>, et laissez-vous inspirer par l’élégance et le savoir-faire.
   </p>
 

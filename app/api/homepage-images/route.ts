@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { verifyToken } from '@/lib/verify';
 import connectToDB from '@/config/database';
 import HomepageImages from '@/models/homepageImages';
@@ -21,9 +22,9 @@ export async function GET() {
       categoryOrder: homepageImages.categoryOrder
     };
     
-    // Add caching headers - cache for 5 minutes, revalidate in background
+    // Reduced cache time and no stale-while-revalidate to ensure fresh data after updates
     const response = NextResponse.json({ images });
-    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    response.headers.set('Cache-Control', 'public, s-maxage=60, max-age=0, must-revalidate');
     
     return response;
   } catch (error) {
@@ -63,10 +64,20 @@ export async function PUT(req: Request) {
       categoryOrder: updatedImages.categoryOrder
     };
 
-    return NextResponse.json({ 
+    // Invalidate cache for this route to ensure fresh data on next GET request
+    revalidatePath('/api/homepage-images');
+
+    const response = NextResponse.json({ 
       message: 'Homepage images updated successfully',
       images 
     });
+    
+    // Prevent caching of the PUT response
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error('Error updating homepage images:', error);
     return NextResponse.json({ error: 'Error updating homepage images' }, { status: 500 });

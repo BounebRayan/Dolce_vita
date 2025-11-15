@@ -64,7 +64,12 @@ const CategoriesSection: React.FC = () => {
   useEffect(() => {
     const fetchCategoryImages = async () => {
       try {
-        const response = await fetch('/api/homepage-images');
+        const response = await fetch('/api/homepage-images', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         const data = await response.json();
         
         if (data.images?.categories) {
