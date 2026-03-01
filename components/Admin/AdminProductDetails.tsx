@@ -68,6 +68,12 @@ const colors = {
   "aubergine clair": "#7A2A59",
 };
 
+type Variant = {
+  label: string;
+  price: number | string;
+  isAvailable: boolean;
+};
+
 type Product = {
   reference: string | number | readonly string[] | undefined;
   productName: string;
@@ -78,6 +84,7 @@ type Product = {
   onSale: boolean;
   salePercentage: number;
   price: number;
+  variants: Variant[];
   description: string;
   shortDescription?: string;
   brand?: string;
@@ -103,6 +110,8 @@ const AdminProductDetails = ({ productId }: Props) => {
   const [localImage, setLocalImage] = useState<File | null>(null);
     const colorKeys = Object.keys(colors);
     const [selectedColor, setSelectedColor] = useState<string>("");
+    const [newVariantLabel, setNewVariantLabel] = useState("");
+    const [newVariantPrice, setNewVariantPrice] = useState<number | string>("");
   
     const subcategories = product?.category === 'Déco' 
       ? categoriesConfig.deco
@@ -533,7 +542,7 @@ if (!token) {
 
                 {/* Dimensions Section */}
                 <div>
-  <label className="block font-medium">Dimensions L x W x H</label>
+  <label className="block font-medium">Dimensions L x W x H (optionnel)</label>
   <div className="grid grid-cols-3 gap-4">
     <input
       type="number"
@@ -584,9 +593,76 @@ if (!token) {
 </div>
 
 
-{/* Available Colors */}
+{/* Variants / Dimensions */}
         <div>
-        <label className="block font-medium">Couleurs disponibles</label>
+          <label className="block font-medium">Variantes / Dimensions</label>
+          <div className="flex gap-2 mt-1">
+            <input
+              type="text"
+              value={newVariantLabel}
+              onChange={(e) => setNewVariantLabel(e.target.value)}
+              placeholder="Ex: 10 x 15 cm"
+              className="p-2 border rounded-sm flex-1 outline-none"
+            />
+            <input
+              type="number"
+              value={newVariantPrice}
+              onChange={(e) => setNewVariantPrice(e.target.value)}
+              placeholder="Prix (DT)"
+              className="p-2 border rounded-sm w-32 outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (product && newVariantLabel.trim() && newVariantPrice) {
+                  setProduct({
+                    ...product,
+                    variants: [...(product.variants || []), { label: newVariantLabel.trim(), price: parseFloat(newVariantPrice as string), isAvailable: true }],
+                  });
+                  setNewVariantLabel("");
+                  setNewVariantPrice("");
+                }
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded-sm text-nowrap"
+            >
+              Ajouter
+            </button>
+          </div>
+          {product.variants && product.variants.length > 0 && (
+            <div className="mt-2 space-y-1">
+              {product.variants.map((variant, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-sm">
+                  <div className="flex items-center gap-4">
+                    <span className="font-medium">{variant.label}</span>
+                    <span>{variant.price} DT</span>
+                    <label className="flex items-center gap-1 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={variant.isAvailable}
+                        onChange={(e) => {
+                          const updated = [...product.variants];
+                          updated[index] = { ...updated[index], isAvailable: e.target.checked };
+                          setProduct({ ...product, variants: updated });
+                        }}
+                      />
+                      Disponible
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setProduct({ ...product, variants: product.variants.filter((_, i) => i !== index) })}
+                  >
+                    <XMarkIcon className="h-5 w-5 text-black hover:scale-110 transition" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+{/* Available Colors (optionnel) */}
+        <div>
+        <label className="block font-medium">Couleurs disponibles (optionnel)</label>
         <select
         value={selectedColor}
           onChange={(e) => {

@@ -83,6 +83,9 @@ export default function AddProductPage() {
   const [salePercentage, setSalePercentage] = useState<number | string>(0);
   const [recommended, setRecommended] = useState(false);
   const [availableColors, setAvailableColors] = useState<Array<{name: string, hex: string, image?: string}>>([]);
+  const [variants, setVariants] = useState<Array<{label: string, price: number | string, isAvailable: boolean}>>([]);
+  const [newVariantLabel, setNewVariantLabel] = useState("");
+  const [newVariantPrice, setNewVariantPrice] = useState<number | string>("");
   const [images, setImages] = useState<string[]>([]);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const colorKeys = Object.keys(colors);
@@ -199,9 +202,10 @@ export default function AddProductPage() {
       onSale,
       salePercentage: onSale ? parseFloat(salePercentage as string) : 0,
       isFeatured: recommended,
-      isPurchasable: category === 'Meubles' ? isPurchasable : true, // Déco is always purchasable
+      isPurchasable: category === 'Meubles' ? isPurchasable : true,
       dimensions,
       availableColors,
+      variants: variants.map(v => ({ label: v.label, price: parseFloat(v.price as string), isAvailable: v.isAvailable })),
       images,
     };
     
@@ -243,6 +247,7 @@ export default function AddProductPage() {
       setSalePercentage(0);
       setRecommended(false);
       setAvailableColors([]);
+      setVariants([]);
       setImages([]);
     } else {
       console.error("Failed to add product");
@@ -413,7 +418,7 @@ export default function AddProductPage() {
         )}
       {/* Dimensions Input */}
       <div>
-          <label className="block font-medium">Dimensions L x W x H</label>
+          <label className="block font-medium">Dimensions L x W x H (optionnel)</label>
           <div className="flex gap-4">
             <input
               type="number"
@@ -438,9 +443,73 @@ export default function AddProductPage() {
         </div>
 
 
-        {/* Available Colors */}
+        {/* Variants (Dimensions with prices) */}
         <div>
-        <label className="block font-medium">Couleurs disponibles</label>
+          <label className="block font-medium">Variantes / Dimensions (optionnel)</label>
+          <div className="flex gap-2 mt-1">
+            <input
+              type="text"
+              value={newVariantLabel}
+              onChange={(e) => setNewVariantLabel(e.target.value)}
+              placeholder="Ex: 10 x 15 cm"
+              className="p-2 border border-black rounded-sm flex-1 outline-none"
+            />
+            <input
+              type="number"
+              value={newVariantPrice}
+              onChange={(e) => setNewVariantPrice(e.target.value)}
+              placeholder="Prix (DT)"
+              className="p-2 border border-black rounded-sm w-32 outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (newVariantLabel.trim() && newVariantPrice) {
+                  setVariants([...variants, { label: newVariantLabel.trim(), price: newVariantPrice, isAvailable: true }]);
+                  setNewVariantLabel("");
+                  setNewVariantPrice("");
+                }
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded-sm text-nowrap"
+            >
+              Ajouter
+            </button>
+          </div>
+          {variants.length > 0 && (
+            <div className="mt-2 space-y-1">
+              {variants.map((variant, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-sm">
+                  <div className="flex items-center gap-4">
+                    <span className="font-medium">{variant.label}</span>
+                    <span>{variant.price} DT</span>
+                    <label className="flex items-center gap-1 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={variant.isAvailable}
+                        onChange={(e) => {
+                          const updated = [...variants];
+                          updated[index].isAvailable = e.target.checked;
+                          setVariants(updated);
+                        }}
+                      />
+                      Disponible
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setVariants(variants.filter((_, i) => i !== index))}
+                  >
+                    <XMarkIcon className="h-5 w-5 text-black hover:scale-110 transition" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Available Colors (optionnel) */}
+        <div>
+        <label className="block font-medium">Couleurs disponibles (optionnel)</label>
         <select
         value={selectedColor}
           onChange={(e) => {
@@ -586,9 +655,9 @@ export default function AddProductPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={availableColors.length === 0 || images.length === 0}
-          className={`w-full mt-4 px-4 py-2 text-blac border-black rounded-sm border ${
-            availableColors.length === 0 || images.length === 0
+          disabled={images.length === 0}
+          className={`w-full mt-4 px-4 py-2 text-black border-black rounded-sm border ${
+            images.length === 0
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-[#dcc174] hover:bg-[#b89f53]"
           }`}

@@ -10,6 +10,7 @@ interface Product {
   _id: string;
   productName: string;
   price: number;
+  variants?: Array<{ label: string; price: number; isAvailable: boolean }>;
   images: string[];
   brand?: string;
   isPurchasable?: boolean;
@@ -70,11 +71,17 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
                 )}
                 {(product.category === "Déco" || (product.category === "Meubles" && product.isPurchasable)) && (
                   <p className="text-sm sm:text-md text-gray-600">
-                    {product?.onSale ? (
-                      <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div>
-                    ) : (
-                      <div>{product?.price.toFixed(0)} DT</div>
-                    )}
+                    {(() => {
+                      const hasVariants = product.variants && product.variants.length > 0;
+                      const displayPrice = hasVariants
+                        ? Math.min(...product.variants!.map(v => v.price))
+                        : product.price;
+                      const prefix = hasVariants ? 'À partir de ' : '';
+                      if (product.onSale) {
+                        return <span>{prefix}{(displayPrice * (1 - product.salePercentage / 100)).toFixed(0)} DT<span className="line-through text-gray-500 ml-2">{displayPrice.toFixed(0)} DT</span></span>;
+                      }
+                      return <span>{prefix}{displayPrice.toFixed(0)} DT</span>;
+                    })()}
                   </p>
                 )}
               </div>

@@ -74,22 +74,31 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: `Product with ID ${item.product} not found` }, { status: 400 });
       }
 
-      if (!item.color || !item.image) {
-        return NextResponse.json({ message: 'Each product must have a color, an image, and a reference specified.' }, { status: 400 });
+      if (!item.image) {
+        return NextResponse.json({ message: 'Each product must have an image specified.' }, { status: 400 });
       }
 
       const quantity = item.quantity || 1;
-      totalAmount += (product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0) )* quantity;
 
-       // Increment the product's unitsSold
-       //product.unitsSold = (product.unitsSold || 0) + quantity;
-       //await product.save();
+      let basePrice = product.price;
+      if (item.variant && product.variants && product.variants.length > 0) {
+        const matchedVariant = product.variants.find((v: any) => v.label === item.variant);
+        if (matchedVariant) {
+          basePrice = matchedVariant.price;
+        }
+      }
+
+      const itemPrice = product.onSale && product.salePercentage > 0
+        ? Math.round(basePrice * (1 - product.salePercentage / 100))
+        : Math.round(basePrice);
+      totalAmount += itemPrice * quantity;
        
       orderProducts.push({
         product: item.product,
         productName: item.productName,
         reference: item.reference,
-        color: item.color,
+        color: item.color || '',
+        variant: item.variant || '',
         image: item.image,
       });
     }

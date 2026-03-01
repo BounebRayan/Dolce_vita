@@ -20,6 +20,12 @@ type Props = {
 
 
 
+type Variant = {
+  label: string;
+  price: number;
+  isAvailable: boolean;
+};
+
 type Product = {
   productName: string;
   category: 'Meubles' | 'Déco';
@@ -29,6 +35,7 @@ type Product = {
   onSale: boolean;
   salePercentage: number;
   price: number;
+  variants?: Variant[];
   description: string;
   shortDescription?: string;
   brand?: string;
@@ -57,14 +64,20 @@ const ProductDetails = ({ productId }: Props) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number>(0);
+  const [showVariantDropdown, setShowVariantDropdown] = useState(false);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(`/api/products/${productId}`);
         setProduct(response.data);
-        setSelectedColor(response.data.availableColors[0]?.name || '');
+        setSelectedColor(response.data.availableColors?.[0]?.name || '');
         setSelectedImageIndex(response.data.mainImageNumber || 0);
+        const firstAvailable = response.data.variants?.findIndex((v: Variant) => v.isAvailable);
+        if (firstAvailable !== undefined && firstAvailable >= 0) {
+          setSelectedVariantIndex(firstAvailable);
+        }
       } catch (error) {
         console.error('Failed to fetch product details:', error);
       }
@@ -73,34 +86,48 @@ const ProductDetails = ({ productId }: Props) => {
     if (productId) fetchProductDetails();
   }, [productId]);
 
+  const getActivePrice = () => {
+    if (!product) return 0;
+    const hasVariants = product.variants && product.variants.length > 0;
+    const basePrice = hasVariants ? Number(product.variants![selectedVariantIndex]?.price ?? product.price) : product.price;
+    if (product.onSale && product.salePercentage > 0) {
+      return Math.round(basePrice * (1 - product.salePercentage / 100));
+    }
+    return Math.round(basePrice);
+  };
+
   const handleAddToCart = () => {
-    // Check if product is purchasable (for Déco or Meubles with isPurchasable)
     const isProductPurchasable = product?.category === 'Déco' || (product?.category === 'Meubles' && product?.isPurchasable);
     
-    if (!isProductPurchasable) {
-      return;
-    }
+    if (!isProductPurchasable) return;
     
     if (!selectedColor && product?.availableColors && product.availableColors.length > 0) {
       alert("Veuillez sélectionner une couleur avant de l'ajouter au panier.");
       return;
     }
-    const salePrice = product?.onSale ? (product.price * (1 - product.salePercentage / 100)).toFixed(0): product?.price.toFixed(0);
-    const uniqueId = `${productId}-${Date.now()}`; // Create a unique ID for this item
+
+    const hasVariants = product?.variants && product.variants.length > 0;
+    if (hasVariants && !product!.variants![selectedVariantIndex]?.isAvailable) {
+      alert("Cette variante n'est pas disponible.");
+      return;
+    }
+
+    const uniqueId = `${productId}-${Date.now()}`;
+    const selectedVariant = hasVariants ? product!.variants![selectedVariantIndex] : null;
   
     const item = {
-      id: uniqueId, // Unique identifier for the cart entry
-      productId: productId, // Reference to the product
+      id: uniqueId,
+      productId: productId,
       productName: product?.productName,
-      price: salePrice || 0,
-      quantity: 1, // Fixed quantity since it's unique
-      color: selectedColor,
+      price: getActivePrice(),
+      quantity: 1,
+      color: selectedColor || '',
+      variant: selectedVariant?.label || '',
       image: product?.images[selectedImageIndex] || product?.images[0],
       reference: product?.reference,
     };
   
-    addToCart(item); // Dispatch addToCart action
-    console.log("Item added to cart:", item);
+    addToCart(item);
   };
 
   const handlePreviousImage = () => {
@@ -263,14 +290,22 @@ const ProductDetails = ({ productId }: Props) => {
           {/* Pricing Display */}
           {isProductPurchasable && (
             <div className="mb-4">
-              {product.onSale ? (
-                <p className="text-black font-medium text-xl">
-                  {(product.price * (1 - product.salePercentage / 100)).toFixed(0)} TND
-                  <span className="line-through text-gray-500 ml-2 text-base">{product.price.toFixed(0)} TND</span>
-                </p>
-              ) : (
-                <p className="text-black font-medium text-xl">{product.price.toFixed(0)} TND</p>
-              )}
+              {(() => {
+                const hasVariants = product.variants && product.variants.length > 0;
+                const currentPrice = hasVariants 
+                  ? Number(product.variants![selectedVariantIndex]?.price || product.price) 
+                  : product.price;
+                
+                if (product.onSale) {
+                  return (
+                    <p className="text-black font-medium text-xl">
+                      {(currentPrice * (1 - product.salePercentage / 100)).toFixed(0)} TND
+                      <span className="line-through text-gray-500 ml-2 text-base">{currentPrice.toFixed(0)} TND</span>
+                    </p>
+                  );
+                }
+                return <p className="text-black font-medium text-xl">{currentPrice.toFixed(0)} TND</p>;
+              })()}
             </div>
           )}
 
@@ -284,7 +319,7 @@ const ProductDetails = ({ productId }: Props) => {
           )}
 
           {/* Color Selection */}
-          {product.availableColors && isProductPurchasable && (
+          {product.availableColors && product.availableColors.length > 0 && isProductPurchasable && (
             <div className="mb-6">
               <span className="block text-gray-700 mb-2">Sélectionnez une couleur</span>
               <div className="flex gap-2 flex-wrap">
@@ -311,7 +346,7 @@ const ProductDetails = ({ productId }: Props) => {
             </div>
           )}
 
-          {product.availableColors && product.category === "Meubles" && !product.isPurchasable && (
+          {product.availableColors && product.availableColors.length > 0 && product.category === "Meubles" && !product.isPurchasable && (
             <div className="mb-6">
               <span className="block text-gray-700 mb-2">Couleurs disponibles</span>
               <div className="flex gap-2 flex-wrap">
@@ -324,6 +359,70 @@ const ProductDetails = ({ productId }: Props) => {
                   />
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Variant / Dimension Selector */}
+          {product.variants && product.variants.length > 0 && (
+            <div className="mb-6 relative">
+              <button
+                type="button"
+                onClick={() => setShowVariantDropdown(!showVariantDropdown)}
+                className="w-full flex items-center justify-between border border-gray-300 rounded-sm px-4 py-3 text-left hover:border-gray-500 transition-colors"
+              >
+                <span>{product.variants[selectedVariantIndex]?.label}</span>
+                <svg className={`w-4 h-4 transition-transform ${showVariantDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {showVariantDropdown && (
+                <div className="absolute top-full left-0 right-0 z-10 bg-white border border-gray-300 rounded-sm shadow-lg mt-1">
+                  <div className="flex justify-end px-2 pt-2 pb-1 border-b border-gray-100">
+                    <button
+                      type="button"
+                      onClick={() => setShowVariantDropdown(false)}
+                      className="text-gray-500 hover:text-black"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  {product.variants.map((variant, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      disabled={!variant.isAvailable}
+                      onClick={() => {
+                        if (variant.isAvailable) {
+                          setSelectedVariantIndex(index);
+                          setShowVariantDropdown(false);
+                        }
+                      }}
+                      className={`w-full flex items-center justify-between px-4 py-3 text-left border-b border-gray-100 last:border-b-0 transition-colors ${
+                        selectedVariantIndex === index
+                          ? 'bg-gray-50 font-medium'
+                          : variant.isAvailable
+                            ? 'hover:bg-gray-50'
+                            : 'opacity-50 cursor-not-allowed'
+                      }`}
+                    >
+                      <div>
+                        <span className={selectedVariantIndex === index ? 'text-[#b89f53]' : ''}>{variant.label}</span>
+                        {!variant.isAvailable && (
+                          <span className="block text-xs text-orange-500">non disponible</span>
+                        )}
+                      </div>
+                      <span className="text-gray-700">
+                        {product.onSale
+                          ? `${(Number(variant.price) * (1 - product.salePercentage / 100)).toFixed(0)} TND`
+                          : `${Number(variant.price).toFixed(0)} TND`}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -351,7 +450,7 @@ const ProductDetails = ({ productId }: Props) => {
           )}
 
           {/* Dimensions */}
-          {product.dimensions.length !== 0 && product.dimensions.width !== 0 && product.dimensions.height !== 0 && (
+          {product.dimensions && product.dimensions.length != null && product.dimensions.width != null && product.dimensions.height != null && product.dimensions.length !== 0 && product.dimensions.width !== 0 && product.dimensions.height !== 0 && (
             <div className="border-t border-gray-300 py-3 mt-4">
               <p className="text-gray-700">
                 Dimensions (L x W x H): {`${product.dimensions.length} x ${product.dimensions.width} x ${product.dimensions.height}`} {product.dimensions.unit}
