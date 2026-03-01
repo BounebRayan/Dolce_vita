@@ -85,6 +85,8 @@ export async function POST(req: Request) {
         const matchedVariant = product.variants.find((v: any) => v.label === item.variant);
         if (matchedVariant) {
           basePrice = matchedVariant.price;
+        } else {
+          return NextResponse.json({ message: `Variant "${item.variant}" not found for product ${product.productName}` }, { status: 400 });
         }
       }
 

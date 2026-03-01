@@ -293,7 +293,7 @@ const ProductDetails = ({ productId }: Props) => {
               {(() => {
                 const hasVariants = product.variants && product.variants.length > 0;
                 const currentPrice = hasVariants 
-                  ? Number(product.variants![selectedVariantIndex]?.price || product.price) 
+                  ? Number(product.variants![selectedVariantIndex]?.price ?? product.price) 
                   : product.price;
                 
                 if (product.onSale) {
