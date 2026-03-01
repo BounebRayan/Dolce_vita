@@ -16,6 +16,7 @@ interface CartItem {
   productName: string;
   price: number;
   color: string;
+  variant?: string;
   quantity: number;
   image: string;
 }
@@ -82,9 +83,10 @@ const CartPage = () => {
       phoneNumber: phone,
       address,
       totalPrice: totalPriceWithShipping,
-      products: items.map((item: { productId: any; color: any; image: any; reference: any; productName: any; price: any; }) => ({
+      products: items.map((item: { productId: any; color: any; variant?: any; image: any; reference: any; productName: any; price: any; }) => ({
         product: item.productId,
-        color: item.color,
+        color: item.color || '',
+        variant: item.variant || '',
         image: item.image,
         reference: item.reference,
         productName: item.productName,
@@ -146,7 +148,8 @@ const CartPage = () => {
                     <RiExternalLinkLine className='h-4 w-4 text-black'/>
                   </Link>
                   <p>Référence: {item.reference}</p>
-                  <p>Couleur: {item.color}</p>
+                  {item.color && <p>Couleur: {item.color}</p>}
+                  {item.variant && <p>Dimension: {item.variant}</p>}
                   <p>Prix article: {item.price} DT</p>
                 </div>
               </div>

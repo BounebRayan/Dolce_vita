@@ -24,6 +24,7 @@ type Product = {
   reference: string;
   productName: string;
   price: number;
+  variants?: Array<{ label: string; price: number; isAvailable: boolean }>;
   images: string[];
   onSale :boolean;
   isRecommended: boolean;
@@ -128,11 +129,17 @@ export default function Section(prop: SectionProp) {
                     )}
                     {(product.category === 'Déco' || (product.category === 'Meubles' && product.isPurchasable)) && (
                       <p className="text-[13px] sm:text-[14px] text-gray-600">
-                        {product?.onSale ? (
-                          <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div>
-                        ) : (
-                          <div>{product?.price.toFixed(0)} DT</div>
-                        )}
+                        {(() => {
+                          const hasVariants = product.variants && product.variants.length > 0;
+                          const displayPrice = hasVariants
+                            ? Math.min(...product.variants!.map(v => v.price))
+                            : product.price;
+                          const prefix = hasVariants ? 'À partir de ' : '';
+                          if (product.onSale) {
+                            return <span>{prefix}{(displayPrice * (1 - product.salePercentage / 100)).toFixed(0)} DT<span className="line-through text-gray-500 ml-2">{displayPrice.toFixed(0)} DT</span></span>;
+                          }
+                          return <span>{prefix}{displayPrice.toFixed(0)} DT</span>;
+                        })()}
                       </p>
                     )}
                     {product.isRecommended && <IoMdHeart  className="text-[#F6DB8D] animate-bounce drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.3)] text h-7 w-7 absolute top-4 right-4 rounded-full p-1"/>}

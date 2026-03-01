@@ -74,6 +74,22 @@ const productSchema = new mongoose.Schema({
     max: 100000,
     index: true
   },
+  variants: [{
+    label: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true
+    }
+  }],
   onSale: {
     type: Boolean,
     default: false,
