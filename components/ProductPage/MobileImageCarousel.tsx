@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from 'next/image';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 
 const MobileImageCarousel = ({ images }: { images: string[] }) => {
@@ -26,7 +27,7 @@ const MobileImageCarousel = ({ images }: { images: string[] }) => {
             <div className="   relative">
 
             <img
-  src={img}
+  src={optimizeCloudinaryUrl(img)}
   alt={`Product Image ${index + 1}`}
   className="object-cover"
 />

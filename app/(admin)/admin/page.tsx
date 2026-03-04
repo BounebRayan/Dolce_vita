@@ -202,8 +202,9 @@ const StatsPage = () => {
         if (!token) return;
 
         // Convert blob to file
-        const croppedFile = new File([croppedBlob], file.name, {
-          type: 'image/jpeg',
+        const webpName = file.name.replace(/\.[^.]+$/, '.webp');
+        const croppedFile = new File([croppedBlob], webpName, {
+          type: 'image/webp',
           lastModified: Date.now(),
         });
         
@@ -246,8 +247,9 @@ const StatsPage = () => {
         if (!token) return;
 
         // Convert blob to file
-        const croppedFile = new File([croppedBlob], file.name, {
-          type: 'image/jpeg',
+        const webpName = file.name.replace(/\.[^.]+$/, '.webp');
+        const croppedFile = new File([croppedBlob], webpName, {
+          type: 'image/webp',
           lastModified: Date.now(),
         });
         

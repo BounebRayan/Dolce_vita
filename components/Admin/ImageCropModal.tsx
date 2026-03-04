@@ -137,7 +137,7 @@ const ImageCropModal: React.FC<ImageCropModalProps> = ({
         } else {
           reject(new Error('Canvas is empty'));
         }
-      }, 'image/jpeg', 0.95); // Higher quality JPEG
+      }, 'image/webp', 0.9);
     });
   }, [completedCrop, cropConfig, minWidth, minHeight]);
 

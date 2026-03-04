@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 interface Product {
   category: 'Meubles' | 'Déco';
@@ -60,7 +61,7 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="cursor-pointer transform transition hover:scale-[1.02] duration-300 pb-1">
                 <img
-                  src={product.images[0]}
+                  src={optimizeCloudinaryUrl(product.images[0])}
                   alt={product.productName}
                   className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[420px] object-cover"
                   loading="lazy"

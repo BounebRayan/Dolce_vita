@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { isAuthenticated } from "@/lib/auth";
 import { categories, getSubsubcategoriesByType, hasSubsubcategories } from "@/config/categories";
+import { convertToWebP } from '@/lib/cloudinary';
 
 const colors = { 
   rouge: "#f56565",
@@ -154,8 +155,9 @@ export default function AddProductPage() {
   const handleImageUpload = async () => {
     if (!imageUpload) return;
 
+    const webpImage = await convertToWebP(imageUpload);
     const formData = new FormData();
-    formData.append("file", imageUpload);
+    formData.append("file", webpImage);
 
     const token = localStorage.getItem('admin_password');
 

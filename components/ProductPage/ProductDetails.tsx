@@ -12,6 +12,7 @@ import { FaCircleInfo, FaCheck } from 'react-icons/fa6';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import MobileImageCarousel from './MobileImageCarousel';
 import { getCategoryText, getSubsubcategoryByType } from '@/config/categories';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 
 type Props = {
@@ -237,7 +238,7 @@ const ProductDetails = ({ productId }: Props) => {
                   >
                     <Image
                       loading='lazy'
-                      src={img}
+                      src={optimizeCloudinaryUrl(img)}
                       alt={`Thumbnail ${index + 1}`}
                       width={80}
                       height={80}
@@ -252,7 +253,7 @@ const ProductDetails = ({ productId }: Props) => {
             <div className="flex-1 relative group">
               <div className="w-full aspect-square overflow-hidden rounded-sm">
                 <Image
-                  src={product.images[selectedImageIndex] || product.images[0]}
+                  src={optimizeCloudinaryUrl(product.images[selectedImageIndex] || product.images[0])}
                   alt={product.productName}
                   width={600}
                   height={600}

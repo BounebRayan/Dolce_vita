@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { FaChevronDown, FaChevronUp, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 type Product = {
   category: string;
@@ -205,7 +206,7 @@ const SearchPage = () => {
                     <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition hover:scale-[1.02] duration-300 rounded-sm pb-1">
                       <div>
                         <img
-                          src={product.images[0]}
+                          src={optimizeCloudinaryUrl(product.images[0])}
                           alt={product.productName}
                           className="w-full rounded-sm object-cover aspect-[6/4]"
                           loading="lazy"
@@ -244,7 +245,7 @@ const SearchPage = () => {
                     <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition hover:scale-[1.02] duration-300 rounded-sm pb-1">
                       <div>
                         <img
-                          src={product.images[0]}
+                          src={optimizeCloudinaryUrl(product.images[0])}
                           alt={product.productName}
                           className="w-full rounded-sm object-cover aspect-[4/5]"
                           loading="lazy"

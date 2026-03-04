@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import Marquee from 'react-fast-marquee';
 import { categories } from '@/config/categories';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 interface Product {
   _id: string;
@@ -98,7 +99,7 @@ const DecorationsPage = () => {
                       <Link key={product._id} href={`/product/${product._id}`}>
                         <div className="relative flex-none w-[300px] mr-4 cursor-pointer rounded-sm pb-1">
                           <img
-                            src={product.images[0]}
+                            src={optimizeCloudinaryUrl(product.images[0])}
                             alt={product.productName}
                             className="w-full object-cover rounded-sm aspect-[4/5]"
                             loading="lazy"
