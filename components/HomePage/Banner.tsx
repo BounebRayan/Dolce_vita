@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import localFont from 'next/font/local';
 import { useEffect, useState } from 'react';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 const Zodiak = localFont({
   src: [
@@ -39,7 +40,7 @@ export default function Banner() {
         });
         const data = await response.json();
         if (data.images?.banner) {
-          setBannerImage(data.images.banner);
+          setBannerImage(optimizeCloudinaryUrl(data.images.banner));
         }
         if (data.images?.bannerOpacity !== undefined) {
           setBannerOpacity(data.images.bannerOpacity);

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';;
 import localFont from 'next/font/local';
 import { homepageCategories, type HomepageCategory } from '../../config/categories';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 const myFont = localFont({
   src: [
@@ -187,7 +188,7 @@ const CategoriesSection: React.FC = () => {
                     {/* Dynamic image - fades in when loaded */}
                     {hasDynamicImage && (
                       <img
-                        src={dynamicImage}
+                        src={optimizeCloudinaryUrl(dynamicImage)}
                         alt={category.name}
                         className={`absolute inset-0 w-full h-64 sm:h-64 md:h-64 lg:h-64 object-cover rounded-sm transition-opacity duration-700 ${
                           isImageLoaded ? 'opacity-100' : 'opacity-0'

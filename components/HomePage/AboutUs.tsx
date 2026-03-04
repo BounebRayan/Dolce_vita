@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 const AboutUsSection = () => {
   const [aboutUsImage, setAboutUsImage] = useState('https://placehold.co/1280x720/F5F5F1/F5F5F1');
@@ -18,7 +19,7 @@ const AboutUsSection = () => {
         });
         const data = await response.json();
         if (data.images?.aboutUs) {
-          setAboutUsImage(data.images.aboutUs);
+          setAboutUsImage(optimizeCloudinaryUrl(data.images.aboutUs));
         }
       } catch (error) {
         console.error('Error fetching about us image:', error);

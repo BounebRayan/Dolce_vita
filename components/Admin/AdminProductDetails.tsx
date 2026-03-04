@@ -5,6 +5,7 @@ import Image from "next/image";
 import axios from "axios";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { categories as categoriesConfig, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
+import { convertToWebP } from '@/lib/cloudinary';
 
 type Props = {
   productId: string;
@@ -264,8 +265,9 @@ if (!token) {
 
   if (!localImage || !product) return;
 
+  const webpImage = await convertToWebP(localImage);
   const formData = new FormData();
-  formData.append("file", localImage);
+  formData.append("file", webpImage);
 
   try {
     const response = await axios.post(API_URL, formData,

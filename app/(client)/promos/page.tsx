@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import InsideCategories from '@/components/ProductPage/InsideCategories';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 interface Product {
   _id: string;
@@ -136,7 +137,7 @@ const PromosPage = () => {
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
                   <img
-                    src={product.images[0]}
+                    src={optimizeCloudinaryUrl(product.images[0])}
                     alt={product.productName}
                     className={`w-full object-cover rounded-sm ${aspect}`}	
                     loading="lazy"

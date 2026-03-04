@@ -4,6 +4,7 @@ import { useCart } from '../../../contexts/CartContext';
 import { useState } from 'react';
 import Image from 'next/image';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 import { RiExternalLinkLine } from "react-icons/ri";
 import { MdOutlineLocalShipping } from 'react-icons/md';
 import { toast } from 'react-toastify';
@@ -140,7 +141,7 @@ const CartPage = () => {
             <div key={item.id} className="relative flex items-center justify-between border-b border-gray-300 pb-3">
               <div className="flex items-start gap-4">
                 <div className="w-[110px] h-[110px] overflow-hidden rounded-md flex-grow flex items-center justify-center">
-                  <Image src={item.image} alt={item.productName} width={140} height={140} className="object-cover rounded-sm" />
+                  <Image src={optimizeCloudinaryUrl(item.image)} alt={item.productName} width={140} height={140} className="object-cover rounded-sm" />
                 </div>
                 <div>
                   <Link href={`/product/${item.productId}`} className='flex items-center gap-2'>

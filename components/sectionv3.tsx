@@ -7,6 +7,7 @@ import { PiShootingStarDuotone } from 'react-icons/pi';
 import { IoHeartCircle } from 'react-icons/io5';
 import { IoMdHeart } from 'react-icons/io';
 import localFont from 'next/font/local';
+import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
 
 const myFont = localFont({
   src: [
@@ -118,7 +119,7 @@ export default function Section(prop: SectionProp) {
                 <Link key={product._id} href={`/product/${product._id}`}>
                   <div className={` relative flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-[1.01] pb-3`}>
                     <img
-                      src={product.images[0] || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
+                      src={optimizeCloudinaryUrl(product.images[0]) || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
                       alt={product.productName}
                       className="w-full aspect-[6/4]  object-cover"
                       loading="lazy"
