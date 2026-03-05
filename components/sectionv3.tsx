@@ -8,6 +8,7 @@ import { IoHeartCircle } from 'react-icons/io5';
 import { IoMdHeart } from 'react-icons/io';
 import localFont from 'next/font/local';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 const myFont = localFont({
   src: [
@@ -118,11 +119,10 @@ export default function Section(prop: SectionProp) {
               .map((product) => (
                 <Link key={product._id} href={`/product/${product._id}`}>
                   <div className={` relative flex-none ${product.category  === 'Meubles' ? 'lg:w-[500px]' : 'lg:w-[300px]'} w-[200px] sm:w-[250px] md:w-[300px] cursor-pointer transform transition duration-300 hover:scale-[1.01] pb-3`}>
-                    <img
-                      src={optimizeCloudinaryUrl(product.images[0]) || "https://placehold.co/600x400/F5F5F1/F5F5F1"}
+                    <ProductImageCarousel
+                      images={product.images}
                       alt={product.productName}
-                      className="w-full aspect-[6/4]  object-cover"
-                      loading="lazy"
+                      className="w-full aspect-[3/4] sm:aspect-[6/4] rounded-sm"
                     />
                     <h3 className="mt-1 text-[13px] sm:text-[14px] font-medium">{product.productName}</h3>
                     {product.category === 'Meubles' && product.brand && (

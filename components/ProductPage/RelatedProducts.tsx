@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 interface Product {
   category: 'Meubles' | 'Déco';
@@ -60,11 +61,10 @@ const RelatedProducts: React.FC<Props> = ({ subCategory, id }) => {
           filteredProducts.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="cursor-pointer transform transition hover:scale-[1.02] duration-300 pb-1">
-                <img
-                  src={optimizeCloudinaryUrl(product.images[0])}
+                <ProductImageCarousel
+                  images={product.images}
                   alt={product.productName}
-                  className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[420px] object-cover"
-                  loading="lazy"
+                  className="w-full aspect-[3/4] sm:aspect-auto sm:h-[320px] md:h-[360px] lg:h-[420px]"
                 />
                 <h3 className="mt-1 text-sm sm:text-md font-medium">{product.productName}</h3>
                 {product.category === "Meubles" && product.brand && (

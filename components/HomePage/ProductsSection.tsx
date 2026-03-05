@@ -70,7 +70,7 @@ function ProductCard({ product }: { product: Product }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] overflow-hidden rounded-sm">
+      <div className="relative w-full aspect-[3/4] sm:aspect-auto sm:h-[300px] md:h-[350px] lg:h-[380px] overflow-hidden rounded-sm">
         {product.images.length > 0 ? (
           product.images.map((img, idx) => (
             <img
@@ -184,7 +184,7 @@ export default function ProductsSection(prop: SectionProp) {
         className="relative flex-none w-[200px] sm:w-[250px] md:w-[300px] lg:w-[300px] cursor-pointer transform transition duration-300 pb-3"
       >
         {/* Image placeholder */}
-        <div className="relative w-full h-[200px] sm:h-[300px] md:h-[350px] lg:h-[380px] bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200 rounded-md overflow-hidden">
+        <div className="relative w-full aspect-[3/4] sm:aspect-auto sm:h-[300px] md:h-[350px] lg:h-[380px] bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200 rounded-md overflow-hidden">
           {/* Shimmer effect */}
           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
         </div>

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { FaChevronDown, FaChevronUp, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 type Product = {
   category: string;
@@ -205,11 +206,10 @@ const SearchPage = () => {
                   {meublesProducts.map((product) => (
                     <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition hover:scale-[1.02] duration-300 rounded-sm pb-1">
                       <div>
-                        <img
-                          src={optimizeCloudinaryUrl(product.images[0])}
+                        <ProductImageCarousel
+                          images={product.images}
                           alt={product.productName}
-                          className="w-full rounded-sm object-cover aspect-[6/4]"
-                          loading="lazy"
+                          className="w-full rounded-sm aspect-[3/4] sm:aspect-[6/4]"
                         />
                         <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                         {product.brand && (
@@ -244,11 +244,10 @@ const SearchPage = () => {
                   {decoProducts.map((product) => (
                     <Link key={product._id} href={`/product/${product._id}`} className="cursor-pointer transform transition hover:scale-[1.02] duration-300 rounded-sm pb-1">
                       <div>
-                        <img
-                          src={optimizeCloudinaryUrl(product.images[0])}
+                        <ProductImageCarousel
+                          images={product.images}
                           alt={product.productName}
-                          className="w-full rounded-sm object-cover aspect-[4/5]"
-                          loading="lazy"
+                          className="w-full rounded-sm aspect-[3/4] sm:aspect-[4/5]"
                         />
                         <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                         {product.category === "Meubles" && product.brand && (
