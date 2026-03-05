@@ -1,35 +1,38 @@
-// pages/admin/login.tsx
 'use client';
 import { isAuthenticated } from '@/lib/auth';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-const AdminLogin = () => {
+function LoginForm() {
   const [password, setPassword] = useState('');
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/admin';
 
-  const  handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-    if (password) {
-      const response = await axios.get('/api/login', {
+      if (password) {
+        const response = await axios.get('/api/login', {
           params: {
             ...(password && { password }),
           },
         });
-      localStorage.setItem('admin_password', response.data.token);
-      window.location.href = '/admin'; // Redirect to the admin page after successful login
-      } 
-    else {
+        localStorage.setItem('admin_password', response.data.token);
+        window.location.href = redirectTo;
+      } else {
+        alert('Invalid password');
+      }
+    } catch (error) {
       alert('Invalid password');
-    }}
-    catch (error) {alert('Invalid password');}
+    }
   };
 
-    useEffect(() => {
-      if (isAuthenticated()) {
-        window.location.href = '/admin'; 
-      }
-    }, []);
+  useEffect(() => {
+    if (isAuthenticated()) {
+      window.location.href = redirectTo;
+    }
+  }, [redirectTo]);
 
   return (
     <form onSubmit={handleSubmit} className="text-center mt-12 flex flex-col gap-2 items-center bg-white p-4 justify-center sm:w-1/2 md:w-1/2 lg:w-1/5 sm:mx-auto mx-8">
@@ -45,6 +48,12 @@ const AdminLogin = () => {
       </button>
     </form>
   );
-};
+}
 
-export default AdminLogin;
+export default function AdminLogin() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}

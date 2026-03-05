@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import InsideCategories from '@/components/ProductPage/InsideCategories';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 interface Product {
   _id: string;
@@ -61,7 +62,7 @@ const PromosPage = () => {
 
   // Determine grid layout for Déco products
   const gridCols = 'lg:grid-cols-4';
-  const aspect = 'aspect-[4/5]';
+  const aspect = 'aspect-[3/4] sm:aspect-[4/5]';
 
   return (
     <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-[60px] mt-2 md:mt-3 mb-8">
@@ -136,11 +137,10 @@ const PromosPage = () => {
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
-                  <img
-                    src={optimizeCloudinaryUrl(product.images[0])}
+                  <ProductImageCarousel
+                    images={product.images}
                     alt={product.productName}
-                    className={`w-full object-cover rounded-sm ${aspect}`}	
-                    loading="lazy"
+                    className={`w-full rounded-sm ${aspect}`}
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                   <p className="text-sm text-gray-600">

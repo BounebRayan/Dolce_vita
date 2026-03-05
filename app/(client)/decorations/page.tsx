@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Marquee from 'react-fast-marquee';
 import { categories } from '@/config/categories';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 interface Product {
   _id: string;
@@ -98,11 +99,10 @@ const DecorationsPage = () => {
                     {products.map((product) => (
                       <Link key={product._id} href={`/product/${product._id}`}>
                         <div className="relative flex-none w-[300px] mr-4 cursor-pointer rounded-sm pb-1">
-                          <img
-                            src={optimizeCloudinaryUrl(product.images[0])}
+                          <ProductImageCarousel
+                            images={product.images}
                             alt={product.productName}
-                            className="w-full object-cover rounded-sm aspect-[4/5]"
-                            loading="lazy"
+                            className="w-full rounded-sm aspect-[3/4] sm:aspect-[4/5]"
                           />
                           <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                           <p className="text-sm text-gray-600">

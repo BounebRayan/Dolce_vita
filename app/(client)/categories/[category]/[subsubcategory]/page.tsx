@@ -8,6 +8,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import CategoriesSection from '@/components/HomePage/CategoriesSection';
 import InsideCategories from '@/components/ProductPage/InsideCategories';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 interface Product {
   _id: string;
@@ -73,7 +74,7 @@ const SubsubcategoryPage = () => {
 
   // Determine grid layout based on the category of the first product
   const gridCols = products[0]?.category === 'Meubles' ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
-  const aspect = products[0]?.category === 'Meubles' ? 'aspect-[6/4]' : 'aspect-[4/5]';
+  const aspect = products[0]?.category === 'Meubles' ? 'aspect-[3/4] sm:aspect-[6/4]' : 'aspect-[3/4] sm:aspect-[4/5]';
 
   return (
     <div className="flex flex-col lg:flex-row mx-4 sm:mx-8 lg:mx-[60px] mt-2 md:mt-3 mb-8">
@@ -142,11 +143,10 @@ const SubsubcategoryPage = () => {
             products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`}>
                 <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
-                  <img
-                    src={optimizeCloudinaryUrl(product.images[0])}
+                  <ProductImageCarousel
+                    images={product.images}
                     alt={product.productName}
-                    className={`w-full object-cover rounded-sm ${aspect}`}	
-                    loading="lazy"
+                    className={`w-full rounded-sm ${aspect}`}
                   />
                   <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                   {product.category === "Déco" && <p className="text-sm text-gray-600">{product?.onSale ? <div>{(product.price * (1 - product.salePercentage / 100)).toFixed(0) } DT<span className="line-through text-gray-500 ml-2">{product.price.toFixed(0)} DT</span></div> : <div>{product?.price.toFixed(0)} DT</div> } </p>}

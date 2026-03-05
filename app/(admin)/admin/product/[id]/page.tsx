@@ -16,7 +16,7 @@ const ProductPage = ({ params }: Props) => {
   const { id } = params;
     useEffect(() => {
       if (!isAuthenticated()) {
-        window.location.href = '/admin/login'; // Redirect to login page
+        window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.pathname);
       }
     }, []); // Extract the product id from the URL
 

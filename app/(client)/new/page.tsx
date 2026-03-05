@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 
 type Product = {
   salePercentage: number;
@@ -57,7 +58,7 @@ const NewPage = () => {
     category: 'Meubles' | 'Déco' 
   }) => {
     const gridCols = category === 'Meubles' ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
-    const aspect = category === 'Meubles' ? 'aspect-[6/4]' : 'aspect-[4/5]';
+    const aspect = category === 'Meubles' ? 'aspect-[3/4] sm:aspect-[6/4]' : 'aspect-[3/4] sm:aspect-[4/5]';
 
     if (loading) {
       return (
@@ -81,11 +82,10 @@ const NewPage = () => {
           {products.map((product) => (
             <Link key={product._id} href={`/product/${product._id}`}>
               <div className="cursor-pointer transform transition duration-300 hover:scale-[1.02] rounded-sm pb-1">
-                <img
-                  src={optimizeCloudinaryUrl(product.images[0])}
+                <ProductImageCarousel
+                  images={product.images}
                   alt={product.productName}
-                  className={`w-full object-cover rounded-sm ${aspect}`}
-                  loading="lazy"
+                  className={`w-full rounded-sm ${aspect}`}
                 />
                 <h3 className="mt-1 text-sm lg:text-[14px] font-medium">{product.productName}</h3>
                 {product.category === "Meubles" && product.brand && (

@@ -251,12 +251,12 @@ const ProductDetails = ({ productId }: Props) => {
             
             {/* Main Image with Navigation */}
             <div className="flex-1 relative group">
-              <div className="w-full aspect-square overflow-hidden rounded-sm">
+              <div className="w-full aspect-[3/4] overflow-hidden rounded-sm">
                 <Image
                   src={optimizeCloudinaryUrl(product.images[selectedImageIndex] || product.images[0])}
                   alt={product.productName}
                   width={600}
-                  height={600}
+                  height={800}
                   className="object-cover w-full h-full"
                 />
               </div>
