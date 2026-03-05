@@ -104,7 +104,7 @@ const InsideCategories: React.FC<InsideCategoriesProps> = ({ type }) => {
       <div className="relative group">
   
         {/* Categories Grid */}
-        <div ref={containerRef} className="flex space-x-2 overflow-x-auto scroll-smooth">
+        <div ref={containerRef} className="flex space-x-2 overflow-x-auto scroll-smooth pl-1 -ml-1">
           {categoriesList.map((category) => (
             <Link key={category.id} href={category.link}>
               <div className={`flex-none rounded-sm border-[1.5px] py-2 px-3 cursor-pointer transform transition-transform hover:scale-[1.02] duration-300 h-full pb-1 ${
