@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { isAuthenticated } from "@/lib/auth";
 import { categories, getSubsubcategoriesByType, hasSubsubcategories } from "@/config/categories";
 import { convertToWebP } from '@/lib/cloudinary';
@@ -89,6 +90,8 @@ export default function AddProductPage() {
   const [newVariantPrice, setNewVariantPrice] = useState<number | string>("");
   const [images, setImages] = useState<string[]>([]);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const colorKeys = Object.keys(colors);
   const [selectedColor, setSelectedColor] = useState<string>("");
 
@@ -182,7 +185,39 @@ export default function AddProductPage() {
     }
   };
 
-  // Submit the form
+  const handleImageDragStart = (index: number) => {
+    setDragIndex(index);
+  };
+
+  const handleImageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    setDragOverIndex(index);
+  };
+
+  const handleImageDrop = (index: number) => {
+    if (dragIndex === null) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(dragIndex, 1);
+    reordered.splice(index, 0, moved);
+    setImages(reordered);
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleImageDragEnd = () => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleSetAsMain = (index: number) => {
+    if (index === 0) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(index, 1);
+    reordered.unshift(moved);
+    setImages(reordered);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -630,27 +665,57 @@ export default function AddProductPage() {
             Charger Cette Image
           </button>
           </div>
+          {images.length > 0 && (
+            <p className="mt-1 text-sm text-gray-500">
+              Glissez-déposez pour réordonner. La première image sera l&apos;image principale.
+            </p>
+          )}
           <div className="mt-1 flex flex-wrap gap-2">
             {images.map((img, index) => (
-              <div key={index} className="relative">
+              <div
+                key={img}
+                draggable
+                onDragStart={() => handleImageDragStart(index)}
+                onDragOver={(e) => handleImageDragOver(e, index)}
+                onDrop={() => handleImageDrop(index)}
+                onDragEnd={handleImageDragEnd}
+                className={`relative group cursor-grab active:cursor-grabbing transition-all duration-200 ${
+                  dragIndex === index ? "opacity-40 scale-95" : ""
+                } ${dragOverIndex === index ? "ring-2 ring-blue-400 ring-offset-1" : ""}`}
+              >
               <img
-                key={index}
                 src={img}
                 alt={`Product Image ${index + 1}`}
-                className="w-24 h-24 object-cover border"
+                className="w-24 h-24 object-cover border pointer-events-none"
               />
+              {index === 0 && (
+                <div className="absolute bottom-1 left-1 bg-yellow-400 rounded-full p-0.5" title="Image principale">
+                  <StarIconSolid className="h-3.5 w-3.5 text-white" />
+                </div>
+              )}
+              {index !== 0 && (
+                <button
+                  onClick={(e) => { e.preventDefault(); handleSetAsMain(index); }}
+                  className="absolute bottom-1 left-1 bg-white/80 rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Définir comme image principale"
+                >
+                  <StarIcon className="h-3.5 w-3.5 text-gray-500" />
+                </button>
+              )}
+              <div className="absolute top-1 left-1 bg-black/50 text-white text-[10px] font-bold rounded px-1">
+                {index + 1}
+              </div>
               <button
                 onClick={(e) => {
-                  e.preventDefault(); // Prevent form submission
+                  e.preventDefault();
                   handleDeleteImage(img);
                 }}
-                className="absolute top-1 right-1 text-black bg-slate-200/50 p-1 rounded-full"
+                className="absolute top-1 right-1 text-black bg-slate-200/50 p-1 rounded-full z-10"
               >
                 <XMarkIcon className="h-5 w-5 text-black transform transition duration-300 hover:scale-105"/>
               </button>
               </div>
             ))}
-    
           </div>
         </div>
 

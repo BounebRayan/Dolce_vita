@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { categories as categoriesConfig, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
 import { convertToWebP } from '@/lib/cloudinary';
 
@@ -109,6 +110,8 @@ const AdminProductDetails = ({ productId }: Props) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [localImage, setLocalImage] = useState<File | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const colorKeys = Object.keys(colors);
     const [selectedColor, setSelectedColor] = useState<string>("");
     const [newVariantLabel, setNewVariantLabel] = useState("");
@@ -164,6 +167,47 @@ const AdminProductDetails = ({ productId }: Props) => {
       };
       setProduct(updatedProduct);
     }
+  };
+
+  const handleImageDragStart = (index: number) => {
+    setDragIndex(index);
+  };
+
+  const handleImageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    setDragOverIndex(index);
+  };
+
+  const handleImageDrop = (index: number) => {
+    if (dragIndex === null || !product) return;
+    const reordered = [...product.images];
+    const [moved] = reordered.splice(dragIndex, 1);
+    reordered.splice(index, 0, moved);
+    setProduct({ ...product, images: reordered });
+    if (selectedImageIndex === dragIndex) {
+      setSelectedImageIndex(index);
+    } else if (dragIndex < selectedImageIndex && index >= selectedImageIndex) {
+      setSelectedImageIndex(selectedImageIndex - 1);
+    } else if (dragIndex > selectedImageIndex && index <= selectedImageIndex) {
+      setSelectedImageIndex(selectedImageIndex + 1);
+    }
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleImageDragEnd = () => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleSetAsMain = (index: number) => {
+    if (!product || index === 0) return;
+    const reordered = [...product.images];
+    const [moved] = reordered.splice(index, 1);
+    reordered.unshift(moved);
+    setProduct({ ...product, images: reordered });
+    setSelectedImageIndex(0);
   };
 
   const handleSaveMainImage = async () => {
@@ -377,25 +421,56 @@ if (!token) {
         </div>
         <div className="flex flex-col flex-wrap gap-2">
           {product.images.map((img, index) => (
-            <div key={index} className="relative">
+            <div
+              key={img}
+              draggable
+              onDragStart={() => handleImageDragStart(index)}
+              onDragOver={(e) => handleImageDragOver(e, index)}
+              onDrop={() => handleImageDrop(index)}
+              onDragEnd={handleImageDragEnd}
+              className={`relative group cursor-grab active:cursor-grabbing transition-all duration-200 ${
+                dragIndex === index ? "opacity-40 scale-95" : ""
+              } ${dragOverIndex === index ? "ring-2 ring-blue-400 ring-offset-1" : ""}`}
+            >
               <Image
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
                 width={100}
                 height={100}
-                className={`cursor-pointer rounded-sm border-2 transition ${
+                className={`rounded-sm border-2 transition pointer-events-none ${
                   index === selectedImageIndex
                     ? "border-blue-500"
-                    : "border-transparent hover:border-gray-300"
+                    : "border-transparent group-hover:border-gray-300"
                 }`}
-                onClick={() => setSelectedImageIndex(index)} // Set selected image index
+              />
+              {index === 0 && (
+                <div className="absolute bottom-1 left-1 bg-yellow-400 rounded-full p-0.5" title="Image principale">
+                  <StarIconSolid className="h-3 w-3 text-white" />
+                </div>
+              )}
+              {index !== 0 && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleSetAsMain(index); }}
+                  className="absolute bottom-1 left-1 bg-white/80 rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Définir comme image principale"
+                >
+                  <StarIcon className="h-3 w-3 text-gray-500" />
+                </button>
+              )}
+              <button
+                onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(index); }}
+                className="absolute inset-0 w-full h-full bg-transparent"
+                aria-label={`Sélectionner image ${index + 1}`}
               />
               <button
-                onClick={() => handleDeleteImage(index)}
-                className="absolute sm:top-1 sm:right-1 right-0.5 top-0.5 text-black bg-white sm:p-1 p-0.5 rounded-full"
+                onClick={(e) => { e.stopPropagation(); handleDeleteImage(index); }}
+                className="absolute sm:top-1 sm:right-1 right-0.5 top-0.5 text-black bg-white sm:p-1 p-0.5 rounded-full z-10"
               >
                 <XMarkIcon className="sm:h-5 sm:w-5 h-4 w-4 text-black transform transition duration-300 hover:scale-105"/>
               </button>
+              <div className="absolute top-1 left-1 bg-black/50 text-white text-[10px] font-bold rounded px-1">
+                {index + 1}
+              </div>
             </div>
           ))}
         </div>
@@ -797,18 +872,12 @@ if (!token) {
           </button>
         )}
 
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 items-center">
+        <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 items-center">
         <button
             onClick={handleDeleteProduct}
             className="px-4 py-2 bg-red-500 text-black rounded-sm border-black border w-full"
           >
            Supprimer le produit
-          </button>
-          <button
-            onClick={handleSaveMainImage}
-            className="px-4 py-2 bg-blue-500 text-black rounded-sm border-black border w-full"
-          >
-            Enregistrer miniature
           </button>
           <button
             onClick={handleSaveChanges}
