@@ -39,7 +39,7 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
       useEffect(() => {
         if (!isAuthenticated()) {
-          window.location.href = '/admin/login'; 
+          window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.pathname); 
         }
       }, []);
   

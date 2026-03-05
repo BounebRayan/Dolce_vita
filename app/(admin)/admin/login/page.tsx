@@ -3,9 +3,12 @@
 import { isAuthenticated } from '@/lib/auth';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const AdminLogin = () => {
   const [password, setPassword] = useState('');
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/admin';
 
   const  handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ const AdminLogin = () => {
           },
         });
       localStorage.setItem('admin_password', response.data.token);
-      window.location.href = '/admin'; // Redirect to the admin page after successful login
+      window.location.href = redirectTo;
       } 
     else {
       alert('Invalid password');
@@ -27,9 +30,9 @@ const AdminLogin = () => {
 
     useEffect(() => {
       if (isAuthenticated()) {
-        window.location.href = '/admin'; 
+        window.location.href = redirectTo; 
       }
-    }, []);
+    }, [redirectTo]);
 
   return (
     <form onSubmit={handleSubmit} className="text-center mt-12 flex flex-col gap-2 items-center bg-white p-4 justify-center sm:w-1/2 md:w-1/2 lg:w-1/5 sm:mx-auto mx-8">

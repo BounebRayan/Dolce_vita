@@ -148,7 +148,7 @@ const StatsPage = () => {
   useEffect(() => {
     const checkAuth = () => {
       if (!isAuthenticated()) {
-        window.location.href = '/admin/login'; // Redirect to login page
+        window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.pathname);
       } else {
         setIsAuthLoading(false);
       }

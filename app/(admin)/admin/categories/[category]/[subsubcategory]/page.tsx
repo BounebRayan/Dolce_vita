@@ -45,7 +45,7 @@ const SubsubcategoryPage = () => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      window.location.href = '/admin/login'; // Redirect to login page
+      window.location.href = '/admin/login?redirect=' + encodeURIComponent(window.location.pathname);
     }
   }, []);
 

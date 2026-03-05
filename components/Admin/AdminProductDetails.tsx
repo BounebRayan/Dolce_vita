@@ -287,13 +287,14 @@ if (!token) {
         await axios.delete(`/api/products/${productId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Add token for authentication
+              Authorization: `Bearer ${token}`,
             },
           });
         alert("Product deleted successfully!");
+        window.location.href = '/admin';
       } catch (error) {
-        console.error("Failed to update product:", error);
-        alert("Error updating product!");
+        console.error("Failed to delete product:", error);
+        alert("Error deleting product!");
       }
     }
   };
