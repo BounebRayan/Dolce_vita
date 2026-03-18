@@ -312,7 +312,7 @@ const ProductDetails = ({ productId }: Props) => {
 
           {/* Short Description */}
           {product.shortDescription ? (
-            <p className="text-gray-700 mb-4">{product.shortDescription}</p>
+            <p className="text-gray-700 mb-4 whitespace-pre-line">{product.shortDescription}</p>
           ) : (
             <p className="text-gray-700 mb-4">
               {product.description.includes('.') ? product.description.split('.')[0] + '.' : product.description.substring(0, 150) + '...'}
@@ -485,7 +485,7 @@ const ProductDetails = ({ productId }: Props) => {
           </div>
         </div>
         <div className="mt-6">
-          <p className="text-gray-700 leading-relaxed">{product.description}</p>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{product.description}</p>
         </div>
       </div>
 
