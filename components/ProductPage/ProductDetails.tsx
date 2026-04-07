@@ -13,6 +13,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import MobileImageCarousel from './MobileImageCarousel';
 import { getCategoryText, getSubsubcategoryByType } from '@/config/categories';
 import { optimizeCloudinaryUrl } from '@/lib/cloudinary';
+import ProductDescriptionMarkdown from './ProductDescriptionMarkdown';
+import { markdownToPlainText } from '@/lib/markdownPlainText';
 
 
 type Props = {
@@ -312,10 +314,19 @@ const ProductDetails = ({ productId }: Props) => {
 
           {/* Short Description */}
           {product.shortDescription ? (
-            <p className="text-gray-700 mb-4 whitespace-pre-line">{product.shortDescription}</p>
+            <div className="mb-4">
+              <ProductDescriptionMarkdown className="text-gray-700">
+                {product.shortDescription}
+              </ProductDescriptionMarkdown>
+            </div>
           ) : (
             <p className="text-gray-700 mb-4">
-              {product.description.includes('.') ? product.description.split('.')[0] + '.' : product.description.substring(0, 150) + '...'}
+              {(() => {
+                const plain = markdownToPlainText(product.description);
+                return plain.includes('.')
+                  ? plain.split('.')[0] + '.'
+                  : plain.substring(0, 150) + '...';
+              })()}
             </p>
           )}
 
@@ -485,7 +496,7 @@ const ProductDetails = ({ productId }: Props) => {
           </div>
         </div>
         <div className="mt-6">
-          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{product.description}</p>
+          <ProductDescriptionMarkdown>{product.description}</ProductDescriptionMarkdown>
         </div>
       </div>
 

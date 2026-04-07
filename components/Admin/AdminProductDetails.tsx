@@ -7,6 +7,7 @@ import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { categories as categoriesConfig, getSubsubcategoriesByType, hasSubsubcategories } from '@/config/categories';
 import { convertToWebP } from '@/lib/cloudinary';
+import DescriptionEditor from '@/components/Admin/DescriptionEditor';
 
 type Props = {
   productId: string;
@@ -508,26 +509,24 @@ if (!token) {
          </div>
          <div>
          <label className="block font-medium mb-1">Description</label>
-        <textarea
-          className="border p-2 w-full rounded-sm outline-none"
+        <DescriptionEditor
           value={product.description}
-          onChange={(e) =>
-            setProduct({ ...product, description: e.target.value })
-          }
-          placeholder="Description du produit"
-        ></textarea>
+          onChange={(description) => setProduct({ ...product, description })}
+          placeholder="Description du produit (gras, italique, listes…)"
+          rows={6}
+        />
          </div>
          <div>
          <label className="block font-medium mb-1">Description courte (optionnel)</label>
-        <textarea
-          className="border p-2 w-full rounded-sm outline-none"
+        <DescriptionEditor
           value={product.shortDescription || ''}
-          onChange={(e) =>
-            setProduct({ ...product, shortDescription: e.target.value || undefined })
+          onChange={(shortDescription) =>
+            setProduct({ ...product, shortDescription: shortDescription || undefined })
           }
-          placeholder="Court texte affiché sous le prix dans la carte produit"
+          placeholder="Court texte sous le prix (mise en forme optionnelle)"
+          rows={3}
           maxLength={300}
-        ></textarea>
+        />
          </div>
          <div>
          <label className="block font-medium mb-1">Marque (optionnel)</label>

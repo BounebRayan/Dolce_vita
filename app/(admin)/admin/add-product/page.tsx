@@ -6,6 +6,7 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { isAuthenticated } from "@/lib/auth";
 import { categories, getSubsubcategoriesByType, hasSubsubcategories } from "@/config/categories";
 import { convertToWebP } from '@/lib/cloudinary';
+import DescriptionEditor from '@/components/Admin/DescriptionEditor';
 
 const colors = { 
   rouge: "#f56565",
@@ -333,26 +334,29 @@ export default function AddProductPage() {
                 {/* Description */}
                 <div>
           <label className="block font-medium">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
-            rows={2}
-            required
-          />
+          <div className="mt-1">
+            <DescriptionEditor
+              value={description}
+              onChange={setDescription}
+              placeholder="Description (gras, italique, listes…)"
+              rows={5}
+              required
+            />
+          </div>
         </div>
 
         {/* Short Description */}
         <div>
           <label className="block font-medium">Description courte (optionnel)</label>
-          <textarea
-            value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
-            className="mt-1 p-2 border border-black rounded-sm w-full outline-none"
-            rows={2}
-            maxLength={300}
-            placeholder="Court texte affiché sous le prix dans la carte produit"
-          />
+          <div className="mt-1">
+            <DescriptionEditor
+              value={shortDescription}
+              onChange={setShortDescription}
+              placeholder="Court texte sous le prix"
+              rows={3}
+              maxLength={300}
+            />
+          </div>
         </div>
 
         {/* Brand */}
